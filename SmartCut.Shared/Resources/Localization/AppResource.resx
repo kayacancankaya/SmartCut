@@ -1,0 +1,576 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add All" xml:space="preserve">
+    <value>Add All</value>
+  </data>
+  <data name="Add Selected" xml:space="preserve">
+    <value>Add Selected</value>
+  </data>
+  <data name="An error occurred while changing the price." xml:space="preserve">
+    <value>An error occurred while changing the price.</value>
+  </data>
+  <data name="An error occurred while loading the page." xml:space="preserve">
+    <value>An error occurred while loading the page.</value>
+  </data>
+  <data name="An error occurred while printing label." xml:space="preserve">
+    <value>An error occurred while printing label.</value>
+  </data>
+  <data name="An error occurred while updating package quantities." xml:space="preserve">
+    <value>An error occurred while updating package quantities.</value>
+  </data>
+  <data name="An unhandled error has occurred." xml:space="preserve">
+    <value>An unhandled error has occurred.</value>
+  </data>
+  <data name="Branch" xml:space="preserve">
+    <value>Branch</value>
+  </data>
+  <data name="Bulk Actions" xml:space="preserve">
+    <value>Bulk Actions</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Continue?" xml:space="preserve">
+    <value>Continue?</value>
+  </data>
+  <data name="Create Loading Order" xml:space="preserve">
+    <value>Create Loading Order</value>
+  </data>
+  <data name="Create Shipment Order" xml:space="preserve">
+    <value>Create Shipment Order</value>
+  </data>
+  <data name="Customer Name" xml:space="preserve">
+    <value>Customer Name</value>
+  </data>
+  <data name="Customer Order Number" xml:space="preserve">
+    <value>Sales Order No</value>
+  </data>
+  <data name="Deselect All" xml:space="preserve">
+    <value>Deselect All</value>
+  </data>
+  <data name="Do you confirm the record process?" xml:space="preserve">
+    <value>Do you confirm the record process?</value>
+  </data>
+  <data name="Enter Filter" xml:space="preserve">
+    <value>Enter Filter</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="Filter: Production State" xml:space="preserve">
+    <value>Filter: Production State</value>
+  </data>
+  <data name="Is Produced?" xml:space="preserve">
+    <value>Is Produced?</value>
+  </data>
+  <data name="Logistic Application" xml:space="preserve">
+    <value>Logistic Application</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="No Filter" xml:space="preserve">
+    <value>No Filter</value>
+  </data>
+  <data name="Not Ready" xml:space="preserve">
+    <value>Not Ready</value>
+  </data>
+  <data name="Number of Package" xml:space="preserve">
+    <value>Number of Package</value>
+  </data>
+  <data name="Order Line Number" xml:space="preserve">
+    <value>Order Line No</value>
+  </data>
+  <data name="Order Quantity" xml:space="preserve">
+    <value>Order Quantity</value>
+  </data>
+  <data name="Package amount must greater than zero." xml:space="preserve">
+    <value>Package amount must greater than zero.</value>
+  </data>
+  <data name="Package amount to be updated couldn't be found." xml:space="preserve">
+    <value>Package amount to be updated couldn't be found.</value>
+  </data>
+  <data name="Package quantities are updated." xml:space="preserve">
+    <value>Package quantities are updated.</value>
+  </data>
+  <data name="Please enter a valid amount." xml:space="preserve">
+    <value>Please enter a valid amount.</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
+  <data name="Price didn't change. Please try again." xml:space="preserve">
+    <value>Price didn't change. Please try again.</value>
+  </data>
+  <data name="Print Label" xml:space="preserve">
+    <value>Print Label</value>
+  </data>
+  <data name="Produced" xml:space="preserve">
+    <value>Produced</value>
+  </data>
+  <data name="Product Code" xml:space="preserve">
+    <value>Product Code</value>
+  </data>
+  <data name="Product Name" xml:space="preserve">
+    <value>Product Name</value>
+  </data>
+  <data name="Reload" xml:space="preserve">
+    <value>Reload</value>
+  </data>
+  <data name="Reports" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+  <data name="Representative" xml:space="preserve">
+    <value>Representative</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="Shipment Ready Quantity" xml:space="preserve">
+    <value>Shipment Ready Quantity</value>
+  </data>
+  <data name="Shipped Quantity" xml:space="preserve">
+    <value>Shipped Quantity</value>
+  </data>
+  <data name="Show Shipping Order" xml:space="preserve">
+    <value>Show Shipping Order</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
+  <data name="Update Selected" xml:space="preserve">
+    <value>Update Selected</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="Customer Order Quantity" xml:space="preserve">
+    <value>Sales Order Qty</value>
+  </data>
+  <data name="Shipment Order Quantity" xml:space="preserve">
+    <value>Shipment Order Quantity</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Shipment Order List" xml:space="preserve">
+    <value>Shipment Order List</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Quantity to Send" xml:space="preserve">
+    <value>Quantity to Send</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Sales order added..." xml:space="preserve">
+    <value>Sales order added...</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Continue</value>
+  </data>
+  <data name="Sales order already added." xml:space="preserve">
+    <value>Sales order already added.</value>
+  </data>
+  <data name="An error occurred while fetching data from the system." xml:space="preserve">
+    <value>An error occurred while fetching data from the system.</value>
+  </data>
+  <data name="Shipment order quantity can not be greater than sales order quantity." xml:space="preserve">
+    <value>Shipment order quantity can not be greater than sales order quantity.</value>
+  </data>
+  <data name="An error occurred while adding the product." xml:space="preserve">
+    <value>An error occurred while adding the product.</value>
+  </data>
+  <data name="Product not found in the list." xml:space="preserve">
+    <value>Product not found in the list.</value>
+  </data>
+  <data name="An error occurred while removing the product." xml:space="preserve">
+    <value>An error occurred while removing the product.</value>
+  </data>
+  <data name="Please add at least one product." xml:space="preserve">
+    <value>Please add at least one product.</value>
+  </data>
+  <data name="Shipment order could not be saved. Please try again." xml:space="preserve">
+    <value>Shipment order could not be saved. Please try again.</value>
+  </data>
+  <data name="Shipment order saved successfully." xml:space="preserve">
+    <value>Shipment order saved successfully.</value>
+  </data>
+  <data name="An error occurred while saving the shipment order." xml:space="preserve">
+    <value>An error occurred while saving the shipment order.</value>
+  </data>
+  <data name="Shipment Order Number" xml:space="preserve">
+    <value>Shipment Order No</value>
+  </data>
+  <data name="Customer" xml:space="preserve">
+    <value>Customer</value>
+  </data>
+  <data name="Detail" xml:space="preserve">
+    <value>Detail</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Shipment orders couldn't be found..." xml:space="preserve">
+    <value>Shipment orders couldn't be found...</value>
+  </data>
+  <data name="Barcode Number" xml:space="preserve">
+    <value>Barcode Number</value>
+  </data>
+  <data name="Shipment Order Line" xml:space="preserve">
+    <value>Shipment Order Line</value>
+  </data>
+  <data name="Total Package Quantity" xml:space="preserve">
+    <value>Total Package Qty</value>
+  </data>
+  <data name="Scanned Quantity" xml:space="preserve">
+    <value>Scanned Quantity</value>
+  </data>
+  <data name="Product Sequence" xml:space="preserve">
+    <value>Product Sequence</value>
+  </data>
+  <data name="Package Sequence" xml:space="preserve">
+    <value>Package Sequence</value>
+  </data>
+  <data name="Is Scanned" xml:space="preserve">
+    <value>Is Scanned</value>
+  </data>
+  <data name="Do you confirm deletion?" xml:space="preserve">
+    <value>Do you confirm deletion?</value>
+  </data>
+  <data name="No Shipment Order found in the system." xml:space="preserve">
+    <value>No Shipment Order found in the system.</value>
+  </data>
+  <data name="An error occurred while filtering." xml:space="preserve">
+    <value>An error occurred while filtering.</value>
+  </data>
+  <data name="An error occurred while adding customer order." xml:space="preserve">
+    <value>An error occurred while adding customer order.</value>
+  </data>
+  <data name="An error occurred while fetching the loading quantity." xml:space="preserve">
+    <value>An error occurred while fetching the loading quantity.</value>
+  </data>
+  <data name="The same shipment order cannot be added more than once." xml:space="preserve">
+    <value>The same shipment order cannot be added more than once.</value>
+  </data>
+  <data name="An error occurred while adding shipment order." xml:space="preserve">
+    <value>An error occurred while adding shipment order.</value>
+  </data>
+  <data name="Loading exists." xml:space="preserve">
+    <value>Loading exists.</value>
+  </data>
+  <data name="An error occurred while fetching data from server." xml:space="preserve">
+    <value>An error occurred while fetching data from server.</value>
+  </data>
+  <data name="An error occurred while deleting." xml:space="preserve">
+    <value>An error occurred while deleting.</value>
+  </data>
+  <data name="Shipment Deleted." xml:space="preserve">
+    <value>Shipment Deleted.</value>
+  </data>
+  <data name="More than one identical barcode." xml:space="preserve">
+    <value>More than one identical barcode.</value>
+  </data>
+  <data name="Could not read barcode." xml:space="preserve">
+    <value>Could not read barcode.</value>
+  </data>
+  <data name="Wrong barcode format." xml:space="preserve">
+    <value>Wrong barcode format.</value>
+  </data>
+  <data name="Could not find sales order belonging to barcode." xml:space="preserve">
+    <value>Could not find sales order belonging to barcode.</value>
+  </data>
+  <data name="An error occurred while scanning barcode." xml:space="preserve">
+    <value>An error occurred while scanning barcode.</value>
+  </data>
+  <data name="Sales order not shipped belonging to this barcode number couldn't be found." xml:space="preserve">
+    <value>Sales order not shipped belonging to this barcode number couldn't be found.</value>
+  </data>
+  <data name="Shipment order details could not be found." xml:space="preserve">
+    <value>Shipment order details could not be found.</value>
+  </data>
+  <data name="package info couldn't be found." xml:space="preserve">
+    <value>package info couldn't be found.</value>
+  </data>
+  <data name="could not be scanned." xml:space="preserve">
+    <value>couldn't be scanned.</value>
+  </data>
+  <data name="Shipment orders recorded successfully." xml:space="preserve">
+    <value>Shipment orders recorded successfully.</value>
+  </data>
+  <data name="An error occurred while recording shipment orders." xml:space="preserve">
+    <value>An error occurred while recording shipment orders.</value>
+  </data>
+  <data name="Shipment order details couldn't be found." xml:space="preserve">
+    <value>Shipment order details couldn't be found.</value>
+  </data>
+  <data name="An error occurred while removing shipment details." xml:space="preserve">
+    <value>An error occurred while removing shipment details.</value>
+  </data>
+  <data name="Sales Report" xml:space="preserve">
+    <value>Sales Report</value>
+  </data>
+  <data name="Shipment Report" xml:space="preserve">
+    <value>Shipment Report</value>
+  </data>
+  <data name="Loading Report" xml:space="preserve">
+    <value>Loading Report</value>
+  </data>
+  <data name="Package Quantity" xml:space="preserve">
+    <value>Package Qty</value>
+  </data>
+  <data name="Loaded Quantity" xml:space="preserve">
+    <value>Loaded Quantity</value>
+  </data>
+  <data name="Shipment List" xml:space="preserve">
+    <value>Shipment List</value>
+  </data>
+  <data name="No shipment orders found ready for loading." xml:space="preserve">
+    <value>No shipment orders found ready for loading.</value>
+  </data>
+  <data name="Loading Order Number" xml:space="preserve">
+    <value>Loading Order No</value>
+  </data>
+  <data name="Label Info" xml:space="preserve">
+    <value>Label Info</value>
+  </data>
+  <data name="Packing List" xml:space="preserve">
+    <value>Packing List</value>
+  </data>
+  <data name="Sales order loaded couldn't be found." xml:space="preserve">
+    <value>Sales order loaded couldn't be found.</value>
+  </data>
+  <data name="Loading Order Details" xml:space="preserve">
+    <value>Loading Order Details</value>
+  </data>
+  <data name="Loading Order Line" xml:space="preserve">
+    <value>Loading Order Line</value>
+  </data>
+  <data name="Report Type" xml:space="preserve">
+    <value>Report Type</value>
+  </data>
+  <data name="An error occurred while listing loading orders." xml:space="preserve">
+    <value>An error occurred while listing loading orders.</value>
+  </data>
+  <data name="An error occurred while listing details." xml:space="preserve">
+    <value>An error occurred while listing details.</value>
+  </data>
+  <data name="An error occurred while listing shipment orders." xml:space="preserve">
+    <value>An error occurred while listing shipment orders.</value>
+  </data>
+  <data name="An error occurred while deleting shipment order." xml:space="preserve">
+    <value>An error occurred while deleting shipment order.</value>
+  </data>
+  <data name="An error occurred while deleting loading order." xml:space="preserve">
+    <value>An error occurred while deleting loading order.</value>
+  </data>
+  <data name="Loading order deleted." xml:space="preserve">
+    <value>Loading order deleted.</value>
+  </data>
+  <data name="Loading List" xml:space="preserve">
+    <value>Loading List</value>
+  </data>
+  <data name="Company Name" xml:space="preserve">
+    <value>Company Name</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="Trade Licence No" xml:space="preserve">
+    <value>Trade Licence No</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Invoice No" xml:space="preserve">
+    <value>Invoice No</value>
+  </data>
+  <data name="PO No" xml:space="preserve">
+    <value>PO No</value>
+  </data>
+  <data name="Payment Term" xml:space="preserve">
+    <value>Payment Term</value>
+  </data>
+  <data name="Delivery Term" xml:space="preserve">
+    <value>Delivery Term</value>
+  </data>
+  <data name="Vessel &amp; Voyage No" xml:space="preserve">
+    <value>Vessel &amp; Voyage No</value>
+  </data>
+  <data name="Container No" xml:space="preserve">
+    <value>Container No</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="Beneficiary" xml:space="preserve">
+    <value>Beneficiary</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>Notes</value>
+  </data>
+  <data name="Bank Details" xml:space="preserve">
+    <value>Bank Details</value>
+  </data>
+  <data name="Signature" xml:space="preserve">
+    <value>Signature</value>
+  </data>
+  <data name="Bank" xml:space="preserve">
+    <value>Bank</value>
+  </data>
+  <data name="Branch Code" xml:space="preserve">
+    <value>Branch Code</value>
+  </data>
+  <data name="SWIFT" xml:space="preserve">
+    <value>SWIFT</value>
+  </data>
+  <data name="USD Account" xml:space="preserve">
+    <value>USD Account</value>
+  </data>
+  <data name="Account No" xml:space="preserve">
+    <value>Account No</value>
+  </data>
+  <data name="IBAN" xml:space="preserve">
+    <value>IBAN</value>
+  </data>
+  <data name="Package Label" xml:space="preserve">
+    <value>Package Label</value>
+  </data>
+</root>

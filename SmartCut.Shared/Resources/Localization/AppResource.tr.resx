@@ -1,0 +1,576 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add All" xml:space="preserve">
+    <value>Tümünü Ekle</value>
+  </data>
+  <data name="Add Selected" xml:space="preserve">
+    <value>Seçilenleri Ekle</value>
+  </data>
+  <data name="An error occurred while changing the price." xml:space="preserve">
+    <value>Fiyat değiştirilirken hata ile karşılaşıldı.</value>
+  </data>
+  <data name="An error occurred while loading the page." xml:space="preserve">
+    <value>Sayfa yüklenirken hata ile karşılaşıldı.</value>
+  </data>
+  <data name="An error occurred while printing label." xml:space="preserve">
+    <value>Etiket basılırken hata ile karşılaşıldı.</value>
+  </data>
+  <data name="An error occurred while updating package quantities." xml:space="preserve">
+    <value>Paket miktarı güncellenirken hata ile karşılaşıldı.</value>
+  </data>
+  <data name="An unhandled error has occurred." xml:space="preserve">
+    <value>Beklenmeyen bir hata oluştu.</value>
+  </data>
+  <data name="Branch" xml:space="preserve">
+    <value>Şube</value>
+  </data>
+  <data name="Bulk Actions" xml:space="preserve">
+    <value>Toplu İşlemler</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>İptal</value>
+  </data>
+  <data name="Continue?" xml:space="preserve">
+    <value>Devam Et?</value>
+  </data>
+  <data name="Create Loading Order" xml:space="preserve">
+    <value>Yükleme Emri Oluştur</value>
+  </data>
+  <data name="Create Shipment Order" xml:space="preserve">
+    <value>Yükleme Emri Oluştur</value>
+  </data>
+  <data name="Customer Name" xml:space="preserve">
+    <value>Cari İsim</value>
+  </data>
+  <data name="Customer Order Number" xml:space="preserve">
+    <value>Sipariş Numarası</value>
+  </data>
+  <data name="Deselect All" xml:space="preserve">
+    <value>Seçimi Temizle</value>
+  </data>
+  <data name="Do you confirm the record process?" xml:space="preserve">
+    <value>Kayıt İşlemini Onaylıyor Musunuz?</value>
+  </data>
+  <data name="Enter Filter" xml:space="preserve">
+    <value>Filtre Giriniz</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Hata</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Filtrele</value>
+  </data>
+  <data name="Filter: Production State" xml:space="preserve">
+    <value>Filtre: Üretim Durumu</value>
+  </data>
+  <data name="Is Produced?" xml:space="preserve">
+    <value>Üretildi Mi?</value>
+  </data>
+  <data name="Logistic Application" xml:space="preserve">
+    <value>Sevkiyat Uygulaması</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>İleri</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Hayır</value>
+  </data>
+  <data name="No Filter" xml:space="preserve">
+    <value>Filtre Yok</value>
+  </data>
+  <data name="Not Ready" xml:space="preserve">
+    <value>Hazır Değil</value>
+  </data>
+  <data name="Number of Package" xml:space="preserve">
+    <value>Toplam Paket Adedi</value>
+  </data>
+  <data name="Order Line Number" xml:space="preserve">
+    <value>Sipariş Sıra</value>
+  </data>
+  <data name="Order Quantity" xml:space="preserve">
+    <value>Sipariş Miktarı</value>
+  </data>
+  <data name="Package amount must greater than zero." xml:space="preserve">
+    <value>Paket miktarı 0'dan büyük olmalı.</value>
+  </data>
+  <data name="Package amount to be updated couldn't be found." xml:space="preserve">
+    <value>Güncellenecek paket miktarı bulunamadı.</value>
+  </data>
+  <data name="Package quantities are updated." xml:space="preserve">
+    <value>Paket Miktarları Güncellendi.</value>
+  </data>
+  <data name="Please enter a valid amount." xml:space="preserve">
+    <value>Lütfen geçerli bir miktar giriniz.</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Geri</value>
+  </data>
+  <data name="Price didn't change. Please try again." xml:space="preserve">
+    <value>Fiyat değişmedi. Lütfen tekrar deneyiniz.</value>
+  </data>
+  <data name="Print Label" xml:space="preserve">
+    <value>Etiket Bas</value>
+  </data>
+  <data name="Produced" xml:space="preserve">
+    <value>Üretildi</value>
+  </data>
+  <data name="Product Code" xml:space="preserve">
+    <value>Ürün Kodu</value>
+  </data>
+  <data name="Product Name" xml:space="preserve">
+    <value>Ürün Adı</value>
+  </data>
+  <data name="Reload" xml:space="preserve">
+    <value>Yeniden Yükle</value>
+  </data>
+  <data name="Reports" xml:space="preserve">
+    <value>Raporlar</value>
+  </data>
+  <data name="Representative" xml:space="preserve">
+    <value>Temsilci</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Seçiniz</value>
+  </data>
+  <data name="Shipment Ready Quantity" xml:space="preserve">
+    <value>Sevk Hazır Miktar</value>
+  </data>
+  <data name="Shipped Quantity" xml:space="preserve">
+    <value>Sevk Edilen Miktar</value>
+  </data>
+  <data name="Show Shipping Order" xml:space="preserve">
+    <value>Sevk Emri Göster</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Başarılı</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Güncelle</value>
+  </data>
+  <data name="Update Selected" xml:space="preserve">
+    <value>Seçilenleri Güncelle</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Evet</value>
+  </data>
+  <data name="Customer Order Quantity" xml:space="preserve">
+    <value>Sipariş Miktar</value>
+  </data>
+  <data name="Shipment Order Quantity" xml:space="preserve">
+    <value>Sevk Miktar</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Ekle</value>
+  </data>
+  <data name="Shipment Order List" xml:space="preserve">
+    <value>Sevk Emri Listesi</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Çıkar</value>
+  </data>
+  <data name="Quantity to Send" xml:space="preserve">
+    <value>Gönderilecek Miktar</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Kapat</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Kaydet</value>
+  </data>
+  <data name="Sales order added..." xml:space="preserve">
+    <value>Sipariş eklendi...</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Devam Et</value>
+  </data>
+  <data name="Sales order already added." xml:space="preserve">
+    <value>Sipariş önceden eklendi.</value>
+  </data>
+  <data name="An error occurred while fetching data from the system." xml:space="preserve">
+    <value>Sistemden veri alınırken hata ile karşılaşıldı...</value>
+  </data>
+  <data name="Shipment order quantity can not be greater than sales order quantity." xml:space="preserve">
+    <value>Sevk miktarı sipariş miktarından büyük olamaz.</value>
+  </data>
+  <data name="An error occurred while adding the product." xml:space="preserve">
+    <value>Ürün ekleme esnasında hata ile karşılaşıldı.</value>
+  </data>
+  <data name="Product not found in the list." xml:space="preserve">
+    <value>Ürün listede bulunamadı.</value>
+  </data>
+  <data name="An error occurred while removing the product." xml:space="preserve">
+    <value>Ürün çıkarma işlemi esnasında hata ile karşılaşıldı.</value>
+  </data>
+  <data name="Please add at least one product." xml:space="preserve">
+    <value>Lütfen en az bir ürün ekleyin.</value>
+  </data>
+  <data name="Shipment order could not be saved. Please try again." xml:space="preserve">
+    <value>Sevk emri kaydedilemedi. Lütfen tekrar deneyin.</value>
+  </data>
+  <data name="Shipment order saved successfully." xml:space="preserve">
+    <value>Sevk emri başarıyla kaydedildi.</value>
+  </data>
+  <data name="An error occurred while saving the shipment order." xml:space="preserve">
+    <value>Sevk emri kaydedilirken hata ile karşılaşıldı.</value>
+  </data>
+  <data name="Shipment Order Number" xml:space="preserve">
+    <value>Sevk No</value>
+  </data>
+  <data name="Customer" xml:space="preserve">
+    <value>Cari</value>
+  </data>
+  <data name="Detail" xml:space="preserve">
+    <value>Detay</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="Shipment orders couldn't be found..." xml:space="preserve">
+    <value>Sevk emirleri bulunamadı.</value>
+  </data>
+  <data name="Barcode Number" xml:space="preserve">
+    <value>Barkod Numarası</value>
+  </data>
+  <data name="Shipment Order Line" xml:space="preserve">
+    <value>Sevk Sıra</value>
+  </data>
+  <data name="Total Package Quantity" xml:space="preserve">
+    <value>Toplam Paket Adedi</value>
+  </data>
+  <data name="Scanned Quantity" xml:space="preserve">
+    <value>Okutulan Miktar</value>
+  </data>
+  <data name="Product Sequence" xml:space="preserve">
+    <value>Ürün Sıra</value>
+  </data>
+  <data name="Package Sequence" xml:space="preserve">
+    <value>Ürün Sıra</value>
+  </data>
+  <data name="Is Scanned" xml:space="preserve">
+    <value>Okutuldu Mu</value>
+  </data>
+  <data name="Do you confirm deletion?" xml:space="preserve">
+    <value>Silme işlemini onaylıyor musunuz?</value>
+  </data>
+  <data name="No Shipment Order found in the system." xml:space="preserve">
+    <value>Çeki Listeleri Sistemde Bulunamadı.</value>
+  </data>
+  <data name="An error occurred while filtering." xml:space="preserve">
+    <value>Filtreleme esnasında hata ile karşılaşıldı.</value>
+  </data>
+  <data name="An error occurred while adding customer order." xml:space="preserve">
+    <value>Sipariş eklenirken hata ile karşılaşıldı.</value>
+  </data>
+  <data name="An error occurred while fetching the loading quantity." xml:space="preserve">
+    <value>Yükleme miktarı alınırken hata ile karşılaşıldı.</value>
+  </data>
+  <data name="The same shipment order cannot be added more than once." xml:space="preserve">
+    <value>Aynı sevk emri birden fazla eklenemez.</value>
+  </data>
+  <data name="An error occurred while adding shipment order." xml:space="preserve">
+    <value>Sevk emri eklenirken hata ile karşılaşıldı.</value>
+  </data>
+  <data name="Loading exists." xml:space="preserve">
+    <value>Yükleme mevcut.</value>
+  </data>
+  <data name="An error occurred while fetching data from server." xml:space="preserve">
+    <value>Yükleme bilgileri sorgulanırken hata ile karşılaşıldı.</value>
+  </data>
+  <data name="An error occurred while deleting." xml:space="preserve">
+    <value>Yükleme emri silinirken hata ile karşılaşıldı.</value>
+  </data>
+  <data name="Shipment Deleted." xml:space="preserve">
+    <value>Sevk Silindi.</value>
+  </data>
+  <data name="More than one identical barcode." xml:space="preserve">
+    <value>Birden fazla aynı barkod.</value>
+  </data>
+  <data name="Could not read barcode." xml:space="preserve">
+    <value>Barkod okutulamadı.</value>
+  </data>
+  <data name="Wrong barcode format." xml:space="preserve">
+    <value>Hatalı barkod formatı</value>
+  </data>
+  <data name="Could not find sales order belonging to barcode." xml:space="preserve">
+    <value>Barkoda ait sipariş bulunamadı</value>
+  </data>
+  <data name="An error occurred while scanning barcode." xml:space="preserve">
+    <value>Barkod okutulurken hata ile karşılaşıldı.</value>
+  </data>
+  <data name="Sales order not shipped belonging to this barcode number couldn't be found." xml:space="preserve">
+    <value>Barkod numarasına ait eksik sipariş bulunamadı.</value>
+  </data>
+  <data name="Shipment order details could not be found." xml:space="preserve">
+    <value>Sevk emri detayları bulunamadı.</value>
+  </data>
+  <data name="package info couldn't be found." xml:space="preserve">
+    <value>paket bilgisi bulunamadı.</value>
+  </data>
+  <data name="could not be scanned." xml:space="preserve">
+    <value>okutulamadı.</value>
+  </data>
+  <data name="Shipment orders recorded successfully." xml:space="preserve">
+    <value>Sevk emirleri başarıyla kaydedildi.</value>
+  </data>
+  <data name="An error occurred while recording shipment orders." xml:space="preserve">
+    <value>Sevk emirleri kaydedilirken bir hata oluştu.</value>
+  </data>
+  <data name="Shipment order details couldn't be found." xml:space="preserve">
+    <value>Sevk emri detayları bulunamadı.</value>
+  </data>
+  <data name="An error occurred while removing shipment details." xml:space="preserve">
+    <value>Sevk emri detayları çıkarılırken hata oluştu.</value>
+  </data>
+  <data name="Sales Report" xml:space="preserve">
+    <value>Satış Rapor</value>
+  </data>
+  <data name="Shipment Report" xml:space="preserve">
+    <value>Sevk Rapor</value>
+  </data>
+  <data name="Loading Report" xml:space="preserve">
+    <value>Yükleme Raporu</value>
+  </data>
+  <data name="Package Quantity" xml:space="preserve">
+    <value>Paket Sayısı</value>
+  </data>
+  <data name="Loaded Quantity" xml:space="preserve">
+    <value>Yüklenen Miktar</value>
+  </data>
+  <data name="Shipment List" xml:space="preserve">
+    <value>Sevk Listesi</value>
+  </data>
+  <data name="No shipment orders found ready for loading." xml:space="preserve">
+    <value>Yüklenecek sevk bulunamadı.</value>
+  </data>
+  <data name="Loading Order Number" xml:space="preserve">
+    <value>Yükleme No</value>
+  </data>
+  <data name="Label Info" xml:space="preserve">
+    <value>Etiket Bilgisi</value>
+  </data>
+  <data name="Packing List" xml:space="preserve">
+    <value>Paketleme Listesi</value>
+  </data>
+  <data name="Sales order loaded couldn't be found." xml:space="preserve">
+    <value>Yüklenen sipariş bulunamadı.</value>
+  </data>
+  <data name="Loading Order Details" xml:space="preserve">
+    <value>Yükleme Emri Detayları</value>
+  </data>
+  <data name="Loading Order Line" xml:space="preserve">
+    <value>Yükleme Emri Sıra</value>
+  </data>
+  <data name="Report Type" xml:space="preserve">
+    <value>Rapor Tipi</value>
+  </data>
+  <data name="An error occurred while listing loading orders." xml:space="preserve">
+    <value>Yüklemeler listelenirken hata ile karşılaşıldı</value>
+  </data>
+  <data name="An error occurred while listing details." xml:space="preserve">
+    <value>Detaylar listelenirken hata ile karşılaşıldı.</value>
+  </data>
+  <data name="An error occurred while listing shipment orders." xml:space="preserve">
+    <value>Sevk emri silinirken hata ile karşılaşıldı.</value>
+  </data>
+  <data name="An error occurred while deleting shipment order." xml:space="preserve">
+    <value>Sevk emri silinirken hata ile karşılaşıldı.</value>
+  </data>
+  <data name="An error occurred while deleting loading order." xml:space="preserve">
+    <value>Yükleme emri silinirken hata ile karşılaşıldı.</value>
+  </data>
+  <data name="Loading order deleted." xml:space="preserve">
+    <value>Yükleme Silindi.</value>
+  </data>
+  <data name="Loading List" xml:space="preserve">
+    <value>Yükleme Listesi</value>
+  </data>
+  <data name="Company Name" xml:space="preserve">
+    <value>Şirket İsmi</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Adres</value>
+  </data>
+  <data name="Trade Licence No" xml:space="preserve">
+    <value>Vergi Numarası</value>
+  </data>
+  <data name="Phone" xml:space="preserve">
+    <value>Telefon</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Mail</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Tarih</value>
+  </data>
+  <data name="Invoice No" xml:space="preserve">
+    <value>Invoice No</value>
+  </data>
+  <data name="PO No" xml:space="preserve">
+    <value>PO No</value>
+  </data>
+  <data name="Payment Term" xml:space="preserve">
+    <value>Ödeme Şartları</value>
+  </data>
+  <data name="Delivery Term" xml:space="preserve">
+    <value>Gönderi Koşulları</value>
+  </data>
+  <data name="Vessel &amp; Voyage No" xml:space="preserve">
+    <value>Gemi ve Sefer Numarası</value>
+  </data>
+  <data name="Container No" xml:space="preserve">
+    <value>Konteyner No</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Toplam</value>
+  </data>
+  <data name="Beneficiary" xml:space="preserve">
+    <value>Alıcı</value>
+  </data>
+  <data name="Notes" xml:space="preserve">
+    <value>Notlar</value>
+  </data>
+  <data name="Bank Details" xml:space="preserve">
+    <value>Banka Detayları</value>
+  </data>
+  <data name="Signature" xml:space="preserve">
+    <value>İmza</value>
+  </data>
+  <data name="Bank" xml:space="preserve">
+    <value>Banka</value>
+  </data>
+  <data name="Branch Code" xml:space="preserve">
+    <value>Şube Kodu</value>
+  </data>
+  <data name="SWIFT" xml:space="preserve">
+    <value>SWIFT</value>
+  </data>
+  <data name="USD Account" xml:space="preserve">
+    <value>USD Hesabı</value>
+  </data>
+  <data name="Account No" xml:space="preserve">
+    <value>Hesap Numarası</value>
+  </data>
+  <data name="IBAN" xml:space="preserve">
+    <value>IBAN</value>
+  </data>
+  <data name="Package Label" xml:space="preserve">
+    <value>Paket Etiketi</value>
+  </data>
+</root>

@@ -1,0 +1,37 @@
+﻿@using SmartCut.Shared.Resources.Localization
+@page "/create-block"
+<PageTitle>@Localizer.Get("Create Block")</PageTitle>
+<h3>@Localizer.Get("Create Block")</h3>
+
+<div class="form-control">
+    <label class="label">
+        <span class="label-text">@Localizer.Get("Block Name")</span>
+        <span class="label-text-alt">@Localizer.Get("Required")</span>
+    </label>
+    <input type="text" placeholder="@Localizer.Get("Block Name")" class="input input-bordered w-full max-w-xs" />
+</div>
+<div class="form-control">
+    <label class="label">
+        <span class="label-text">@Localizer.Get("Width")</span>
+        <span class="label-text-alt">*</span>
+    </label>
+    <input type="number" placeholder="@Localizer.Get("Enter Width...")" class="input input-bordered w-full max-w-xs" />
+</div>
+<div class="form-control">
+    <label class="label">
+        <span class="label-text">@Localizer.Get("Length")</span>
+        <span class="label-text-alt">*</span>
+    </label>
+    <input type="number" placeholder="@Localizer.Get("Enter Length...")" class="input input-bordered w-full max-w-xs" />
+</div>
+<div class="form-control">
+    <label class="label">
+        <span class="label-text">@Localizer.Get("Height")</span>
+        <span class="label-text-alt">*</span>
+    </label>
+    <input type="number" placeholder="@Localizer.Get("Enter Height")" class="input input-bordered w-full max-w-xs" />
+</div>
+
+@code {
+
+}
