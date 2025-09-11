@@ -573,4 +573,55 @@
   <data name="Package Label" xml:space="preserve">
     <value>Etiqeta del Paquete</value>
   </data>
+  <data name="Home" xml:space="preserve">
+    <value>Inicio</value>
+  </data>
+  <data name="Block Name" xml:space="preserve">
+    <value>Nombre del Bloque</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Descripción</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Ancho</value>
+  </data>
+  <data name="Length" xml:space="preserve">
+    <value>Largo</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>Altura</value>
+  </data>
+  <data name="Material" xml:space="preserve">
+    <value>Tipo de Material</value>
+  </data>
+  <data name="Create Block" xml:space="preserve">
+    <value>Crear Bloque</value>
+  </data>
+  <data name="Block Name is required." xml:space="preserve">
+    <value>El nombre del bloque es obligatorio</value>
+  </data>
+  <data name="Width is required" xml:space="preserve">
+    <value>El Ancho es obligatorio</value>
+  </data>
+  <data name="Length is required" xml:space="preserve">
+    <value>El Largo es obligatorio</value>
+  </data>
+  <data name="Height is required" xml:space="preserve">
+    <value>La altura es obligatorio</value>
+  </data>
+  <data name="An error occured while saving block" xml:space="preserve">
+    <value>Ocurrió un error al guardar el bloque.</value>
+  </data>
+  <data name="Failed to save block" xml:space="preserve">
+    <value>Error al guardar el bloque.</value>
+  </data>
+  <data name="Block saved successfully" xml:space="preserve">
+    <value>Bloque guardado correctamente.</value>
+  </data>
+  <data name="Block" xml:space="preserve">
+    <value>Bloque</value>
+  </data>
+  <data name="Orders" xml:space="preserve">
+    <value>Las Órdenes</value>
+  </data>
 </root>

@@ -573,4 +573,55 @@
   <data name="Package Label" xml:space="preserve">
     <value>Package Label</value>
   </data>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="Block Name" xml:space="preserve">
+    <value>Block Name</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Block Description</value>
+  </data>
+  <data name="Width" xml:space="preserve">
+    <value>Width</value>
+  </data>
+  <data name="Length" xml:space="preserve">
+    <value>Length</value>
+  </data>
+  <data name="Height" xml:space="preserve">
+    <value>Height</value>
+  </data>
+  <data name="Material" xml:space="preserve">
+    <value>Material</value>
+  </data>
+  <data name="Create Block" xml:space="preserve">
+    <value>Create Block</value>
+  </data>
+  <data name="Block Name is required." xml:space="preserve">
+    <value>Block Name is required.</value>
+  </data>
+  <data name="Width is required" xml:space="preserve">
+    <value>Width is required</value>
+  </data>
+  <data name="Length is required" xml:space="preserve">
+    <value>Length is required</value>
+  </data>
+  <data name="Height is required" xml:space="preserve">
+    <value>Height is required</value>
+  </data>
+  <data name="An error occured while saving block" xml:space="preserve">
+    <value>An error occured while saving block</value>
+  </data>
+  <data name="Failed to save block" xml:space="preserve">
+    <value>Failed to save block</value>
+  </data>
+  <data name="Block saved successfully" xml:space="preserve">
+    <value>Block saved successfully</value>
+  </data>
+  <data name="Block" xml:space="preserve">
+    <value>Block</value>
+  </data>
+  <data name="Orders" xml:space="preserve">
+    <value>Orders</value>
+  </data>
 </root>

@@ -1,0 +1,28 @@
+﻿<button class="noselect" style="background-color:@buttonBackgroundColor;color:@buttonColor;width:@buttonWidth">
+    <span class="text">@buttonText</span>
+    <span class="icon" style="width: @iconWidth;--TransformIcon:@transformIcon; --IconHoverWidth:@iconHoverWidth;">@svg</span>
+</button>
+
+@code {
+    [Parameter] public string buttonWidth { get; set; } = "150px";  // red background
+    [Parameter] public string buttonBackgroundColor { get; set; } = "red";  // red background
+    [Parameter] public string buttonColor { get; set; }  = "#ffffff";            // white text
+    [Parameter] public string buttonText { get; set; } = "List";
+    [Parameter] public string transformIcon { get; set; } = "75px";
+    [Parameter] public string iconWidth { get; set; } = "60px";
+    [Parameter] public string iconHoverWidth { get; set; } = "85px";
+    // [Parameter] public string buttonWidth { get; set; } = "200px";  // red background
+    // [Parameter] public string buttonBackgroundColor { get; set; } = "red";  // red background
+    // [Parameter] public string buttonColor { get; set; }  = "#ffffff";            // white text
+    // [Parameter] public string buttonText { get; set; } = "List";
+    // [Parameter] public string transformIcon { get; set; } = "160px";
+    // [Parameter] public string iconWidth { get; set; } = "40px";
+    // [Parameter] public string iconHoverWidth { get; set; } = "200px";
+
+    [Parameter] public MarkupString svg { get; set; }  = new MarkupString(@"
+<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-list-nested' viewBox='0 0 16 16'>
+  <path fill-rule='evenodd' d='M2.5 3.5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z'/>
+</svg>");
+
+    [Parameter] public EventCallback OnClicked { get; set; }
+}

@@ -1,0 +1,30 @@
+﻿@using SmartCut.Shared.Services
+@inject BreadcrumbService BreadcrumbService
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        @foreach (var item in BreadcrumbService.Items)
+        {
+            if (item.IsActive)
+            {
+                <li class="breadcrumb-item active" aria-current="page">@item.Title</li>
+            }
+            else
+            {
+                <li class="breadcrumb-item"><a href="@item.Url">@item.Title</a></li>
+            }
+        }
+    </ol>
+</nav>
+
+@code {
+    protected override void OnInitialized()
+    {
+        BreadcrumbService.OnBreadcrumbChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        BreadcrumbService.OnBreadcrumbChanged -= StateHasChanged;
+    }
+}

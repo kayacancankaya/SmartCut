@@ -1,0 +1,63 @@
+﻿@page "/block"
+@using SmartCut.Shared.Models
+@using SmartCut.Shared.Resources.Localization
+@using SmartCut.Shared.Services
+@using SmartCut.Shared.Layout.Components
+@inject BreadcrumbService BreadcrumbService
+@inject NotificationService NotificationService
+@inject NavigationManager NavigationManager
+@inject ApiClient BlockService
+<div class="card">
+    <div class="card-overlay"></div>
+        <div class="card-inner">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title mb-0">@Localizer.Get("Processes")</h3>
+             </div>
+            <div class="card-body btn-container">
+
+                <ListButton buttonText="Add New" buttonBackgroundColor="green"
+                        svg="@plusSquareSvg"
+                        OnClicked="NavigateToList"
+                        buttonWidth="150px"
+                        transformIcon="75px"
+                        iconWidth="60px"
+                        iconHoverWidth="85px" />
+
+                <ListButton buttonText="List"  buttonBackgroundColor="aqua"
+                        svg="@plusSquareSvg"
+                        OnClicked="NavigateToList" />
+
+                <ListButton buttonText="Import from Excel" buttonBackgroundColor="green"
+                        svg="@plusSquareSvg"
+                        OnClicked="NavigateToList"
+                        buttonWidth="200px"
+                        transformIcon="160px" 
+                        iconWidth="40px"
+                        iconHoverWidth="200px" />
+
+                <ListButton buttonText="Export to Excel" buttonBackgroundColor="green"
+                        svg="@plusSquareSvg"
+                        OnClicked="NavigateToList"
+                        buttonWidth="200px"
+                        transformIcon="160px"
+                        iconWidth="40px"
+                        iconHoverWidth="200px" />
+
+              
+
+
+            </div>
+        </div>
+</div>
+@code {
+   
+    private MarkupString plusSquareSvg = new MarkupString(@"
+<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-plus-square-fill' viewBox='0 0 16 16'>
+  <path d='M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z'/>
+</svg>");
+
+    private void NavigateToList()
+    {
+        NavigationManager.NavigateTo("block-create");
+    }
+}

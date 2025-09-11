@@ -1,37 +1,108 @@
-﻿@using SmartCut.Shared.Resources.Localization
-@page "/create-block"
-<PageTitle>@Localizer.Get("Create Block")</PageTitle>
+﻿@page "/create-block"
+@using SmartCut.Shared.Models
+@using SmartCut.Shared.Resources.Localization
+@using SmartCut.Shared.Services
+@inject BreadcrumbService BreadcrumbService
+@inject NotificationService NotificationService
+@inject ApiClient BlockService
+
 <h3>@Localizer.Get("Create Block")</h3>
 
-<div class="form-control">
-    <label class="label">
-        <span class="label-text">@Localizer.Get("Block Name")</span>
-        <span class="label-text-alt">@Localizer.Get("Required")</span>
-    </label>
-    <input type="text" placeholder="@Localizer.Get("Block Name")" class="input input-bordered w-full max-w-xs" />
-</div>
-<div class="form-control">
-    <label class="label">
-        <span class="label-text">@Localizer.Get("Width")</span>
-        <span class="label-text-alt">*</span>
-    </label>
-    <input type="number" placeholder="@Localizer.Get("Enter Width...")" class="input input-bordered w-full max-w-xs" />
-</div>
-<div class="form-control">
-    <label class="label">
-        <span class="label-text">@Localizer.Get("Length")</span>
-        <span class="label-text-alt">*</span>
-    </label>
-    <input type="number" placeholder="@Localizer.Get("Enter Length...")" class="input input-bordered w-full max-w-xs" />
-</div>
-<div class="form-control">
-    <label class="label">
-        <span class="label-text">@Localizer.Get("Height")</span>
-        <span class="label-text-alt">*</span>
-    </label>
-    <input type="number" placeholder="@Localizer.Get("Enter Height")" class="input input-bordered w-full max-w-xs" />
+<div class="mb-3">
+    <label class="form-label">@Localizer.Get("Block Name")</label>
+    <input class="form-control" @bind="block.Name" />
+    @if (!string.IsNullOrWhiteSpace(errors.Name))
+    {
+        <div class="text-danger">@errors.Name</div>
+    }
 </div>
 
+<div class="mb-3">
+    <label class="form-label">@Localizer.Get("Description")</label>
+    <input class="form-control" @bind="block.Description" />
+    @if (!string.IsNullOrWhiteSpace(errors.Description))
+    {
+        <div class="text-danger">@errors.Description</div>
+    }
+</div>
+
+<div class="mb-3">
+    <label class="form-label">@Localizer.Get("Width")</label>
+    <input type="number" step="any" class="form-control" @bind="block.Width" />
+    @if (!string.IsNullOrWhiteSpace(errors.Width))
+    {
+        <div class="text-danger">@errors.Width</div>
+    }
+</div>
+
+<div class="mb-3">
+    <label class="form-label">@Localizer.Get("Length")</label>
+    <input type="number" step="any" class="form-control" @bind="block.Length" />
+    @if (!string.IsNullOrWhiteSpace(errors.Length))
+    {
+        <div class="text-danger">@errors.Length</div>
+    }
+</div>
+
+<div class="mb-3">
+    <label class="form-label">@Localizer.Get("Height")</label>
+    <input type="number" step="any" class="form-control" @bind="block.Height" />
+    @if (!string.IsNullOrWhiteSpace(errors.Height))
+    {
+        <div class="text-danger">@errors.Height</div>
+    }
+</div>
+
+<div class="mb-3">
+    <label class="form-label">@Localizer.Get("Material")</label>
+    <input class="form-control" @bind="block.Material" />
+</div>
+
+<button class="btn btn-primary" @onclick="HandleSubmitAsync">@Localizer.Get("Save")</button>
+
 @code {
+    private SmartCut.Shared.Models.Block block = new SmartCut.Shared.Models.Block();
+    private SmartCut.Shared.Models.ValidationErrors errors = new SmartCut.Shared.Models.ValidationErrors();
+    private async Task HandleSubmitAsync()
+    {
+        try
+        {
+
+            errors = new ValidationErrors(); // reset
+
+            // Manual validation
+            if (string.IsNullOrWhiteSpace(block.Name))
+                errors.Name = Localizer.Get("Block Name is required");
+
+            if (block.Width <= 0)
+                errors.Width = Localizer.Get("Width is required");
+
+            if (block.Length <= 0)
+                errors.Length = Localizer.Get("Length is required");
+
+            if (block.Height <= 0)
+                errors.Height = Localizer.Get("Height is required");
+
+            if (errors.HasErrors)
+                return; // stop submit
+
+            bool result = await BlockService.CreateBlockAsync(block);
+            if (result)
+            {
+                NotificationService.ShowSuccess("Block saved successfully");
+                block = new SmartCut.Shared.Models.Block(); // reset form
+            }
+            else
+            {
+                NotificationService.ShowError("Failed to save block");
+            }
+        }
+        catch (Exception)
+        {
+            NotificationService.ShowError("An error occured while saving block");
+        }
+
+    }
+
 
 }

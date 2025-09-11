@@ -26,6 +26,29 @@ namespace SmartCut
             builder.Services.AddBlazorWebViewDeveloperTools();
             builder.Logging.AddDebug();
 #endif
+            builder.Services.AddScoped(sp =>
+            {
+                Uri? baseAddress = null;
+
+                if (DeviceInfo.Platform == DevicePlatform.Android)
+                    baseAddress = new Uri("https://admin.birilerigt.com/"); // emulator localhost workaround
+                else if (DeviceInfo.Platform == DevicePlatform.iOS)
+                    baseAddress = new Uri("http://localhost:5001/"); // iOS simulator localhost workaround
+                else if (DeviceInfo.Platform == DevicePlatform.MacCatalyst)
+                    baseAddress = new Uri("http://localhost:5001/"); // Mac Catalyst localhost workaround
+                else if (DeviceInfo.Platform == DevicePlatform.WinUI)
+                    baseAddress = new Uri("http://localhost:7110/");
+                else
+                    baseAddress = new Uri("https://smartcut.smartifie.com/");
+
+                return new HttpClient { BaseAddress = baseAddress };
+            });
+            builder.Services.AddScoped<ApiClient>();
+            builder.Services.AddScoped<NotificationService>();
+            builder.Services.AddScoped<BreadcrumbService>();
+     
+
+
 
             // 1. Set default culture to en-US
             var defaultCulture = new CultureInfo("en-US");
