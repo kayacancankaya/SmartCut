@@ -624,4 +624,10 @@
   <data name="Orders" xml:space="preserve">
     <value>Siparişler</value>
   </data>
+  <data name="Block List" xml:space="preserve">
+    <value>Blok Listesi</value>
+  </data>
+  <data name="Processes" xml:space="preserve">
+    <value>Prosesler</value>
+  </data>
 </root>

@@ -624,4 +624,10 @@
   <data name="Orders" xml:space="preserve">
     <value>Las Órdenes</value>
   </data>
+  <data name="Block List" xml:space="preserve">
+    <value>Lista de Bloque</value>
+  </data>
+  <data name="Processes" xml:space="preserve">
+    <value>Los Procesos</value>
+  </data>
 </root>

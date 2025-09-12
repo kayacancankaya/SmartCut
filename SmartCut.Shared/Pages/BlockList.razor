@@ -1,0 +1,33 @@
+﻿@page "/create-block"
+@using SmartCut.Shared.Models
+@using SmartCut.Shared.Resources.Localization
+@using SmartCut.Shared.Services
+@using SmartCut.Shared.Layout.Components
+@using SmartCut.Shared.Models.ViewModels
+@inject BreadcrumbService BreadcrumbService
+@inject NotificationService NotificationService
+@inject ApiClient BlockService
+<div class="card">
+    <div class="card-overlay"></div>
+    <div class="card-inner">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="card-title mb-0">@Localizer.Get("Block List")</h3>
+        </div>
+        <div class="card-body btn-container">
+
+        </div>
+    </div>
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        BreadcrumbService.SetBreadcrumbs(new List<BreadcrumbItem>
+        {
+            new() { Title = "Ana Sayfa", Url = "/", IsActive = false },
+            new() { Title = "Blok", Url = "/block", IsActive = false } ,
+            new() { Title = "Blok Oluştur", Url = "/create-block", IsActive = true }
+
+        });
+    }
+}
