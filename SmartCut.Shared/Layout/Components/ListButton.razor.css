@@ -6,7 +6,7 @@
     background: red;
     border: none;
     border-radius: 15px;
-    box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+    box-shadow: inset 20px 20px 40px #1e3a5a, inset -20px -20px 40px #76e6ff;
 }
 
     button, button span {
@@ -17,6 +17,8 @@
             transform: translateX(35px);
             color: white;
             font-weight: bold;
+            font-size:12px;
+            padding:0px;
         }
 
         button .icon::before {
@@ -32,10 +34,11 @@
             display: flex;
             align-items: center;
             justify-content: end;
+            width: var(--IconWidth);
         }
 
         button svg {
-            width: 15px;
+            width: 15px;https://0.0.0.0/block
             fill: #eee;
         }
 
@@ -44,7 +47,8 @@
         }
 
         button:hover {
-            background: #ff3636;
+            box-shadow: inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff;
+            background: #d9d9d9;
         }
 
             button:hover .text {

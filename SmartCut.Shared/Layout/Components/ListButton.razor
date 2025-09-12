@@ -1,6 +1,6 @@
 ﻿<button class="noselect" style="background-color:@buttonBackgroundColor;color:@buttonColor;width:@buttonWidth">
     <span class="text">@buttonText</span>
-    <span class="icon" style="width: @iconWidth;--TransformIcon:@transformIcon; --IconHoverWidth:@iconHoverWidth;">@svg</span>
+    <span class="icon" style="--IconWidth:@iconWidth;--TransformIcon:@transformIcon; --IconHoverWidth:@iconHoverWidth;">@svg</span>
 </button>
 
 @code {
@@ -8,9 +8,9 @@
     [Parameter] public string buttonBackgroundColor { get; set; } = "red";  // red background
     [Parameter] public string buttonColor { get; set; }  = "#ffffff";            // white text
     [Parameter] public string buttonText { get; set; } = "List";
-    [Parameter] public string transformIcon { get; set; } = "75px";
-    [Parameter] public string iconWidth { get; set; } = "60px";
-    [Parameter] public string iconHoverWidth { get; set; } = "85px";
+    [Parameter] public string transformIcon { get; set; } = "95px";
+    [Parameter] public string iconWidth { get; set; } = "45px";
+    [Parameter] public string iconHoverWidth { get; set; } = "90px";
     // [Parameter] public string buttonWidth { get; set; } = "200px";  // red background
     // [Parameter] public string buttonBackgroundColor { get; set; } = "red";  // red background
     // [Parameter] public string buttonColor { get; set; }  = "#ffffff";            // white text

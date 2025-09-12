@@ -2,6 +2,8 @@
 @using SmartCut.Shared.Models
 @using SmartCut.Shared.Resources.Localization
 @using SmartCut.Shared.Services
+@using SmartCut.Shared.Layout.Components
+@using SmartCut.Shared.Models.ViewModels
 @inject BreadcrumbService BreadcrumbService
 @inject NotificationService NotificationService
 @inject ApiClient BlockService
@@ -63,6 +65,16 @@
 @code {
     private SmartCut.Shared.Models.Block block = new SmartCut.Shared.Models.Block();
     private SmartCut.Shared.Models.ValidationErrors errors = new SmartCut.Shared.Models.ValidationErrors();
+    protected override void OnInitialized()
+    {
+        BreadcrumbService.SetBreadcrumbs(new List<BreadcrumbItem>
+        {
+            new() { Title = "Ana Sayfa", Url = "/", IsActive = false },
+            new() { Title = "Blok", Url = "/block", IsActive = false } ,
+            new() { Title = "Blok Oluştur", Url = "/create-block", IsActive = true } 
+ 
+        });
+    }
     private async Task HandleSubmitAsync()
     {
         try
@@ -103,6 +115,4 @@
         }
 
     }
-
-
 }

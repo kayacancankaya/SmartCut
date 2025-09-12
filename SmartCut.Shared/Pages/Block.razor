@@ -1,5 +1,6 @@
 ﻿@page "/block"
 @using SmartCut.Shared.Models
+@using SmartCut.Shared.Models.ViewModels
 @using SmartCut.Shared.Resources.Localization
 @using SmartCut.Shared.Services
 @using SmartCut.Shared.Layout.Components
@@ -15,34 +16,31 @@
              </div>
             <div class="card-body btn-container">
 
-                <ListButton buttonText="Add New" buttonBackgroundColor="green"
+                <ListButton buttonText="Add New" buttonBackgroundColor="#20c997"
                         svg="@plusSquareSvg"
                         OnClicked="NavigateToList"
-                        buttonWidth="150px"
-                        transformIcon="75px"
-                        iconWidth="60px"
-                        iconHoverWidth="85px" />
+                        />
 
-                <ListButton buttonText="List"  buttonBackgroundColor="aqua"
+                <ListButton buttonText="List"  buttonBackgroundColor="#4a90e2"
                         svg="@plusSquareSvg"
-                        OnClicked="NavigateToList" />
+                        OnClicked="NavigateToList"
+                        />
 
-                <ListButton buttonText="Import from Excel" buttonBackgroundColor="green"
+                <ListButton buttonText="Import from Excel" buttonBackgroundColor="#185C37"
                         svg="@plusSquareSvg"
                         OnClicked="NavigateToList"
                         buttonWidth="200px"
-                        transformIcon="160px" 
-                        iconWidth="40px"
-                        iconHoverWidth="200px" />
-
-                <ListButton buttonText="Export to Excel" buttonBackgroundColor="green"
+                        transformIcon="150px" 
+                        iconHoverWidth="120px" />
+                        
+                <ListButton buttonText="Export to Excel" buttonBackgroundColor="#185C37"
                         svg="@plusSquareSvg"
                         OnClicked="NavigateToList"
                         buttonWidth="200px"
-                        transformIcon="160px"
-                        iconWidth="40px"
-                        iconHoverWidth="200px" />
+                        transformIcon="150px" 
+                        iconHoverWidth="120px" />
 
+            
               
 
 
@@ -56,6 +54,16 @@
   <path d='M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z'/>
 </svg>");
 
+    protected override void OnInitialized()
+    {
+        BreadcrumbService.SetBreadcrumbs(new List<BreadcrumbItem>
+        {
+            new() { Title = "Ana Sayfa", Url = "/", IsActive = false },
+            new() { Title = "Blok", Url = "/block", IsActive = true } ,
+            new() { Title = "Blok Oluştur", Url = "/create-block", IsActive = false }
+
+        });
+    }
     private void NavigateToList()
     {
         NavigationManager.NavigateTo("block-create");
