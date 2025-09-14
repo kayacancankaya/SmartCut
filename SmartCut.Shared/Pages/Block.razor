@@ -3,49 +3,142 @@
 @using SmartCut.Shared.Models.ViewModels
 @using SmartCut.Shared.Resources.Localization
 @using SmartCut.Shared.Services
+@using SmartCut.Shared.Interfaces
 @using SmartCut.Shared.Layout.Components
 @inject BreadcrumbService BreadcrumbService
 @inject NotificationService NotificationService
 @inject NavigationManager NavigationManager
 @inject ApiClient BlockService
+@inject IExcelService ExcelService
+@inject IFormFactor FormFactor
+@* @inject IJSRuntime JS *@
 <div class="card">
     <div class="card-overlay"></div>
-        <div class="card-inner">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h3 class="card-title mb-0">@Localizer.Get("Processes")</h3>
-             </div>
-            <div class="card-body btn-container">
-
-                <ListButton buttonText="@Localizer.Get("Add New")" buttonBackgroundColor="#20c997"
+    <div class="card-inner">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="card-title mb-0">@Localizer.Get("Processes")</h3>
+        </div>
+        <div class="card-body">
+            <div class="container ">
+                <div class="row">
+                    @* show navigation buttons *@
+                    <div class="col-12 btn-container d-flex align-items-center justify-content-start">
+                        <ListButton buttonText="@Localizer.Get("Add New")" buttonBackgroundColor="#20c997"
                         svg="@plusSquareSvg"
                         OnClicked="NavigateToCreate"
+                        disabled="@buttonsDisabled"
                         />
 
-            <ListButton buttonText="@Localizer.Get("Add New")" buttonBackgroundColor="#4a90e2"
+                        <ListButton buttonText="@Localizer.Get("List Blocks")" buttonBackgroundColor="#4a90e2"
                         svg="@listSvg"
                         OnClicked="NavigateToList"
-                        />
-            
-            <ListButton buttonText="@Localizer.Get("Import from Excel")" buttonBackgroundColor="#185C37"
-                        svg="@importIcon"
-                        OnClicked="ImportFromExcelAsync"
-                        buttonWidth="200px"
-                        transformIcon="150px" 
-                        iconHoverWidth="115px" />
-                        
-                <ListButton buttonText="@Localizer.Get("Export to Excel")" buttonBackgroundColor="#185C37"
+                        buttonWidth="175px"
+                        transformIcon="125px"
+                        iconHoverWidth="105px" 
+                        disabled="@buttonsDisabled"/>
+
+                        <InputFile @ref="fileInput"  OnChange="ImportFromExcelAsync"/>
+
+                        <ListButton buttonText="@Localizer.Get("Export to Excel")" buttonBackgroundColor="#185C37"
                         svg="@exportIcon"
                         OnClicked="ExportToExcelAsync"
                         buttonWidth="200px"
                         transformIcon="150px" 
-                        iconHoverWidth="115px" />
-
-          
+                        iconHoverWidth="115px" 
+                        disabled="@buttonsDisabled"/>
+                    </div>
+                    @if (showOrders)
+                    {
+                        <div class="col-12 mt-4">
+                            <h4>@Localizer.Get("Imported Orders")</h4>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>@Localizer.Get("Customer Order Number")</th>
+                                        <th>@Localizer.Get("Order Line Number")</th>
+                                        <th>@Localizer.Get("Width")</th>
+                                        <th>@Localizer.Get("Length")</th>
+                                        <th>@Localizer.Get("Height")</th>
+                                        <th>@Localizer.Get("Order Quantity")</th>
+                                        @if(showCustomerCode)
+                                        {
+                                            <th>@Localizer.Get("Customer Code")</th>
+                                        }
+                                        @if(showCustomerName)
+                                        {
+                                            <th>@Localizer.Get("Customer Name")</th>
+                                        }
+                                        @if(showStockCode)
+                                        {
+                                            <th>@Localizer.Get("Product Code")</th>
+                                        }
+                                        @if(showStockName)
+                                        {
+                                            <th>@Localizer.Get("Product Name")</th>
+                                        }
+                                        @if(showDescription)
+                                        {
+                                            <th>@Localizer.Get("Description")</th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var order in orders)
+                                    {
+                                        <tr>
+                                            <td>@order.InvoiceNumber</td>
+                                            <td>@order.Line</td>
+                                            <td>@order.Width</td>
+                                            <td>@order.Length</td>
+                                            <td>@order.Height</td>
+                                            <td>@order.Quantity</td>
+                                            @if(showCustomerCode)
+                                            {
+                                                <td>@order.CustomerCode</td>
+                                            }
+                                            @if(showCustomerName)
+                                            {
+                                                <td>@order.CustomerName</td>
+                                            }
+                                            @if(showStockCode)
+                                            {
+                                                <td>@order.StockCode</td>
+                                            }
+                                            @if(showStockName)
+                                            {
+                                                <td>@order.StockName</td>
+                                            }
+                                            @if(showDescription)
+                                            {
+                                                <td>@order.Description</td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                            <ActionButton actionType="1" OnClicked="SaveOrdersAsync" disabled="@buttonsDisabled"/>
+                    }
+                </div>
             </div>
+
+
+
         </div>
+    </div>
 </div>
 @code {
-
+    private InputFile fileInput;
+    private string platform => FormFactor.GetPlatform(); 
+    private string factor => FormFactor.GetFormFactor();
+    private List<OrderDTO> orders = new List<OrderDTO>(); 
+    private bool buttonsDisabled = false;
+    private bool showOrders = false;
+    private bool showCustomerCode = false;
+    private bool showCustomerName = false;
+    private bool showStockCode = false;
+    private bool showStockName = false;
+    private bool showDescription = false;
     private MarkupString plusSquareSvg = new MarkupString(@"
 <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-plus-square-fill' viewBox='0 0 16 16'>
   <path d='M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z'/>
@@ -53,13 +146,10 @@
     private MarkupString listSvg = new MarkupString(@"    <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-list-nested' viewBox='0 0 16 16'>
             <path fill-rule='evenodd' d='M4.5 11.5A.5.5 0 0 1 5 11h10a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zm-2-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm-2-4A.5.5 0 0 1 1 3h10a.5.5 0 0 1 0 1H1a.5.5 0 0 1-.5-.5z'/>
         </svg>");
-
     private MarkupString importIcon = new MarkupString(@"
-        <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-file-earmark-arrow-down' viewBox='0 0 16 16'>
-            <path d='M8.5 6.5a.5.5 0 0 0-1 0v3.793L6.354 9.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293z'/>
-            <path d='M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z'/>
-        </svg>");
-
+    <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor' class='bi bi-file-earmark-arrow-down-fill' viewBox='0 0 16 16'>
+        <path d='M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0'/>
+    </svg>");
     private MarkupString exportIcon = new MarkupString(@"
         <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-file-earmark-arrow-up-fill' viewBox='0 0 16 16'>
             <path d='M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M6.354 9.854a.5.5 0 0 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 8.707V12.5a.5.5 0 0 1-1 0V8.707z'/>
@@ -73,21 +163,128 @@
 
         });
     }
+
+
     private void NavigateToCreate()
     {
-        NavigationManager.NavigateTo("block-create");
+        NavigationManager.NavigateTo("create-block");
     }
     private void NavigateToList()
     {
-        NavigationManager.NavigateTo("block-list");
+        NavigationManager.NavigateTo("list-block");
     }
-    private async Task ImportFromExcelAsync()
+
+    // private async Task TriggerFileInputAsync() => await JS.InvokeVoidAsync("triggerClick", fileInput.Element);
+
+    private async Task ImportFromExcelAsync(InputFileChangeEventArgs e)
     {
-        NavigationManager.NavigateTo("block-create");
+        try
+        {
+            buttonsDisabled = true;
+            StateHasChanged(); 
+            bool isWeb = factor == "Web";
+            isWeb = true;
+            string which = factor;
+
+            if (!isWeb)
+            {
+                // var result = await FilePicker.Default.PickAsync(new PickOptions
+                // {
+                //         PickerTitle = Localizer.Get("Select an Excel file"),
+                // });
+                // if (result != null)
+                // {
+                //     using var stream = await result.OpenReadAsync();
+
+                // }
+                return;
+            }
+            else
+            {
+                if (e.File == null)
+                {
+                    NotificationService.ShowError(Localizer.Get("File selection was cancelled or failed."));
+                    return;
+                }
+                if (e.File.Size == 0)
+                {
+                    NotificationService.ShowError(Localizer.Get("File selection was cancelled or failed."));
+                    return;
+                }
+                orders = await ExcelService.ImportOrdersAsync(e.File);
+                if(orders.Count() ==0 )
+                {
+                    NotificationService.ShowError(Localizer.Get("File selection was cancelled or failed."));
+                    return;
+                }
+                ToggleColumns(orders);
+                showOrders = true;
+                buttonsDisabled = false;
+            }
+
+        }
+        catch (Exception)
+        {
+            NotificationService.ShowError(Localizer.Get("File selection was cancelled or failed."));
+            buttonsDisabled = false;
+        }
+    }
+    private void ToggleColumns(List<OrderDTO> orders)
+    {
+        try
+        {
+            if (orders == null) return;
+            if (orders.Count() <= 0) return;
+            if (orders.Any(c => !string.IsNullOrEmpty(c.CustomerCode))) showCustomerCode = true;
+            if (orders.Any(c => !string.IsNullOrEmpty(c.CustomerName))) showCustomerName = true;
+            if (orders.Any(s => !string.IsNullOrEmpty(s.StockCode))) showStockCode = true;
+            if (orders.Any(s => !string.IsNullOrEmpty(s.StockName))) showStockName = true;
+            if (orders.Any(d => !string.IsNullOrEmpty(d.Description))) showDescription = true;
+        }
+        catch (Exception)
+        {
+            return;
+        }
     }
     private async Task ExportToExcelAsync()
     {
         NavigationManager.NavigateTo("block-create");
     }
-
+    private async Task SaveOrdersAsync()
+    {
+        try
+        {
+            buttonsDisabled = true;
+            StateHasChanged();
+            if (orders == null )
+            {
+                NotificationService.ShowError(Localizer.Get("No orders to save."));
+                buttonsDisabled = false;
+                return;
+            }
+            if (orders.Count() <= 0)
+            {
+                NotificationService.ShowError(Localizer.Get("No orders to save."));
+                buttonsDisabled = false;
+                return;
+            }
+            var result = await BlockService.ImportOrdersAsync(orders);
+            if (result)
+            {
+                NotificationService.ShowSuccess(Localizer.Get("Orders saved successfully."));
+                orders = new List<OrderDTO>();
+                showOrders = false;
+            }
+            else
+            {
+                NotificationService.ShowError(Localizer.Get("Failed to save orders."));
+            }
+            buttonsDisabled = false;
+        }
+        catch (Exception)
+        {
+            Localizer.Get("Failed to save orders.");
+            buttonsDisabled = false;
+        }
+    }
 }

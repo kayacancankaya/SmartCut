@@ -3,10 +3,10 @@ using SmartCut.Shared.Models;
 using SmartCut.Shared.Interfaces;
 namespace SmartCut.Web.Controller
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class WebController : ControllerBase
     {
-        [ApiController]
-        [Route("api/[controller]")]
         private readonly ILogger<WebController> _logger;
         private readonly IDataService _data;
         private readonly IConfiguration _configuration;
@@ -32,6 +32,29 @@ namespace SmartCut.Web.Controller
                     return BadRequest("Block is null.");
                 }
                 var result = await _data.CreateBlockAsync(block);
+                return result ? Ok("Block created successfully.") : StatusCode(500, "A problem happened while handling your request.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpPost("importorders")]
+        public async Task<IActionResult> ImportOrders([FromBody] List<OrderDTO> orders)
+        {
+            try
+            {
+                if (orders == null)
+                {
+                    return BadRequest("Orders are null.");
+                }
+                if (orders.Count <= 0)
+                {
+                    return BadRequest("Orders are empty.");
+                }
+                var result = await _data.ImportOrdersAsync(orders);
                 return result ? Ok("Block created successfully.") : StatusCode(500, "A problem happened while handling your request.");
             }
             catch (Exception ex)

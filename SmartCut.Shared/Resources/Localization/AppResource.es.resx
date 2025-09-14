@@ -597,7 +597,7 @@
   <data name="Create Block" xml:space="preserve">
     <value>Crear Bloque</value>
   </data>
-  <data name="Block Name is required." xml:space="preserve">
+  <data name="Block Name is required" xml:space="preserve">
     <value>El nombre del bloque es obligatorio</value>
   </data>
   <data name="Width is required" xml:space="preserve">
@@ -629,5 +629,38 @@
   </data>
   <data name="Processes" xml:space="preserve">
     <value>Los Procesos</value>
+  </data>
+  <data name="Add New" xml:space="preserve">
+    <value>Agregar Nuevo</value>
+  </data>
+  <data name="List Blocks" xml:space="preserve">
+    <value>Listar Bloques</value>
+  </data>
+  <data name="Import from Excel" xml:space="preserve">
+    <value>Importar desde Excel</value>
+  </data>
+  <data name="Export to Excel" xml:space="preserve">
+    <value>Exportar a Excel</value>
+  </data>
+  <data name="File selection was cancelled or failed." xml:space="preserve">
+    <value>Archivo no seleccionado o fallo en la carga.</value>
+  </data>
+  <data name="List" xml:space="preserve">
+    <value>Listar</value>
+  </data>
+  <data name="An error occured while saving" xml:space="preserve">
+    <value>Ocurrió un error al guardar</value>
+  </data>
+  <data name="Calculation" xml:space="preserve">
+    <value>Cálculo</value>
+  </data>
+  <data name="No orders to save." xml:space="preserve">
+    <value>No orden para guardar.</value>
+  </data>
+  <data name="Orders saved successfully." xml:space="preserve">
+    <value>Los pedidos se guardaron correctamente.</value>
+  </data>
+  <data name="Failed to save orders." xml:space="preserve">
+    <value>Error al guardar los pedidos.</value>
   </data>
 </root>

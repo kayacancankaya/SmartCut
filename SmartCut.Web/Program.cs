@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using SmartCut.Shared.Data;
+using SmartCut.Shared.Helpers;
 using SmartCut.Shared.Interfaces;
 using SmartCut.Shared.Services;
 using SmartCut.Web.Components;
@@ -49,8 +50,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 
 builder.Services.AddLocalization();
-
+builder.Services.AddControllers();
 builder.Services.AddScoped<IDataService, DataService>();
+builder.Services.AddScoped<IExcelService, ClosedXMLService>();
 builder.Services.AddScoped<BreadcrumbService>(); 
 builder.Services.AddScoped<NotificationService>();
 

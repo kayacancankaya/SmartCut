@@ -1,0 +1,27 @@
+﻿button {
+    position: relative;
+    display: inline-block;
+    margin: 15px;
+    width:150px;
+    padding: 10px 15px;
+    text-align: center;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-decoration: none;
+    color: var(--background-color);
+    background: transparent;
+    cursor: pointer;
+    transition: ease-out 0.5s;
+    border: 2px solid var(--background-color);
+    border-radius: 10px;
+    box-shadow: inset 1px 1px 5px var(--background-color), inset -1px -1px 3px var(--background-color-dark);
+}
+
+    button:hover {
+        color: white;
+        box-shadow: inset 0 -100px 0 0 var(--background-color);
+    }
+
+    button:active {
+        transform: scale(0.9);
+    }

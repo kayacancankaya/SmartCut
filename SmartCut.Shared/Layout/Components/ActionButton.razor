@@ -1,0 +1,43 @@
+﻿@using SmartCut.Shared.Resources.Localization
+<button @onclick="OnClicked"
+        style="--background-color:@BackgroundColor;--background-color-dark:@BackgroundColorDark;"
+        disabled="@disabled"        
+>
+    @ButtonText
+</button>
+
+@code {
+    [Parameter] public int actionType { get; set; } = 1; // 1: Save, 2: Delete, 3: Update, 4: Add, 5: List
+    [Parameter] public EventCallback OnClicked { get; set; }
+    [Parameter] public bool disabled { get; set; } = false;
+    private string ButtonText => actionType switch
+    {
+        1 => Localizer.Get("Save"),
+        2 => Localizer.Get("Delete"),
+        3 => Localizer.Get("Update"),
+        4 => Localizer.Get("Add"),
+        5 => Localizer.Get("List"),
+        _ => Localizer.Get("List")
+    };
+
+    private string BackgroundColor => actionType switch
+    {
+        1 => "#198754",
+        2 => "#dc3545",
+        3 => "#0d6efd",
+        4 => "#0d6efd",
+        5 => "#6c757d",
+        _ => "#6c757d"
+    };
+
+    private string BackgroundColorDark => actionType switch
+    {
+        1 => "#146c43",
+        2 => "#b02a37",
+        3 => "#084298",
+        4 => "#084298",
+        5 => "#343a40",
+        _ => "#343a40"
+    };
+}
+

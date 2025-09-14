@@ -36,5 +36,20 @@ namespace SmartCut.Shared.Services
                 return false;
             }
         }
+        public async Task<bool> ImportOrdersAsync(List<OrderDTO> orders)
+        {
+            try
+            {
+                var response = await _http.PostAsJsonAsync("api/web/importorders", orders);
+                if (response.IsSuccessStatusCode)
+                    return true;
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return false;
+            }
+        }
     }
 }

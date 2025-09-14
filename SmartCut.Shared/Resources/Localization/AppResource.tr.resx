@@ -370,7 +370,7 @@
     <value>Silme işlemini onaylıyor musunuz?</value>
   </data>
   <data name="No Shipment Order found in the system." xml:space="preserve">
-    <value>Çeki Listeleri Sistemde Bulunamadı.</value>
+    <value>Sevk Emirleri Sistemde Bulunamadı.</value>
   </data>
   <data name="An error occurred while filtering." xml:space="preserve">
     <value>Filtreleme esnasında hata ile karşılaşıldı.</value>
@@ -597,7 +597,7 @@
   <data name="Create Block" xml:space="preserve">
     <value>Blok Oluştur</value>
   </data>
-  <data name="Block Name is required." xml:space="preserve">
+  <data name="Block Name is required" xml:space="preserve">
     <value>Blok Adı Zorunlu</value>
   </data>
   <data name="Width is required" xml:space="preserve">
@@ -629,5 +629,38 @@
   </data>
   <data name="Processes" xml:space="preserve">
     <value>Prosesler</value>
+  </data>
+  <data name="Add New" xml:space="preserve">
+    <value>Yeni Ekle</value>
+  </data>
+  <data name="List Blocks" xml:space="preserve">
+    <value>Blok Listele</value>
+  </data>
+  <data name="Import from Excel" xml:space="preserve">
+    <value>Excel'den Aktar</value>
+  </data>
+  <data name="Export to Excel" xml:space="preserve">
+    <value>Excel'e Aktar</value>
+  </data>
+  <data name="File selection was cancelled or failed." xml:space="preserve">
+    <value>Dosya seçimi iptal edildi veya başarısız oldu.</value>
+  </data>
+  <data name="List" xml:space="preserve">
+    <value>Listele</value>
+  </data>
+  <data name="An error occured while saving" xml:space="preserve">
+    <value>Kayıt yapılırken hata ile karşılaşıldı.</value>
+  </data>
+  <data name="Calculation" xml:space="preserve">
+    <value>Hesap</value>
+  </data>
+  <data name="No orders to save." xml:space="preserve">
+    <value>Kaydedilecek sipariş bulunamadı.</value>
+  </data>
+  <data name="Orders saved successfully." xml:space="preserve">
+    <value>Siparişler başarıyla kaydedildi.</value>
+  </data>
+  <data name="Failed to save orders." xml:space="preserve">
+    <value>Siparişler kaydedilirken hata ile karşılaşıldı.</value>
   </data>
 </root>
