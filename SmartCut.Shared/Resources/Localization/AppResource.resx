@@ -628,7 +628,7 @@
     <value>Block List</value>
   </data>
   <data name="Processes" xml:space="preserve">
-    <value>Procesos</value>
+    <value>Processes</value>
   </data>
   <data name="Add New" xml:space="preserve">
     <value>Add New</value>
@@ -662,5 +662,23 @@
   </data>
   <data name="Failed to save orders." xml:space="preserve">
     <value>Failed to save orders.</value>
+  </data>
+  <data name="Block Management" xml:space="preserve">
+    <value>Block Management</value>
+  </data>
+  <data name="Order Management" xml:space="preserve">
+    <value>Order Management</value>
+  </data>
+  <data name="List Orders" xml:space="preserve">
+    <value>List Orders</value>
+  </data>
+  <data name="Error importing blocks from Excel" xml:space="preserve">
+    <value>Error importing blocks from Excel</value>
+  </data>
+  <data name="No blocks to save." xml:space="preserve">
+    <value>No blocks to save.</value>
+  </data>
+  <data name="Blocks saved successfully" xml:space="preserve">
+    <value>Block(s) saved successfully</value>
   </data>
 </root>

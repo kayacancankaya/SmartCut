@@ -663,4 +663,22 @@
   <data name="Failed to save orders." xml:space="preserve">
     <value>Siparişler kaydedilirken hata ile karşılaşıldı.</value>
   </data>
+  <data name="Block Management" xml:space="preserve">
+    <value>Blok İşlemleri</value>
+  </data>
+  <data name="Order Management" xml:space="preserve">
+    <value>Sipariş İşlemleri</value>
+  </data>
+  <data name="List Orders" xml:space="preserve">
+    <value>Sipariş Listele</value>
+  </data>
+  <data name="Error importing blocks from Excel" xml:space="preserve">
+    <value>Blok bilgileri aktarılırken hata oluştu.</value>
+  </data>
+  <data name="No blocks to save." xml:space="preserve">
+    <value>Kaydedilecek blok bulunamadı.</value>
+  </data>
+  <data name="Blocks saved successfully" xml:space="preserve">
+    <value>Blok(lar) başarıyla kaydedildi.</value>
+  </data>
 </root>

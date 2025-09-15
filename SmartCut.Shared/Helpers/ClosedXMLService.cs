@@ -83,5 +83,59 @@ namespace SmartCut.Shared.Helpers
                 return new List<OrderDTO>();
             }
         }
+        public async Task<List<BlockDTO>> ImportBlocksAsync(IBrowserFile file)
+        {
+            try
+            {
+                var data = new List<List<string>>();
+
+                using var stream = new MemoryStream();
+                await file.OpenReadStream().CopyToAsync(stream);
+
+                using var workbook = new XLWorkbook(stream);
+                var ws = workbook.Worksheets.First();
+                stream.Position = 0;
+
+                List<BlockDTO> blocks = new List<BlockDTO>();
+                foreach (var row in ws.RowsUsed())
+                {
+                    // Skip header row
+                    if (row.RowNumber() == 1) continue;
+                    var block = new BlockDTO();
+                    foreach (var cell in row.CellsUsed())
+                    {
+                        
+                        switch (cell.Address.ColumnNumber)
+                        {
+                            case 1:
+                                block.Name = cell.GetString() ?? string.Empty;
+                                break;
+                            case 2:
+                                block.Width = (float)cell.GetDouble();
+                                break;
+                            case 3:
+                                block.Length = (float)cell.GetDouble();
+                                break;
+                            case 4:
+                                block.Height = (float)cell.GetDouble();
+                                break;
+                            case 5:
+                                block.Material = cell.GetString() ?? string.Empty;
+                                break;
+                            case 6:
+                                block.Description = cell.GetString() ?? string.Empty;
+                                break;
+                        }
+                    }
+                    blocks.Add(block);
+                }
+                return blocks ?? new List<BlockDTO>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error importing blocks from Excel");
+                return new List<BlockDTO>();
+            }
+        }
     }
 }

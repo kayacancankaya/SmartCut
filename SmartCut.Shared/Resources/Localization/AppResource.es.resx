@@ -663,4 +663,22 @@
   <data name="Failed to save orders." xml:space="preserve">
     <value>Error al guardar los pedidos.</value>
   </data>
+  <data name="Block Management" xml:space="preserve">
+    <value>Gestión de Bloques</value>
+  </data>
+  <data name="Order Management" xml:space="preserve">
+    <value>Gestión de Pedidos</value>
+  </data>
+  <data name="List Orders" xml:space="preserve">
+    <value>Listar Ordenes</value>
+  </data>
+  <data name="Error importing blocks from Excel" xml:space="preserve">
+    <value>Error al importar bloques desde Excel</value>
+  </data>
+  <data name="No blocks to save." xml:space="preserve">
+    <value>No bloques para guardar.</value>
+  </data>
+  <data name="Blocks saved successfully" xml:space="preserve">
+    <value>Los Bloques guardado correctamente.</value>
+  </data>
 </root>

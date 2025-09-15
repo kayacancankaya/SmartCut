@@ -81,20 +81,20 @@ namespace SmartCut.Shared.Models
         public char ApprovalStatus { get; set; } = 'A';
         [Required]
         public int BranchCode { get; set; } = 0;
-        public DateTime? DueDate { get; set; }
+        public DateTime? DueDate { get; set; } = DateTime.Now.AddMonths(2);
         public float Width { get; set; }
         public float Length { get; set; }
         public float Height { get; set; }
         public bool IsActive { get; set; } = true;
         [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         [Required]
-        public DateTime? CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; } = DateTime.Now;
         [Required]
         [MaxLength(450)]
         public string CreatedBy { get; set; } = string.Empty;
 
         [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
-        public DateTime? UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; } = DateTime.Now;
         [MaxLength(450)]
         public string UpdatedBy { get; set; } = string.Empty;
         public Order? Order { get; set; }

@@ -1,0 +1,77 @@
+﻿/* Hidden input */
+[type="file"] {
+    display: none;
+}
+
+/* Styled label acts like button */
+.file-btn {
+    height: 50px;
+    width: 200px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    background: #185C37;
+    border: none;
+    border-radius: 15px;
+    box-shadow: inset 2px 2px 5px #1e3a5a, inset -2px -2px 5px #76e6ff;
+    position: relative;
+    padding: 0 15px;
+    transition: 200ms;
+}
+
+    .file-btn .text {
+        transform: translateX(20px);
+        color: white;
+        font-weight: bold;
+        font-size: 12px;
+        padding: 0;
+        transition: 200ms;
+    }
+
+    .file-btn .icon::before {
+        content: "|";
+        color: black;
+        margin-right: 8px; /* spacing between line and icon */
+    }
+
+    .file-btn .icon {
+        position: absolute;
+        height: 40px;
+        transform: translateX(var(--TransformIcon, 140px));
+        display: flex;
+        align-items: center;
+        justify-content: end;
+        width: var(--IconWidth, 40px);
+        transition: 200ms;
+    }
+
+    .file-btn svg {
+        width: 15px;
+        fill: #eee;
+        transition: 200ms;
+    }
+
+    /* Hover state */
+    .file-btn:hover .icon::before {
+        opacity: 0;
+    }
+
+    .file-btn:hover {
+        box-shadow: inset 1px 1px 2px #bebebe, inset -1px -1px 2px #ffffff;
+        background: #d9d9d9;
+    }
+
+        .file-btn:hover .text {
+            color: transparent;
+        }
+
+        .file-btn:hover .icon {
+            width: var(--IconHoverWidth, 100px);
+            border-left: none;
+            transform: translateX(0);
+        }
+
+    /* Active state */
+    .file-btn:active .icon svg {
+        transform: scale(0.8);
+    }

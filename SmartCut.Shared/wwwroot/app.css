@@ -94,3 +94,44 @@ h1:focus {
 .bi-export {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-file-earmark-arrow-up-fill' viewBox='0 0 16 16'%3E%3Cpath d='M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M6.354 9.854a.5.5 0 0 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 8.707V12.5a.5.5 0 0 1-1 0V8.707z'/%3E%3C/svg%3E");
 }
+
+.card {
+    --bg: #e8e8e8;
+    --contrast: #e2e0e0;
+    --grey: #93a1a1;
+    position: relative;
+    padding: 9px;
+    background-color: var(--bg);
+    border-radius: 35px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+}
+
+.card-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-conic-gradient(var(--bg) 0.0000001%, var(--grey) 0.000104%) 60% 60%/600% 600%;
+    filter: opacity(10%) contrast(105%);
+}
+
+.card-inner {
+    width: auto; /* allow dynamic width */
+    max-width: 100%; /* do not overflow parent card */
+    display: flex;
+    flex-direction: column; /* keep header on top, buttons below */
+    align-items: center;
+    padding: 15px;
+    gap: 15px; /* space between header and buttons */
+}
+
+.btn-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* or flex-start */
+    gap: 10px;
+    width: 100%;
+}
+
+    .btn-container .btn {
+        flex: 1 0 150px; /* grow if needed, min width 150px */
+    }

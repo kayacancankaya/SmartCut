@@ -55,6 +55,29 @@ namespace SmartCut.Web.Controller
                     return BadRequest("Orders are empty.");
                 }
                 var result = await _data.ImportOrdersAsync(orders);
+                return result ? Ok("Order created successfully.") : StatusCode(500, "A problem happened while handling your request.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpPost("importblocks")]
+        public async Task<IActionResult> ImportBlocks([FromBody] List<BlockDTO> blocks)
+        {
+            try
+            {
+                if (blocks == null)
+                {
+                    return BadRequest("Blocks are null.");
+                }
+                if (blocks.Count <= 0)
+                {
+                    return BadRequest("Blocks are empty.");
+                }
+                var result = await _data.ImportBlocksAsync(blocks);
                 return result ? Ok("Block created successfully.") : StatusCode(500, "A problem happened while handling your request.");
             }
             catch (Exception ex)

@@ -1,13 +1,9 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualBasic;
-using MySqlConnector;
 using SmartCut.Shared.Data;
 using SmartCut.Shared.Interfaces;
 using SmartCut.Shared.Models;
 using System.Collections.Generic;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace SmartCut.Shared.Services
 {
     public class DataService : IDataService
@@ -23,20 +19,37 @@ namespace SmartCut.Shared.Services
         {
             throw new NotImplementedException();
         }
-        public async Task<bool> ImportOrdersAsync(List<OrderDTO> orderDTOs)
+        public async Task<bool> ImportBlocksAsync(List<BlockDTO> blockDTOs)
         {
             try
             {
-                if (orderDTOs == null) return false;
-                if (orderDTOs.Count <= 0) return false;
-                List<Order> orders = MapOrderDTOToOrder(orderDTOs);
-                if (orders == null) return false;
-                if (orders.Count <= 0) return false;
-                var result = await BulkUpsertOrdersAsync(orders);
-                if (!result) return false;
-                List<OrderLine> orderLines = MapOrderDTOToOrderLine(orderDTOs);
-                result = await BulkInsertOrderLinesAsync(orderLines);
-                return result;
+                if (blockDTOs == null) return false;
+                if (blockDTOs.Count <= 0) return false;
+                List<Block> blocks = new();
+
+                foreach (var dto in blockDTOs)
+                {
+                    var block = new Block
+                    {
+                        Name = dto.Name ?? string.Empty,
+                        Normalized_Name = dto.Name.ToUpperInvariant(),
+                        Width = dto.Width,
+                        Length = dto.Length,
+                        Height = dto.Height,
+                        Description = dto.Description ?? string.Empty,
+                        Normalized_Description = dto.Description?.ToUpperInvariant() ?? string.Empty,
+                        Material = dto.Material ?? string.Empty,
+                        Normalized_Material = dto.Material?.ToUpperInvariant() ?? string.Empty,
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now,
+                    };
+                    blocks.Add(block);
+                }
+
+                await _context.Blocks.AddRangeAsync(blocks);
+                await _context.SaveChangesAsync();
+
+                return true;
             }
             catch (Exception ex)
             {
@@ -44,7 +57,33 @@ namespace SmartCut.Shared.Services
                 return false;
             }
         }
-        private List<Order> MapOrderDTOToOrder(List<OrderDTO> orderDTOs)
+        public async Task<bool> ImportOrdersAsync(List<OrderDTO> orderDTOs)
+        {
+            try
+            {
+                if (orderDTOs == null) return false;
+                if (orderDTOs.Count <= 0) return false;
+                bool result = await InsertOrdersAsync(orderDTOs);
+                if (!result)
+                {
+                    await ImportOrdersCallBack(orderDTOs);
+                    return false;
+                }
+                result = await InsertOrderLinesAsync(orderDTOs);
+                if (!result)
+                {
+                    await ImportOrdersCallBack(orderDTOs);
+                    return false;
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex,ex.Message.ToString());
+                return false;
+            }
+        }
+        private async Task<bool> InsertOrdersAsync(List<OrderDTO> orderDTOs)
         {
             try
             {
@@ -72,20 +111,26 @@ namespace SmartCut.Shared.Services
                         DueDate = DateTime.Now.AddMonths(2),
                         TotalQuantity = quantity,
                         InvoiceItemCount = (short)invoiceItemCount,
-
+                        CreatedAt = DateTime.Now,
+                        CreatedBy = string.Empty,
+                        UpdatedAt = DateTime.Now,
+                        UpdatedBy = string.Empty,
                     };
                     orders.Add(order);
                 }
-                return orders;
+                await _context.Orders.AddRangeAsync(orders);
+                await _context.SaveChangesAsync();
+
+                return true;
 
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message.ToString());
-                return new List<Order>();
+                return false;
             }
         }
-        private List<OrderLine> MapOrderDTOToOrderLine(List<OrderDTO> orderDTOs)
+        private async Task<bool> InsertOrderLinesAsync(List<OrderDTO> orderDTOs)
         {
             try
             {
@@ -109,58 +154,18 @@ namespace SmartCut.Shared.Services
                         Width = order.Width,
                         Length = order.Length,
                         Height = order.Height,
+                        //CreatedAt = DateTime.Now,
+                        //CreatedBy = string.Empty,
+                        //UpdatedAt = DateTime.Now,
+                        //UpdatedBy = string.Empty,
 
                     };
                     orderLines.Add(orderLine);
                 }
-                return orderLines;
-
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message.ToString());
-                return new List<OrderLine>();
-            }
-        }
-        private async Task<bool> BulkUpsertOrdersAsync(List<Order> orders)
-        {
-            try
-            {
-                var values = string.Join(", ", orders.Select((o, i) =>
-                                                        $"(@InvoiceNumber{i}, @CustomerCode{i}, @CustomerName{i}, @NormalizedCustomerName{i}, @Date{i}, @DueDate{i}, @TotalQuantity{i}, @InvoiceItemCount{i})"));
-
-                string sql = $@"
-                    MERGE INTO Orders AS Target
-                    USING (VALUES {values}) 
-                           AS Source (InvoiceNumber, CustomerCode, CustomerName, Normalized_CustomerName, Date, DueDate, TotalQuantity, InvoiceItemCount)
-                    ON Target.InvoiceNumber = Source.InvoiceNumber
-                    WHEN MATCHED THEN
-                        UPDATE SET 
-                            CustomerCode = Source.CustomerCode,
-                            CustomerName = Source.CustomerName,
-                            Normalized_CustomerName = Source.Normalized_CustomerName,
-                            Date = Source.Date,
-                            DueDate = Source.DueDate,
-                            TotalQuantity = Source.TotalQuantity,
-                            InvoiceItemCount = Source.InvoiceItemCount
-                    WHEN NOT MATCHED THEN
-                        INSERT (InvoiceNumber, CustomerCode, CustomerName, Normalized_CustomerName, Date, DueDate, TotalQuantity, InvoiceItemCount)
-                        VALUES (Source.InvoiceNumber, Source.CustomerCode, Source.CustomerName, Source.Normalized_CustomerName, Source.Date, Source.DueDate, Source.TotalQuantity, Source.InvoiceItemCount);";
-                var parameters = orders.SelectMany((o, i) => new[]
-                {
-                    new MySqlParameter($"@InvoiceNumber{i}", o.InvoiceNumber),
-                    new MySqlParameter($"@CustomerCode{i}", o.CustomerCode ?? (object)DBNull.Value),
-                    new MySqlParameter($"@CustomerName{i}", o.CustomerName ?? (object)DBNull.Value),
-                    new MySqlParameter($"@NormalizedCustomerName{i}", o.Normalized_CustomerName ?? (object)DBNull.Value),
-                    new MySqlParameter($"@Date{i}", o.Date),
-                    new MySqlParameter($"@DueDate{i}", o.DueDate),
-                    new MySqlParameter($"@TotalQuantity{i}", o.TotalQuantity),
-                    new MySqlParameter($"@InvoiceItemCount{i}", o.InvoiceItemCount),
-                }).ToArray();
-
-                int rowsAff = await _context.Database.ExecuteSqlRawAsync(sql, parameters);
-                if (rowsAff <= 0) return false;
+                await _context.OrderLines.AddRangeAsync(orderLines);
+                await _context.SaveChangesAsync();
                 return true;
+
             }
             catch (Exception ex)
             {
@@ -168,66 +173,36 @@ namespace SmartCut.Shared.Services
                 return false;
             }
         }
-        private async Task<bool> BulkInsertOrderLinesAsync(List<OrderLine> orderLines)
+        private async Task ImportOrdersCallBack(List<OrderDTO> orderDTOs)
         {
             try
             {
-                if (orderLines == null) return false;
-                if (orderLines.Count <= 0) return false;
-                var values = orderLines.Select((o, i) =>
-                                                        $"(@InvoiceNumber{i},@Line{i}, @CustomerCode{i}, @CustomerName{i}, @Normalized_CustomerName{i}, @StockCode{i}, @StockName{i}, @Normalized_StockName{i}, " +
-                                                        $"@Date{i}, @DueDate{i}, @Width{i}, @Length{i},@Height{i},@Quantity{i},@Description{i})");
-                string sql = $@"
-                    MERGE INTO OrderItems AS Target
-                    USING (VALUES {values}) 
-                           AS Source (InvoiceNumber,Line, CustomerCode, CustomerName, Normalized_CustomerName, StockCode, StockName, Normalized_StockName,Date,DueDate, Width, Length,Height,Quantity,Description)
-                    ON Target.InvoiceNumber = Source.InvoiceNumber and Target.Line=Source.Line
-                    WHEN MATCHED THEN
-                        UPDATE SET 
-                            CustomerCode = Source.CustomerCode,
-                            CustomerName = Source.CustomerName,
-                            Normalized_CustomerName = Source.Normalized_CustomerName,
-                            Date = Source.Date,
-                            DueDate = Source.DueDate,
-                            StockCode = Source.StockCode,
-                            StockName = Source.StockName,
-                            Normalized_StockName = Source.Normalized_StockName,
-                            Width = Source.Width,   
-                            Length = Source.Length,
-                            Height = Source.Height,
-                            Quantity = Source.Quantity,
-                            Description = Source.Description
-                    WHEN NOT MATCHED THEN
-                        INSERT (InvoiceNumber,Line, CustomerCode, CustomerName, Normalized_CustomerName,StockCode, StockName, Normalized_StockName, Date, DueDate, Width,Length,Height,Quantity,Description)
-                        VALUES (Source.InvoiceNumber, Source.CustomerCode, Source.CustomerName, Source.Normalized_CustomerName,Source.StockCode, Source.StockName, Source.Normalized_StockName, Source.Date, Source.DueDate,Source.Width,Source.Length,Source.Height,Source.Quantity,Source.Description );";
-
-                var parameters = orderLines.SelectMany((o, i) => new[]
+                IEnumerable<string> distinctInvoices = orderDTOs.Select(o => o.InvoiceNumber).Distinct().ToList();
+                List<Order> orders = new();
+                List<OrderLine> orderLines = new();
+                foreach (var invoice in distinctInvoices)
                 {
-                    new MySqlParameter($"@InvoiceNumber{i}", o.InvoiceNumber),
-                    new MySqlParameter($"@CustomerCode{i}", o.CustomerCode ?? (object)DBNull.Value),
-                    new MySqlParameter($"@CustomerName{i}", o.CustomerName ?? (object)DBNull.Value),
-                    new MySqlParameter($"@Normalized_CustomerName{i}", o.Normalized_CustomerName ?? (object)DBNull.Value),
-                    new MySqlParameter($"@StockCode{i}", o.StockCode ?? (object)DBNull.Value),
-                    new MySqlParameter($"@StockName{i}", o.StockName ?? (object)DBNull.Value),
-                    new MySqlParameter($"@Normalized_StockName{i}", o.Normalized_StockName ?? (object)DBNull.Value),
-                    new MySqlParameter($"@Date{i}", o.Date),
-                    new MySqlParameter($"@DueDate{i}", o.DueDate),
-                    new MySqlParameter($"@Width{i}", o.Width),
-                    new MySqlParameter($"@Length{i}", o.Length),
-                    new MySqlParameter($"@Height{i}", o.Height),
-                    new MySqlParameter($"@Quantity{i}", o.Quantity),
-                    new MySqlParameter($"@Description{i}", o.Description),
+                    var existingOrder = await _context.Orders.FirstOrDefaultAsync(o => o.InvoiceNumber == invoice);
+                    var existingOrderLines = await _context.OrderLines.Where(i => i.InvoiceNumber == invoice).ToListAsync();
+                    if (existingOrder != null)
+                        orders.Add(existingOrder);
+                    if (existingOrderLines != null)
+                    {
+                        if(existingOrderLines.Count > 0)
+                            orderLines.AddRange(existingOrderLines);
+                    }
+                }
+                if (orderLines.Count > 0)
+                    _context.OrderLines.RemoveRange(orderLines);
+                if (orders.Count > 0)
+                    _context.Orders.RemoveRange(orders);
 
-                }).ToArray();
-
-                int rowsAff = await _context.Database.ExecuteSqlRawAsync(sql, parameters);
-                if (rowsAff <= 0) return false;
-                return true;
+                return; 
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message.ToString());
-                return false;
+                return;
             }
         }
     }

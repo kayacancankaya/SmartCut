@@ -5,5 +5,6 @@ namespace SmartCut.Shared.Interfaces
     {
         Task<bool> CreateBlockAsync(Block block);
         Task<bool> ImportOrdersAsync(List<OrderDTO> orders);
+        Task<bool> ImportBlocksAsync(List<BlockDTO> blocks);
     }
 }
