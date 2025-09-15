@@ -36,6 +36,19 @@ namespace SmartCut.Shared.Services
                 return false;
             }
         }
+        public async Task<int> CheckIfBlockExistsAsync(string blockName)
+        {
+            try
+            {
+                var response = await _http.GetAsync($"api/web/ifblockexists?blockName={blockName}");
+                return response.IsSuccessStatusCode ? await response.Content.ReadFromJsonAsync<int>() : -1;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return -1;
+            }
+        }
         public async Task<bool> CreateBlockAsync(Block block)
         {
             try

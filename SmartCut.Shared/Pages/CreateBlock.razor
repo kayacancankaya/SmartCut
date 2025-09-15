@@ -97,7 +97,17 @@
 
             if (errors.HasErrors)
                 return; // stop submit
-
+            int resultInt = await BlockService.CheckIfBlockExistsAsync(block.Name);
+            if (resultInt == 0)
+            {
+                NotificationService.ShowError(Localizer.Get("A block with this name already exists"));
+                return;
+            }
+            else if (resultInt == -1)
+            {
+                NotificationService.ShowError(Localizer.Get("An error occurred while checking system"));
+                return;
+            }
             bool result = await BlockService.CreateBlockAsync(block);
             if (result)
             {

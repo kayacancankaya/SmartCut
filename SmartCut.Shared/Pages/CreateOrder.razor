@@ -14,111 +14,103 @@
             <h3 class="card-title mb-0">@Localizer.Get("Create Order")</h3>
         </div>
         <div class="card-body">
+            <div class="form-class">
+                <div class="mb-3">
+                    <label class="form-label">@Localizer.Get("Invoice No")*</label>
+                    <input class="form-control" @bind="order.InvoiceNumber" />
+                    @if (!string.IsNullOrWhiteSpace(errors.InvoiceNumber))
+                    {
+                        <div class="text-danger">@errors.InvoiceNumber</div>
+                    }
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">@Localizer.Get("Order Line Number")*</label>
+                    <input class="form-control" @bind="order.Line" />
+                    @if (!string.IsNullOrWhiteSpace(errors.Line))
+                    {
+                        <div class="text-danger">@errors.Line</div>
+                    }
+                </div>
 
+                <div class="mb-3">
+                    <label class="form-label">@Localizer.Get("Width")*</label>
+                    <input type="number" step="any" class="form-control" @bind="order.Width" />
+                    @if (!string.IsNullOrWhiteSpace(errors.Width))
+                    {
+                        <div class="text-danger">@errors.Width</div>
+                    }
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label">@Localizer.Get("Invoice Number")</label>
-                <input class="form-control" @bind="order.InvoiceNumber" />
-                @if (!string.IsNullOrWhiteSpace(errors.InvoiceNumber))
-                {
-                    <div class="text-danger">@errors.InvoiceNumber</div>
-                }
-            </div>
-            <div class="mb-3">
-                <label class="form-label">@Localizer.Get("Order Line")</label>
-                <input class="form-control" @bind="order.Line" />
-                @if (!string.IsNullOrWhiteSpace(errors.OrderLine))
-                {
-                    <div class="text-danger">@errors.OrderLine</div>
-                }
-            </div>
+                <div class="mb-3">
+                    <label class="form-label">@Localizer.Get("Length")*</label>
+                    <input type="number" step="any" class="form-control" @bind="order.Length" />
+                    @if (!string.IsNullOrWhiteSpace(errors.Length))
+                    {
+                        <div class="text-danger">@errors.Length</div>
+                    }
+                </div>
 
-            <div class="mb-3">
-                <label class="form-label">@Localizer.Get("Width")</label>
-                <input type="number" step="any" class="form-control" @bind="order.Width" />
-                @if (!string.IsNullOrWhiteSpace(errors.Width))
-                {
-                    <div class="text-danger">@errors.Width</div>
-                }
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">@Localizer.Get("Length")</label>
-                <input type="number" step="any" class="form-control" @bind="order.Length" />
-                @if (!string.IsNullOrWhiteSpace(errors.Length))
-                {
-                    <div class="text-danger">@errors.Length</div>
-                }
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">@Localizer.Get("Height")</label>
-                <input type="number" step="any" class="form-control" @bind="order.Height" />
-                @if (!string.IsNullOrWhiteSpace(errors.Height))
-                {
-                    <div class="text-danger">@errors.Height</div>
-                }
-            </div>
-            <div class="mb-3">
-                <label class="form-label">@Localizer.Get("Quantity")</label>
-                <input class="form-control" @bind="order.Quantity" />
-                @if (!string.IsNullOrWhiteSpace(errors.Quantity))
-                {
+                <div class="mb-3">
+                    <label class="form-label">@Localizer.Get("Height")*</label>
+                    <input type="number" step="any" class="form-control" @bind="order.Height" />
+                    @if (!string.IsNullOrWhiteSpace(errors.Height))
+                    {
+                        <div class="text-danger">@errors.Height</div>
+                    }
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">@Localizer.Get("Order Quantity")*</label>
+                    <input class="form-control" @bind="order.Quantity" />
+                    @if (!string.IsNullOrWhiteSpace(errors.Quantity))
+                    {
                         <div class="text-danger">@errors.Quantity</div>
-                }
-            </div>
-            <div class="mb-3">
-                <label class="form-label">@Localizer.Get("Product Code")</label>
-                <input class="form-control" @bind="order.StockCode" />
-                @if (!string.IsNullOrWhiteSpace(errors.StockCode))
-                {
-                    <div class="text-danger">@errors.StockCode</div>
-                }
-            </div>
-            <div class="mb-3">
-                <label class="form-label">@Localizer.Get("Stock Name")</label>
-                <input class="form-control" @bind="order.StockName" />
-                @if (!string.IsNullOrWhiteSpace(errors.StockName))
-                {
-                    <div class="text-danger">@errors.StockName</div>
-                }
-            </div>
-            <div class="mb-3">
-                <label class="form-label">@Localizer.Get("Stock Name")</label>
-                <input class="form-control" @bind="order.StockName" />
-                @if (!string.IsNullOrWhiteSpace(errors.StockName))
-                {
-                    <div class="text-danger">@errors.StockName</div>
-                }
-            </div>
-            <div class="mb-3">
-                <label class="form-label">@Localizer.Get("Customer Code")</label>
-                <input class="form-control" @bind="order.CustomerCode" />
-                @if (!string.IsNullOrWhiteSpace(errors.CustomerCode))
-                {
-                    <div class="text-danger">@errors.CustomerCode</div>
-                }
-            </div>
-            <div class="mb-3">
-                <label class="form-label">@Localizer.Get("Customer Name")</label>
-                <input class="form-control" @bind="order.CustomerName" />
-                @if (!string.IsNullOrWhiteSpace(errors.CustomerName))
-                {
-                    <div class="text-danger">@errors.CustomerName</div>
-                }
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">@Localizer.Get("Description")</label>
-                <input class="form-control" @bind="order.Description" />
-                @if (!string.IsNullOrWhiteSpace(errors.Description))
-                {
-                    <div class="text-danger">@errors.Description</div>
-                }
-            </div>
+                    }
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">@Localizer.Get("Product Code")</label>
+                    <input class="form-control" @bind="order.StockCode" />
+                    @if (!string.IsNullOrWhiteSpace(errors.StockCode))
+                    {
+                        <div class="text-danger">@errors.StockCode</div>
+                    }
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">@Localizer.Get("Product Name")</label>
+                    <input class="form-control" @bind="order.StockName" />
+                    @if (!string.IsNullOrWhiteSpace(errors.StockName))
+                    {
+                        <div class="text-danger">@errors.StockName</div>
+                    }
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">@Localizer.Get("Customer Code")</label>
+                    <input class="form-control" @bind="order.CustomerCode" />
+                    @if (!string.IsNullOrWhiteSpace(errors.CustomerCode))
+                    {
+                        <div class="text-danger">@errors.CustomerCode</div>
+                    }
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">@Localizer.Get("Customer Name")</label>
+                    <input class="form-control" @bind="order.CustomerName" />
+                    @if (!string.IsNullOrWhiteSpace(errors.CustomerName))
+                    {
+                        <div class="text-danger">@errors.CustomerName</div>
+                    }
+                </div>
 
-        
-            <button class="btn btn-primary" @onclick="HandleSubmitAsync">@Localizer.Get("Save")</button>
+                <div class="mb-3">
+                    <label class="form-label">@Localizer.Get("Description")</label>
+                    <input class="form-control" @bind="order.Description" />
+                    @if (!string.IsNullOrWhiteSpace(errors.Description))
+                    {
+                        <div class="text-danger">@errors.Description</div>
+                    }
+                </div>
+                 <div class="full-width">
+                <ActionButton actionType="1" disabled="@buttonDisabled" OnClicked="HandleSubmitAsync"/>
+                </div>
+             </div>
         </div>
     </div>
 </div>
@@ -126,6 +118,7 @@
 @code {
     private OrderDTO order = new OrderDTO();
     private SmartCut.Shared.Models.ValidationErrors errors = new SmartCut.Shared.Models.ValidationErrors();
+    private bool buttonDisabled = false;
     protected override void OnInitialized()
     {
         BreadcrumbService.SetBreadcrumbs(new List<BreadcrumbItem>
@@ -165,6 +158,7 @@
             if (errors.HasErrors)
                 return; // stop submit
 
+            buttonDisabled = true;
             bool result = await OrderService.CreateOrderAsync(order);
             if (result)
             {

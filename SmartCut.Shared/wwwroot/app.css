@@ -135,3 +135,20 @@ h1:focus {
     .btn-container .btn {
         flex: 1 0 150px; /* grow if needed, min width 150px */
     }
+
+
+.card-body .form-class {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+/* Make full width fields span across both columns */
+.full-width {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 768px) {
+    .card-body .form-class {
+        grid-template-columns: 1fr;
+    }

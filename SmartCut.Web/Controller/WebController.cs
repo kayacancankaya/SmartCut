@@ -23,7 +23,7 @@ namespace SmartCut.Web.Controller
         }
 
         [HttpPost("createorder")]
-        public async Task<IActionResult> CreateBlock([FromBody] OrderDTO order)
+        public async Task<IActionResult> CreateOrder([FromBody] OrderDTO order)
         {
             try
             {
@@ -33,6 +33,25 @@ namespace SmartCut.Web.Controller
                 }
                 var result = await _data.CreateOrderAsync(order);
                 return result ? Ok("Order created successfully.") : StatusCode(500, "A problem happened while handling your request.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("ifblockexists")]
+        public async Task<ActionResult<int>> IfBlockExists(string blockName)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(blockName))
+                {
+                    return BadRequest("Block name is null.");
+                }
+                var response = await _data.CheckIfBlockExistsAsync(blockName);
+                return response;
             }
             catch (Exception ex)
             {

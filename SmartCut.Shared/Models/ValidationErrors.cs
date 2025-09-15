@@ -31,6 +31,6 @@ namespace SmartCut.Shared.Models
             || !string.IsNullOrWhiteSpace(CustomerName)
             || !string.IsNullOrWhiteSpace(Line)
             || !string.IsNullOrWhiteSpace(Quantity)
-            || !string.IsNullOrWhiteSpace(InvoiceNumber)
+            || !string.IsNullOrWhiteSpace(InvoiceNumber);
     }
 }

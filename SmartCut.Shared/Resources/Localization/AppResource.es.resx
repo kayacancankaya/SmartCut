@@ -681,4 +681,28 @@
   <data name="Blocks saved successfully" xml:space="preserve">
     <value>Los Bloques guardado correctamente.</value>
   </data>
+  <data name="A block with this name already exists" xml:space="preserve">
+    <value>Un bloque con este nombre ya existe</value>
+  </data>
+  <data name="An error occurred while checking system" xml:space="preserve">
+    <value>Se produjo un error al verificar el sistema</value>
+  </data>
+  <data name="An error occured while saving order" xml:space="preserve">
+    <value>Ocurrió un error al guardar el orden.</value>
+  </data>
+  <data name="Customer Code" xml:space="preserve">
+    <value>Codigo de Cliente</value>
+  </data>
+  <data name="Invoice is required" xml:space="preserve">
+    <value>Número de factura es obligatorio</value>
+  </data>
+  <data name="Quantity is required" xml:space="preserve">
+    <value>La candidad es obligatorio</value>
+  </data>
+  <data name="Order line is required" xml:space="preserve">
+    <value>N.º de Línea es obligatorio</value>
+  </data>
+  <data name="Create Order" xml:space="preserve">
+    <value>Crear Pedido</value>
+  </data>
 </root>

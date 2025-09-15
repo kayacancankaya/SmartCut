@@ -610,7 +610,7 @@
     <value>Height is required</value>
   </data>
   <data name="An error occured while saving block" xml:space="preserve">
-    <value>An error occured while saving block</value>
+    <value>An error occured while saving block.</value>
   </data>
   <data name="Failed to save block" xml:space="preserve">
     <value>Failed to save block</value>
@@ -680,5 +680,29 @@
   </data>
   <data name="Blocks saved successfully" xml:space="preserve">
     <value>Block(s) saved successfully</value>
+  </data>
+  <data name="A block with this name already exists" xml:space="preserve">
+    <value>A block with this name already exists</value>
+  </data>
+  <data name="An error occurred while checking system" xml:space="preserve">
+    <value>An error occurred while checking system</value>
+  </data>
+  <data name="An error occured while saving order" xml:space="preserve">
+    <value>An error occured while saving order.</value>
+  </data>
+  <data name="Customer Code" xml:space="preserve">
+    <value>Customer Code</value>
+  </data>
+  <data name="Invoice is required" xml:space="preserve">
+    <value>Invoice is required</value>
+  </data>
+  <data name="Quantity is required" xml:space="preserve">
+    <value>Quantity is required</value>
+  </data>
+  <data name="Order line is required" xml:space="preserve">
+    <value>Order line is required</value>
+  </data>
+  <data name="Create Order" xml:space="preserve">
+    <value>Create Order</value>
   </data>
 </root>
