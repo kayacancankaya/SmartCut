@@ -22,6 +22,24 @@ namespace SmartCut.Web.Controller
             _httpClient = httpClient;
         }
 
+        [HttpPost("createorder")]
+        public async Task<IActionResult> CreateBlock([FromBody] OrderDTO order)
+        {
+            try
+            {
+                if (order == null)
+                {
+                    return BadRequest("Order is null.");
+                }
+                var result = await _data.CreateOrderAsync(order);
+                return result ? Ok("Order created successfully.") : StatusCode(500, "A problem happened while handling your request.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return StatusCode(500, "Internal server error");
+            }
+        }
         [HttpPost("createblock")]
         public async Task<IActionResult> CreateBlock([FromBody] Block block)
         {

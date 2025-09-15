@@ -1,5 +1,185 @@
-﻿<h3>CreateOrder</h3>
+﻿@page "/create-order"
+@using SmartCut.Shared.Models
+@using SmartCut.Shared.Resources.Localization
+@using SmartCut.Shared.Services
+@using SmartCut.Shared.Layout.Components
+@using SmartCut.Shared.Models.ViewModels
+@inject BreadcrumbService BreadcrumbService
+@inject NotificationService NotificationService
+@inject ApiClient OrderService
+<div class="card">
+    <div class="card-overlay"></div>
+    <div class="card-inner">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="card-title mb-0">@Localizer.Get("Create Order")</h3>
+        </div>
+        <div class="card-body">
+
+
+            <div class="mb-3">
+                <label class="form-label">@Localizer.Get("Invoice Number")</label>
+                <input class="form-control" @bind="order.InvoiceNumber" />
+                @if (!string.IsNullOrWhiteSpace(errors.InvoiceNumber))
+                {
+                    <div class="text-danger">@errors.InvoiceNumber</div>
+                }
+            </div>
+            <div class="mb-3">
+                <label class="form-label">@Localizer.Get("Order Line")</label>
+                <input class="form-control" @bind="order.Line" />
+                @if (!string.IsNullOrWhiteSpace(errors.OrderLine))
+                {
+                    <div class="text-danger">@errors.OrderLine</div>
+                }
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">@Localizer.Get("Width")</label>
+                <input type="number" step="any" class="form-control" @bind="order.Width" />
+                @if (!string.IsNullOrWhiteSpace(errors.Width))
+                {
+                    <div class="text-danger">@errors.Width</div>
+                }
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">@Localizer.Get("Length")</label>
+                <input type="number" step="any" class="form-control" @bind="order.Length" />
+                @if (!string.IsNullOrWhiteSpace(errors.Length))
+                {
+                    <div class="text-danger">@errors.Length</div>
+                }
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">@Localizer.Get("Height")</label>
+                <input type="number" step="any" class="form-control" @bind="order.Height" />
+                @if (!string.IsNullOrWhiteSpace(errors.Height))
+                {
+                    <div class="text-danger">@errors.Height</div>
+                }
+            </div>
+            <div class="mb-3">
+                <label class="form-label">@Localizer.Get("Quantity")</label>
+                <input class="form-control" @bind="order.Quantity" />
+                @if (!string.IsNullOrWhiteSpace(errors.Quantity))
+                {
+                        <div class="text-danger">@errors.Quantity</div>
+                }
+            </div>
+            <div class="mb-3">
+                <label class="form-label">@Localizer.Get("Product Code")</label>
+                <input class="form-control" @bind="order.StockCode" />
+                @if (!string.IsNullOrWhiteSpace(errors.StockCode))
+                {
+                    <div class="text-danger">@errors.StockCode</div>
+                }
+            </div>
+            <div class="mb-3">
+                <label class="form-label">@Localizer.Get("Stock Name")</label>
+                <input class="form-control" @bind="order.StockName" />
+                @if (!string.IsNullOrWhiteSpace(errors.StockName))
+                {
+                    <div class="text-danger">@errors.StockName</div>
+                }
+            </div>
+            <div class="mb-3">
+                <label class="form-label">@Localizer.Get("Stock Name")</label>
+                <input class="form-control" @bind="order.StockName" />
+                @if (!string.IsNullOrWhiteSpace(errors.StockName))
+                {
+                    <div class="text-danger">@errors.StockName</div>
+                }
+            </div>
+            <div class="mb-3">
+                <label class="form-label">@Localizer.Get("Customer Code")</label>
+                <input class="form-control" @bind="order.CustomerCode" />
+                @if (!string.IsNullOrWhiteSpace(errors.CustomerCode))
+                {
+                    <div class="text-danger">@errors.CustomerCode</div>
+                }
+            </div>
+            <div class="mb-3">
+                <label class="form-label">@Localizer.Get("Customer Name")</label>
+                <input class="form-control" @bind="order.CustomerName" />
+                @if (!string.IsNullOrWhiteSpace(errors.CustomerName))
+                {
+                    <div class="text-danger">@errors.CustomerName</div>
+                }
+            </div>
+            
+            <div class="mb-3">
+                <label class="form-label">@Localizer.Get("Description")</label>
+                <input class="form-control" @bind="order.Description" />
+                @if (!string.IsNullOrWhiteSpace(errors.Description))
+                {
+                    <div class="text-danger">@errors.Description</div>
+                }
+            </div>
+
+        
+            <button class="btn btn-primary" @onclick="HandleSubmitAsync">@Localizer.Get("Save")</button>
+        </div>
+    </div>
+</div>
 
 @code {
+    private OrderDTO order = new OrderDTO();
+    private SmartCut.Shared.Models.ValidationErrors errors = new SmartCut.Shared.Models.ValidationErrors();
+    protected override void OnInitialized()
+    {
+        BreadcrumbService.SetBreadcrumbs(new List<BreadcrumbItem>
+        {
+            new() { Title = Localizer.Get("Home"), Url = "/", IsActive = false },
+            new() { Title = Localizer.Get("Orders"), Url = "/order", IsActive = false } ,
+            new() { Title = Localizer.Get("Add New"), Url = "/create-order", IsActive = true }
 
+        });
+    }
+    private async Task HandleSubmitAsync()
+    {
+        try
+        {
+
+            errors = new ValidationErrors(); // reset
+
+            // Manual validation
+            if (string.IsNullOrWhiteSpace(order.InvoiceNumber))
+                errors.InvoiceNumber = Localizer.Get("Invoice is required");
+
+            if (order.Width <= 0)
+                errors.Width = Localizer.Get("Width is required");
+
+            if (order.Length <= 0)
+                errors.Length = Localizer.Get("Length is required");
+
+            if (order.Height <= 0)
+                errors.Height = Localizer.Get("Height is required");
+
+            if (order.Quantity <= 0)
+                errors.Height = Localizer.Get("Quantity is required");
+
+            if (order.Line <= 0)
+                errors.Height = Localizer.Get("Order line is required");
+
+            if (errors.HasErrors)
+                return; // stop submit
+
+            bool result = await OrderService.CreateOrderAsync(order);
+            if (result)
+            {
+                NotificationService.ShowSuccess("Order saved successfully");
+                order = new OrderDTO(); // reset form
+            }
+            else
+            {
+                NotificationService.ShowError("Failed to save order");
+            }
+        }
+        catch (Exception)
+        {
+            NotificationService.ShowError("An error occured while saving order");
+        }
+
+    }
 }

@@ -21,6 +21,21 @@ namespace SmartCut.Shared.Services
             _http = http;
             _logger = logger;
         }
+        public async Task<bool> CreateOrderAsync(OrderDTO order)
+        {
+            try
+            {
+                var response = await _http.PostAsJsonAsync("api/web/createorder", order);
+                if (response.IsSuccessStatusCode)
+                    return true;
+                return false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return false;
+            }
+        }
         public async Task<bool> CreateBlockAsync(Block block)
         {
             try

@@ -19,6 +19,55 @@ namespace SmartCut.Shared.Services
         {
             throw new NotImplementedException();
         }
+        public async Task<bool> CreateOrderAsync(OrderDTO orderDTO)
+        {
+            try
+            {
+                float quantity = 0f;
+                int invoiceItemCount = 0;
+                //check if order exists
+                var existingOrder = await _context.Orders.FirstOrDefaultAsync(o => o.InvoiceNumber == orderDTO.InvoiceNumber);
+                if (existingOrder != null)
+                {
+                    quantity = await _context.Orders.FirstOrDefaultAsync(o => o.InvoiceNumber == orderDTO.InvoiceNumber).ContinueWith(t => t.Result.TotalQuantity);
+                }
+                    
+                List<Order> orders = new();
+                foreach (var invoice in distinctInvoices)
+                {
+                    customerCode = orderDTOs.Where(o => o.InvoiceNumber == invoice).Select(o => o.CustomerCode).FirstOrDefault() ?? string.Empty;
+                    customerName = orderDTOs.Where(o => o.InvoiceNumber == invoice).Select(o => o.CustomerName).FirstOrDefault() ?? string.Empty;
+                    quantity = orderDTOs.Where(o => o.InvoiceNumber == invoice).Sum(o => o.Quantity);
+                    invoiceItemCount = orderDTOs.Where(o => o.InvoiceNumber == invoice).Count();
+                    var order = new Order
+                    {
+                        InvoiceNumber = invoice,
+                        CustomerCode = customerCode,
+                        CustomerName = customerName,
+                        Normalized_CustomerName = customerName.ToUpperInvariant(),
+                        Date = DateTime.Now,
+                        DueDate = DateTime.Now.AddMonths(2),
+                        TotalQuantity = quantity,
+                        InvoiceItemCount = (short)invoiceItemCount,
+                        CreatedAt = DateTime.Now,
+                        CreatedBy = string.Empty,
+                        UpdatedAt = DateTime.Now,
+                        UpdatedBy = string.Empty,
+                    };
+                    orders.Add(order);
+                }
+                await _context.Orders.AddRangeAsync(orders);
+                await _context.SaveChangesAsync();
+
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return false;
+            }
+        }
         public async Task<bool> ImportBlocksAsync(List<BlockDTO> blockDTOs)
         {
             try
