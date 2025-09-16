@@ -1,5 +1,90 @@
-﻿<h3>OrderList</h3>
+﻿@page "/list-order"
+@using SmartCut.Shared.Models
+@using SmartCut.Shared.Resources.Localization
+@using SmartCut.Shared.Services
+@using SmartCut.Shared.Layout.Components
+@using SmartCut.Shared.Models.ViewModels
+@inject BreadcrumbService BreadcrumbService
+@inject NotificationService NotificationService
+@inject ApiClient OrderService
+<div class="card">
+    <div class="card-overlay"></div>
+    <div class="card-inner">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="card-title mb-0">@Localizer.Get("Order List")</h3>
+        </div>
+        <div class="card-body btn-container">
+            @if (Orders != null)
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">@Localizer.Get("Invoice Number")</th>
+                            <th scope="col">@Localizer.Get("Line")</th>
+                            <th scope="col">@Localizer.Get("Width")</th>
+                            <th scope="col">@Localizer.Get("Length")</th>
+                            <th scope="col">@Localizer.Get("Height")</th>
+                            <th scope="col">@Localizer.Get("Quantity")</th>
+                            <th scope="col">@Localizer.Get("Product Code")</th>
+                            <th scope="col">@Localizer.Get("Product Name")</th>
+                            <th scope="col">@Localizer.Get("Customer Code")</th>
+                            <th scope="col">@Localizer.Get("Customer Name")</th>
+                            <th scope="col">@Localizer.Get("Description")</th>
+                            <th scope="col">@Localizer.Get("Created At")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Orders)
+                        {
+                            <tr>
+                                <th scope="row">@order.Id</th>
+                                <td>@order.InvoiceNumber</td>
+                                <td>@order.Line</td>
+                                <td>@order.Width</td>
+                                <td>@order.Length</td>
+                                <td>@order.Height</td>
+                                <td>@order.Quantity</td>
+                                <td>@order.StockCode</td>
+                                <td>@order.StockName</td>
+                                <td>@order.CustomerCode</td>
+                                <td>@order.CustomerName</td>
+                                <td>@order.Description</td>
+                                <td>@order.CreatedAt</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>@Localizer.Get(@lonelyMessage)</p>
+            }
+        </div>
+    </div>
+</div>
 
 @code {
+    private IEnumerable<SmartCut.Shared.Models.OrderLine>? Orders { get; set; }
+    private string lonelyMessage = Localizer.Get("Loading...");
+    protected override async Task OnInitializedAsync()
+    {
 
+        BreadcrumbService.SetBreadcrumbs(new List<BreadcrumbItem>
+        {
+            new() { Title = Localizer.Get("Home"), Url = "/", IsActive = false },
+            new() { Title = Localizer.Get("Orders"), Url = "/block", IsActive = false } ,
+            new() { Title = Localizer.Get("Order List"), Url = "/list-block", IsActive = true }
+
+        });
+
+        Orders = await OrderService.GetOrdersAsync(1, 10, string.Empty, 0, string.Empty);
+        if (Orders == null)
+        {
+            lonelyMessage = Localizer.Get("No orders found.");
+            return;
+        }
+        if (!Orders.Any())
+            lonelyMessage = Localizer.Get("No orders found.");
+    }
 }

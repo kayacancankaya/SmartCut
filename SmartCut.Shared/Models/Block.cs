@@ -43,10 +43,13 @@ namespace SmartCut.Shared.Models
         public string? Normalized_Material { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        [NotMapped]
+        public bool IsSelected { get; set; } = false;
         public Block()
         {
             CreatedAt = DateTime.Now;
             UpdatedAt = DateTime.Now;
         }
+
     }
 }

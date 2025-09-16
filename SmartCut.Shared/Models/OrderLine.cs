@@ -98,5 +98,7 @@ namespace SmartCut.Shared.Models
         [MaxLength(450)]
         public string UpdatedBy { get; set; } = string.Empty;
         public Order? Order { get; set; }
+        [NotMapped]
+        public bool IsSelected { get; set; } = false;
     }
 }

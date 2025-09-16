@@ -21,6 +21,10 @@
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">@Localizer.Get("Block Name")</th>
+                            <th scope="col">@Localizer.Get("Width")</th>
+                            <th scope="col">@Localizer.Get("Length")</th>
+                            <th scope="col">@Localizer.Get("Height")</th>
+                            <th scope="col">@Localizer.Get("Material")</th>
                             <th scope="col">@Localizer.Get("Description")</th>
                             <th scope="col">@Localizer.Get("Created At")</th>
                         </tr>
@@ -31,6 +35,10 @@
                             <tr>
                                 <th scope="row">@block.Id</th>
                                 <td>@block.Name</td>
+                                <td>@block.Width</td>
+                                <td>@block.Length</td>
+                                <td>@block.Height</td>
+                                <td>@block.Material</td>
                                 <td>@block.Description</td>
                                 <td>@block.CreatedAt.ToString("g")</td>
                             </tr>

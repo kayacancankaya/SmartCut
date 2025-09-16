@@ -708,4 +708,19 @@
   <data name="Loading..." xml:space="preserve">
     <value>Yükleniyor...</value>
   </data>
+  <data name="Created At" xml:space="preserve">
+    <value>Kayıt Tarihi</value>
+  </data>
+  <data name="Order List" xml:space="preserve">
+    <value>Sipariş Listesi</value>
+  </data>
+  <data name="No blocks found." xml:space="preserve">
+    <value>Sistemde kayıtlı blok bulunamadı.</value>
+  </data>
+  <data name="No orders found." xml:space="preserve">
+    <value>Sistemde kayıtlı sipariş bulunamadı.</value>
+  </data>
+  <data name="Calculate" xml:space="preserve">
+    <value>Hesapla</value>
+  </data>
 </root>

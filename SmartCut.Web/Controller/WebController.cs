@@ -22,12 +22,42 @@ namespace SmartCut.Web.Controller
             _httpClient = httpClient;
         }
 
+        [HttpGet("getallblocks")]
+        public async Task<ActionResult<IEnumerable<Block>?>> GetAllBlocks()
+        {
+            try
+            {
+                var response = await _data.GetAllBlocksAsync();
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
         [HttpGet("getblocks")]
-        public async Task<ActionResult<IEnumerable<Block>?>> GetBlocks(int pageNumber,int pageSize,string name,string description,string material)
+        public async Task<ActionResult<IEnumerable<Block>?>> GetBlocks(int pageNumber=10,int pageSize = 1,string name = "",string description = "",string material = "")
         {
             try
             {
                 var response = await _data.GetBlocksAsync(pageNumber,pageSize,name,description,material);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
+        [HttpGet("getorders")]
+        public async Task<ActionResult<IEnumerable<Block>?>> GetOrders(int pageNumber=10,int pageSize = 1,string invoiceNumber = "",int line = 0 , string stockCode="",string stockName="",string customerCode="",string customerName="",string description = "")
+        {
+            try
+            {
+                var response = await _data.GetOrdersAsync(pageNumber, pageSize, invoiceNumber, line, stockCode, stockName, customerCode, customerName, description);
                 return Ok(response);
             }
             catch (Exception ex)
@@ -130,6 +160,25 @@ namespace SmartCut.Web.Controller
                 }
                 var result = await _data.ImportBlocksAsync(blocks);
                 return result ? Ok("Block created successfully.") : StatusCode(500, "A problem happened while handling your request.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return StatusCode(500, "Internal server error");
+            }
+        }
+        [HttpPost("calculatecuttingplan")]
+        public async Task<ActionResult<int>> CalculateCuttingPlan([FromBody] CalculationDTO dTO)
+        {
+            try
+            {
+                if (dTO == null)
+                {
+                    return BadRequest("Calculation data is null.");
+                }
+                var response = await _data.CalculateCuttingPlanAsync(dTO);
+
+                return Ok(response);
             }
             catch (Exception ex)
             {

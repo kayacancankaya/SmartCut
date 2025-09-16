@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.Extensions.Logging;
 using SmartCut.Shared.Models;
 using System;
 using System.Collections.Generic;
@@ -34,12 +35,40 @@ namespace SmartCut.Shared.Services
                 return new List<OrderDTO>();
             }
         }
+        public async Task<IEnumerable<OrderLine>?> GetOrdersAsync(int pageNumber = 1,int pageSize = 10,string invoiceNumber = "",int line = 0,string stockCode = "",
+                                                            string stockName = "",string customerCode = "",string customerName = "",string description = "")
+        {
+            try
+            {
+                var response = await _http.GetFromJsonAsync<IEnumerable<OrderLine>?>(@$"api/web/getorders?pageNumber={pageNumber}&pageSize={pageSize}&invoiceNumber={invoiceNumber}&line={line}
+                                                                                        &stockCode={stockCode}&stockName={stockName}&customerCode={customerCode}&customerName={customerName}&description={description}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return new List<OrderLine>();
+            }
+        }
+        public async Task<IEnumerable<Block>?> GetAllBlocksAsync()
+        {
+            try
+            {
+                var response = await _http.GetFromJsonAsync<IEnumerable<Block>?>($"api/web/getallblocks");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return new List<Block>();
+            }
+        }
         public async Task<IEnumerable<Block>?> GetBlocksAsync(int pageNumber=1,int pageSize = 10,string name ="",string description = "",string material = "")
         {
             try
             {
-                var response = await _http.GetAsync($"api/web/getblocks?pageNumber={pageNumber}&pageSize={pageSize}&name={name}&description={description}&material={material}");
-                return response.IsSuccessStatusCode ? await response.Content.ReadFromJsonAsync<IEnumerable<Block>>() : new List<Block>();
+                var response = await _http.GetFromJsonAsync<IEnumerable<Block>?>($"api/web/getblocks?pageNumber={pageNumber}&pageSize={pageSize}&name={name}&description={description}&material={material}");
+                return response;
             }
             catch (Exception ex)
             {
@@ -118,6 +147,24 @@ namespace SmartCut.Shared.Services
             {
                 _logger.LogError(ex, ex.Message.ToString());
                 return false;
+            }
+        }
+        public async Task<int> CalculateCuttingPlanAsync(CalculationDTO dto)
+        {
+            try
+            {
+                var response = await _http.PostAsJsonAsync($"api/web/calculatecuttingplan",dto);
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = await response.Content.ReadFromJsonAsync<int>();
+                    return result;
+                }
+                return -1;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return -1;
             }
         }
     }

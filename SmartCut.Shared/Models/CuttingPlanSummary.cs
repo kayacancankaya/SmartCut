@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SmartCut.Shared.Models
+{
+    public class CuttingPlanSummary
+    {
+        [Required]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+        [Required]
+        public int Status { get; set; }
+        [Required]
+        public string Explanation { get; set; } = string.Empty;
+        [Required]
+        public List<CutEntry> CuttingPlan { get; set; } = new();
+        [Required]
+        public float ScrapVolume { get; set; }
+        [Required]
+        public float PercentFulfilled { get; set; }
+    }
+
+}
