@@ -705,4 +705,7 @@
   <data name="Create Order" xml:space="preserve">
     <value>Create Order</value>
   </data>
+  <data name="Loading..." xml:space="preserve">
+    <value>Loading...</value>
+  </data>
 </root>

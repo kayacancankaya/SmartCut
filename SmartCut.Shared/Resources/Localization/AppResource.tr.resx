@@ -705,4 +705,7 @@
   <data name="Create Order" xml:space="preserve">
     <value>Sipariş Oluştur</value>
   </data>
+  <data name="Loading..." xml:space="preserve">
+    <value>Yükleniyor...</value>
+  </data>
 </root>

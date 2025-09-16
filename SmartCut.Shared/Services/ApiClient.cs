@@ -21,6 +21,32 @@ namespace SmartCut.Shared.Services
             _http = http;
             _logger = logger;
         }
+        public async Task<List<OrderDTO>> GetOrdersAsync()
+        {
+            try
+            {
+                var response = await _http.GetAsync("api/web/getorders");
+                return response.IsSuccessStatusCode ? await response.Content.ReadFromJsonAsync<List<OrderDTO>>() : new List<OrderDTO>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return new List<OrderDTO>();
+            }
+        }
+        public async Task<IEnumerable<Block>?> GetBlocksAsync(int pageNumber=1,int pageSize = 10,string name ="",string description = "",string material = "")
+        {
+            try
+            {
+                var response = await _http.GetAsync($"api/web/getblocks?pageNumber={pageNumber}&pageSize={pageSize}&name={name}&description={description}&material={material}");
+                return response.IsSuccessStatusCode ? await response.Content.ReadFromJsonAsync<IEnumerable<Block>>() : new List<Block>();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return new List<Block>();
+            }
+        }
         public async Task<bool> CreateOrderAsync(OrderDTO order)
         {
             try

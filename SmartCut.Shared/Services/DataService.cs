@@ -15,6 +15,36 @@ namespace SmartCut.Shared.Services
             _logger = logger;
             _context = context;
         }
+        public async Task<IEnumerable<Block>?> GetBlocksAsync(int pageNumber,int pageSize,string name,string description,string material)
+        {
+            try
+            {
+                if (pageNumber <= 0) pageNumber = 1;
+                if (pageSize <= 0) pageSize = 10;
+                var query = _context.Blocks.AsQueryable();
+                if (!string.IsNullOrEmpty(name))
+                {
+                    var normalizedName = name.ToUpperInvariant();
+                    query = query.Where(b => b.Normalized_Name.Contains(normalizedName));
+                }
+                if (!string.IsNullOrEmpty(description))
+                {
+                    var normalizedDescription = description.ToUpperInvariant();
+                    query = query.Where(b => b.Normalized_Description.Contains(normalizedDescription));
+                }
+                if (!string.IsNullOrEmpty(material))
+                {
+                    var normalizedMaterial = material.ToUpperInvariant();
+                    query = query.Where(b => b.Normalized_Material.Contains(normalizedMaterial));
+                }
+                return await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return new List<Block>();
+            }
+        }
         public async Task<bool> CreateBlockAsync(Block block)
         {
             try

@@ -22,6 +22,20 @@ namespace SmartCut.Web.Controller
             _httpClient = httpClient;
         }
 
+        [HttpGet("getblocks")]
+        public async Task<ActionResult<IEnumerable<Block>?>> GetBlocks(int pageNumber,int pageSize,string name,string description,string material)
+        {
+            try
+            {
+                var response = await _data.GetBlocksAsync(pageNumber,pageSize,name,description,material);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return StatusCode(500, "Internal server error");
+            }
+        }
         [HttpPost("createorder")]
         public async Task<IActionResult> CreateOrder([FromBody] OrderDTO order)
         {

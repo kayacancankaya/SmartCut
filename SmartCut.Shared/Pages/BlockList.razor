@@ -14,20 +14,59 @@
             <h3 class="card-title mb-0">@Localizer.Get("Block List")</h3>
         </div>
         <div class="card-body btn-container">
-
+            @if(Blocks != null)
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">@Localizer.Get("Block Name")</th>
+                            <th scope="col">@Localizer.Get("Description")</th>
+                            <th scope="col">@Localizer.Get("Created At")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var block in Blocks)
+                        {
+                            <tr>
+                                <th scope="row">@block.Id</th>
+                                <td>@block.Name</td>
+                                <td>@block.Description</td>
+                                <td>@block.CreatedAt.ToString("g")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>@Localizer.Get(@lonelyMessage)</p>
+            }
         </div>
     </div>
 </div>
 
 @code {
-    protected override void OnInitialized()
+    private IEnumerable<SmartCut.Shared.Models.Block>? Blocks { get; set; }
+    private string lonelyMessage = Localizer.Get("Loading...");
+    protected override async Task OnInitializedAsync()
     {
+        
         BreadcrumbService.SetBreadcrumbs(new List<BreadcrumbItem>
         {
-            new() { Title = "Ana Sayfa", Url = "/", IsActive = false },
-            new() { Title = "Blok", Url = "/block", IsActive = false } ,
-            new() { Title = "Blok Oluştur", Url = "/create-block", IsActive = true }
+            new() { Title = Localizer.Get("Home"), Url = "/", IsActive = false },
+            new() { Title = Localizer.Get("Block"), Url = "/block", IsActive = false } ,
+            new() { Title = Localizer.Get("Block List"), Url = "/list-block", IsActive = true }
 
         });
+
+        Blocks = await BlockService.GetBlocksAsync(1,10,string.Empty,string.Empty,string.Empty);
+        if (Blocks == null)
+        {
+            lonelyMessage = Localizer.Get("No blocks found.");
+            return;
+        }
+        if (!Blocks.Any())
+            lonelyMessage = Localizer.Get("No blocks found.");
     }
 }

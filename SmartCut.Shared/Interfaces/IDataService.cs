@@ -3,6 +3,7 @@ namespace SmartCut.Shared.Interfaces
 {
     public interface IDataService
     {
+        Task<IEnumerable<Block>?> GetBlocksAsync(int pageNumber, int pageSize, string name, string description, string material);
         Task<bool> CreateBlockAsync(Block block);
         Task<int> CheckIfBlockExistsAsync(string blockName);
         Task<bool> CreateOrderAsync(OrderDTO orderDTO);
