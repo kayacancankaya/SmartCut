@@ -525,6 +525,8 @@ namespace SmartCut.Shared.Services
                 // Group placements by order line
                 var planEntries = new List<CutEntry>();
                 var placementsGrouped = placements.GroupBy(p => p.OrderLineId);
+                List<Dimension> dimensions = new();
+                List<SmartCut.Shared.Models.Position> allPositions = new();
                 foreach (var grp in placementsGrouped)
                 {
                     int counter = 0;
@@ -543,8 +545,10 @@ namespace SmartCut.Shared.Services
                         posList.Add(position1);
                     }
                     float[] dimsOriginal = orderLineDims.TryGetValue(grp.Key, out var d) ? d : new float[] { 0f, 0f, 0f };
+                   
                     Dimension dimension = new Dimension
                     {
+                        OrderLineId = grp.Key,
                         X = dimsOriginal[0],
                         Y = dimsOriginal[1],
                         Z = dimsOriginal[2]
@@ -557,11 +561,11 @@ namespace SmartCut.Shared.Services
                         Positions = posList,
                         Dimension = dimension
                     });
-                    await _context.Positions.AddRangeAsync(posList);
-                    await _context.Dimensions.AddAsync(dimension);
+                    allPositions.AddRange(posList);
+                    if (!dimensions.Any(d => d.OrderLineId == grp.Key))
+                        dimensions.Add(dimension);
                 }
 
-                await _context.CutEntries.AddRangeAsync(planEntries);
                 // Identify shortfalls per order line for explanation
                 var shortfalls = new List<string>();
                 var requestedById = orderLines.ToDictionary(k => k.Id, v => Convert.ToInt32(v.Quantity));
@@ -605,8 +609,29 @@ namespace SmartCut.Shared.Services
                     PercentFulfilled = (float)percentFulfilled
                 };
                 await _context.CuttingPlans.AddAsync(result);
+                await _context.CutEntries.AddRangeAsync(planEntries);
                 await _context.SaveChangesAsync();
 
+                //make all CutEntryId in positions
+                foreach (var pos in allPositions)
+                {
+                    var entry = planEntries.FirstOrDefault(e => e.OrderLineId == pos.OrderLineId);
+                    if (entry != null)
+                    {
+                        pos.CutEntryId = entry.Id;
+                    }
+                }
+                foreach (var dim in dimensions)
+                {
+                    var entry = planEntries.FirstOrDefault(e => e.Dimension == dim);
+                    if (entry != null)
+                    {
+                        dim.CutEntryId = entry.Id;
+                    }
+                }
+                await _context.Positions.AddRangeAsync(allPositions);
+                await _context.Dimensions.AddRangeAsync(dimensions);
+                await _context.SaveChangesAsync();
                 return result.Id; 
 
             }
@@ -621,7 +646,13 @@ namespace SmartCut.Shared.Services
         {
             try
             {
-                return await _context.CuttingPlans.FirstOrDefaultAsync(i=> i.Id == id);
+                return await _context.CuttingPlans
+                                    .Include(c => c.CutEntries)
+                                        .ThenInclude(e => e.Positions)   // relación 1:N
+                                    .Include(c => c.CutEntries)
+                                        .ThenInclude(e => e.Dimension)   // relación 1:1
+                                    .FirstOrDefaultAsync(i => i.Id == id);
+
             }
             catch (Exception ex)
             {

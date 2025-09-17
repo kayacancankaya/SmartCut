@@ -18,6 +18,8 @@ namespace SmartCut.Shared.Models
         [Required]
         public long OrderLineId { get; set; }
         [Required]
+        public long CutEntryId { get; set; }
+        [Required]
         public int QuantityLine { get; set; }
         [Required]
         public float X { get; set; }
@@ -27,5 +29,7 @@ namespace SmartCut.Shared.Models
         public float Z { get; set; }
         [ForeignKey(nameof(OrderLineId))]
         public OrderLine? OrderLine { get; set; }
+        [ForeignKey(nameof(CutEntryId))]
+        public CutEntry? CutEntry { get; set; }
     }
 }

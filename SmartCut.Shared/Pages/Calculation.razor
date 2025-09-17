@@ -1,4 +1,5 @@
 ﻿@page "/calculation"
+@using SmartCut.Shared.Helpers
 @using SmartCut.Shared.Models
 @using SmartCut.Shared.Resources.Localization
 @using SmartCut.Shared.Services
@@ -109,8 +110,97 @@
         </div>
     </div>
 </div>
+<button class="btn btn-primary" @onclick="ShowCalculationResult" style="margin-top:10px;">@Localizer.Get("View Selected Orders") (@SelectedOrders.Count)</button>
+@if(showCuttingPlan)
+{
 
+    <div class="custom-modal-overlay">
+        <div class="custom-modal">
+            <div class="custom-modal-header">
+                <h5>@Localizer.Get("Calculation Result")</h5>
 
+                <button type="button" class="btn-close" @onclick="CloseCalculationResult"></button>
+
+            </div>
+            <div class="custom-modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <p><strong>@Localizer.Get("Id"):</strong> @CuttingPlan?.Id</p>
+                        </div>
+                        <div class="col">
+                            <p><strong>@Localizer.Get("Scrap Volume"):</strong> @CuttingPlan?.ScrapVolume</p>
+                        </div>
+                        <div class="col">
+                            <p><strong>@Localizer.Get("Percent Fulfilled"):</strong> @CuttingPlan?.PercentFulfilled</p>
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-primary" @onclick="VisualizeCalculationAsync">@Localizer.Get("Visualize Calculation")</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">@Localizer.Get("Invoice Number")</th>
+                                <th scope="col">@Localizer.Get("Line")</th>
+                                <th scope="col">@Localizer.Get("Width")</th>
+                                <th scope="col">@Localizer.Get("Length")</th>
+                                <th scope="col">@Localizer.Get("Height")</th>
+                                <th scope="col">@Localizer.Get("Quantity")</th>
+                                <th scope="col">@Localizer.Get("Product Code")</th>
+                                <th scope="col">@Localizer.Get("Product Name")</th>
+                                <th scope="col">@Localizer.Get("Customer Code")</th>
+                                <th scope="col">@Localizer.Get("Customer Name")</th>
+                                <th scope="col">@Localizer.Get("Description")</th>
+                                <th scope="col">@Localizer.Get("Created At")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var entry in CuttingPlan.CutEntries)
+                            {
+                                <tr>
+                                    <th>@entry.OrderLine.InvoiceNumber</th>
+                                    <th>@entry.OrderLine.Line</th>
+                                    <th>@entry.OrderLine.Width</th>
+                                    <th>@entry.OrderLine.Height</th>
+                                    <th>@entry.OrderLine.Length</th>
+                                    <th>@entry.OrderLine.StockCode</th>
+                                    <th>@entry.OrderLine.StockName</th>
+                                    <th>@entry.OrderLine.CustomerCode</th>
+                                    <th>@entry.OrderLine.CustomerName</th>
+                                    <th>@entry.OrderLine.Quantity</th>
+                                    <th>@entry.QuantityFulfilled</th>
+
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="CloseCalculationResult">@Localizer.Get("Close")</button>
+            </div>
+
+        </div>
+    </div>
+}
+@if (isVisualizing)
+{
+    <div class="cutting-plan-container border" 
+         style="position: relative; width:600px; height:400px; background:#f8f9fa;">
+        @foreach (var item in placementViewModels)
+        {
+            string css = $"position:absolute;left:{item.X}px;top:{item.Y}px;width:{item.W}px;height:{item.H}px;background-color:{item.Color};opacity:0.8;border:1px solid #333;font-size:10px;color:#fff;text-align:center;overflow:hidden;";
+            <div class="placement-box" 
+                 style="@css">
+                "ID:"@item.OrderLineId
+            </div>
+        }
+    </div>
+}
 @code {
     private IEnumerable<SmartCut.Shared.Models.Block>? Blocks { get; set; }
     private SmartCut.Shared.Models.Block? SelectedBlock { get; set; }
@@ -185,12 +275,13 @@
                 OrderLineIDs = SelectedOrderIds.ToList()
             };
             var result = await CalculationService.CalculateCuttingPlanAsync(calculationDTO);
-            CuttingPlan = await CalculationService.GetCuttingPlanAsync(result.Id);
-            if(cuttingPlan == null)
+            CuttingPlan = await CalculationService.GetCuttingPlanAsync(result);
+            if(CuttingPlan == null)
             {
                 NotificationService.ShowError(Localizer.Get("An error occurred while calculating."));
                 return;
             }
+            showCuttingPlan = true;
 
         }
         catch (Exception)
@@ -198,6 +289,61 @@
             NotificationService.ShowError(Localizer.Get("An error occurred while calculating."));
         }
     }
+    private bool showCuttingPlan = false;
+    private void CloseCalculationResult() => showCuttingPlan = false;
+    private void ShowCalculationResult() => showCuttingPlan = true;
+    private bool isVisualizing = false;
+    private List<PlacementViewModel> placementViewModels = new();
+    private async Task VisualizeCalculationAsync()
+    {
+        try
+        {
+            showCuttingPlan = false;
+            await Task.Delay(500);
 
+            // Convert placements from your calculation result
+            if (CuttingPlan != null)
+            {
+                var allPlacements = CuttingPlan.CutEntries
+                    .SelectMany(cp => cp.Positions.Select(pos => new Placement
+                    {
+                        OrderLineId = cp.OrderLineId,
+                        X = pos.X,
+                        Y = pos.Y,
+                        Z = pos.Z,
+                        W = cp.Dimension.X,
+                        L = cp.Dimension.Y,
+                        H = cp.Dimension.Z
+                    }))
+                    .ToList();
+
+                BuildPlacementViewModels(allPlacements);
+            }
+
+            isVisualizing = true;
+        }
+        catch (Exception)
+        {
+            NotificationService.ShowError("An error occurred while visualizing cutting plan.");
+            isVisualizing = false;
+            await Task.Delay(500);
+            showCuttingPlan = true;
+        }
+    }
+    private void BuildPlacementViewModels(List<Placement> placements)
+    {
+        var rnd = new Random();
+        placementViewModels = placements.Select(p => new PlacementViewModel
+        {
+            OrderLineId = p.OrderLineId,
+            X = p.X,
+            Y = p.Y,
+            Z = p.Z,
+            W = p.W,
+            H = p.H,
+            L = p.L,
+            Color = $"#{rnd.Next(0x1000000):X6}" // random color per part
+        }).ToList();
+    }
 
 }

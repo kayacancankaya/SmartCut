@@ -1,0 +1,12 @@
+﻿.cutting-plan-container {
+    perspective: 800px;
+}
+
+.placement-box {
+    transform: rotateX(15deg) rotateY(15deg);
+    transition: transform 0.3s ease-in-out;
+}
+
+    .placement-box:hover {
+        transform: rotateX(0deg) rotateY(0deg) scale(1.1);
+    }

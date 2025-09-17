@@ -13,12 +13,12 @@ namespace SmartCut.Shared.Models
         [Required]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public long Id { get; set; }
         [Required]
         public int Status { get; set; }
         [Required]
         public string Explanation { get; set; } = string.Empty;
-        [Required]
+
         public List<CutEntry> CutEntries { get; set; } = new();
         [Required]
         public float ScrapVolume { get; set; }
