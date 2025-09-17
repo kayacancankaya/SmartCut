@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SmartCut.Shared.Models
 {
-
     public class CutEntry
     {
         [Required]
@@ -11,12 +10,18 @@ namespace SmartCut.Shared.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
         [Required]
-        [ForeignKey("OrderLine")]
         public long OrderLineId { get; set; }
+        [Required]
+        public long CuttingPlanId { get; set; }
         [Required]
         public int QuantityFulfilled { get; set; }
 
-        public ICollection<Position> Positions { get; set; } = new List<Position>();
-        public Dimension? Dimensions { get; set; } 
+        [ForeignKey(nameof(OrderLineId))]
+        public OrderLine? OrderLine { get; set; }
+        public List<Position> Positions { get; set; } = new();
+        public Dimension? Dimension { get; set; } 
+
+        [ForeignKey(nameof(CuttingPlanId))]
+        public CuttingPlan? CuttingPlan { get; set; }
     }
 }

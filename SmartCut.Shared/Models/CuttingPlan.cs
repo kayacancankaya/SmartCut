@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SmartCut.Shared.Models
 {
-    public class CuttingPlanSummary
+    public class CuttingPlan
     {
         [Required]
         [Key]
@@ -19,7 +19,7 @@ namespace SmartCut.Shared.Models
         [Required]
         public string Explanation { get; set; } = string.Empty;
         [Required]
-        public List<CutEntry> CuttingPlan { get; set; } = new();
+        public List<CutEntry> CutEntries { get; set; } = new();
         [Required]
         public float ScrapVolume { get; set; }
         [Required]

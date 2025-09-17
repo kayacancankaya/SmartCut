@@ -168,7 +168,7 @@ namespace SmartCut.Web.Controller
             }
         }
         [HttpPost("calculatecuttingplan")]
-        public async Task<ActionResult<int>> CalculateCuttingPlan([FromBody] CalculationDTO dTO)
+        public async Task<ActionResult<long>> CalculateCuttingPlan([FromBody] CalculationDTO dTO)
         {
             try
             {
@@ -186,5 +186,20 @@ namespace SmartCut.Web.Controller
                 return StatusCode(500, "Internal server error");
             }
         }
+        [HttpGet("getcuttingplan")]
+        public async Task<ActionResult<CuttingPlan>> GetCuttingPlanAsync(long id)
+        {
+            try
+            {
+                var response = await _data.GetCuttingPlanAsync(id);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
     }
 }

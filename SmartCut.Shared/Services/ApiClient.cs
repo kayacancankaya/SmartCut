@@ -1,13 +1,6 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using SmartCut.Shared.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Net.WebRequestMethods;
 
 namespace SmartCut.Shared.Services
 {
@@ -149,7 +142,7 @@ namespace SmartCut.Shared.Services
                 return false;
             }
         }
-        public async Task<int> CalculateCuttingPlanAsync(CalculationDTO dto)
+        public async Task<long> CalculateCuttingPlanAsync(CalculationDTO dto)
         {
             try
             {
@@ -165,6 +158,19 @@ namespace SmartCut.Shared.Services
             {
                 _logger.LogError(ex, ex.Message.ToString());
                 return -1;
+            }
+        }
+        public async Task<CuttingPlan?> GetCuttingPlanAsync(long id)
+        {
+            try
+            {
+                var response = await _http.GetFromJsonAsync<CuttingPlan?>($"api/web/getcuttingplan?id={id}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return null;
             }
         }
     }

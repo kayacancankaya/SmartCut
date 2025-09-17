@@ -117,6 +117,7 @@
     private IEnumerable<OrderLine>? Orders { get; set; } = new List<OrderLine>();
     private List<OrderLine> SelectedOrders { get; set; } = new List<OrderLine>();
     private List<long> SelectedOrderIds { get; set; } = new List<long>();
+    private CuttingPlan? CuttingPlan { get; set; }
     private string lonelyMessage = Localizer.Get("Loading...");
     protected override async Task OnInitializedAsync()
     {
@@ -160,28 +161,42 @@
     }
     private async Task CalculateAsync()
     {
-        if(SelectedBlock == null)
+        try
         {
-            NotificationService.ShowError(Localizer.Get("Please select a block first."));
-            return;
+
+            if(SelectedBlock == null)
+            {
+                NotificationService.ShowError(Localizer.Get("Please select a block first."));
+                return;
+            }
+            if(SelectedOrders == null)
+            {
+                NotificationService.ShowError(Localizer.Get("Please select order."));
+                return;
+            }
+            if(SelectedOrders.Count == 0)
+            {
+                NotificationService.ShowError(Localizer.Get("Please select order."));
+                return;
+            }
+            CalculationDTO calculationDTO = new CalculationDTO
+            {
+                BlockId = SelectedBlock.Id,
+                OrderLineIDs = SelectedOrderIds.ToList()
+            };
+            var result = await CalculationService.CalculateCuttingPlanAsync(calculationDTO);
+            CuttingPlan = await CalculationService.GetCuttingPlanAsync(result.Id);
+            if(cuttingPlan == null)
+            {
+                NotificationService.ShowError(Localizer.Get("An error occurred while calculating."));
+                return;
+            }
+
         }
-        if(SelectedOrders == null)
+        catch (Exception)
         {
-            NotificationService.ShowError(Localizer.Get("Please select order."));
-            return;
+            NotificationService.ShowError(Localizer.Get("An error occurred while calculating."));
         }
-        if(SelectedOrders.Count == 0)
-        {
-            NotificationService.ShowError(Localizer.Get("Please select order."));
-            return;
-        }
-        CalculationDTO calculationDTO = new CalculationDTO
-        {
-            BlockId = SelectedBlock.Id,
-            OrderLineIDs = SelectedOrderIds.ToList()
-        };
-        var result = await CalculationService.CalculateCuttingPlanAsync(calculationDTO);
-      
     }
 
 

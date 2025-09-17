@@ -14,7 +14,7 @@ namespace SmartCut.Shared.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
-        [ForeignKey("Order")]
+
         public long OrderId { get; set; }
         [Required]
         [MaxLength(255)]
@@ -97,7 +97,11 @@ namespace SmartCut.Shared.Models
         public DateTime? UpdatedAt { get; set; } = DateTime.Now;
         [MaxLength(450)]
         public string UpdatedBy { get; set; } = string.Empty;
+        [ForeignKey(nameof(OrderId))]
         public Order? Order { get; set; }
+        public Dimension Dimension { get; set; } = new();
+        public List<Position> Positions { get; set; } = new();
+        public List<CutEntry> CutEntries { get; set; } = new();
         [NotMapped]
         public bool IsSelected { get; set; } = false;
     }

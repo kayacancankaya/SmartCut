@@ -437,19 +437,19 @@ namespace SmartCut.Shared.Services
                 return;
             }
         }
-        public async Task<int> CalculateCuttingPlanAsync(CalculationDTO calculationDTO)
+        public async Task<long> CalculateCuttingPlanAsync(CalculationDTO calculationDTO)
         {
             try
             {
                 if (calculationDTO.BlockId <= 0)
-                    return 1;
+                    return -2;
                 if (calculationDTO.OrderLineIDs == null)
-                    return 2;
+                    return -3;
                 if (calculationDTO.OrderLineIDs.Count == 0)
-                    return 2;
+                    return -3;
                 Block? block = await _context.Blocks.FirstOrDefaultAsync(b => b.Id == calculationDTO.BlockId);
                 if (block == null)
-                    return 1;
+                    return -2;
                 double blockVolume = (double)block.Width * (double)block.Height * (double)block.Length;
 
                 List<OrderLine> orderLines = new();
@@ -527,11 +527,15 @@ namespace SmartCut.Shared.Services
                 var placementsGrouped = placements.GroupBy(p => p.OrderLineId);
                 foreach (var grp in placementsGrouped)
                 {
+                    int counter = 0;
                     var positions = grp.Select(g => new float[] { g.X, g.Y, g.Z }).ToList();
                     List<SmartCut.Shared.Models.Position> posList = new();
                     foreach (var position in positions) {
+                        counter++;
                         SmartCut.Shared.Models.Position position1 = new SmartCut.Shared.Models.Position
                         {
+                            OrderLineId = grp.Key,
+                            QuantityLine = counter,
                             X = position[0],
                             Y = position[1],
                             Z = position[2]
@@ -545,18 +549,19 @@ namespace SmartCut.Shared.Services
                         Y = dimsOriginal[1],
                         Z = dimsOriginal[2]
                     };
-                       
-                    
                     
                     planEntries.Add(new CutEntry
                     {
                         OrderLineId = grp.Key,
                         QuantityFulfilled = positions.Count,
                         Positions = posList,
-                        Dimensions = dimension
+                        Dimension = dimension
                     });
+                    await _context.Positions.AddRangeAsync(posList);
+                    await _context.Dimensions.AddAsync(dimension);
                 }
 
+                await _context.CutEntries.AddRangeAsync(planEntries);
                 // Identify shortfalls per order line for explanation
                 var shortfalls = new List<string>();
                 var requestedById = orderLines.ToDictionary(k => k.Id, v => Convert.ToInt32(v.Quantity));
@@ -591,25 +596,37 @@ namespace SmartCut.Shared.Services
                 }
 
                 // Build JSON result object
-                var result = new CuttingPlanSummary
+                var result = new CuttingPlan
                 {
                     Status = status,
                     Explanation = explanation,
-                    CuttingPlan = planEntries,
+                    CutEntries = planEntries,
                     ScrapVolume = (float)scrapVolume,
                     PercentFulfilled = (float)percentFulfilled
                 };
+                await _context.CuttingPlans.AddAsync(result);
+                await _context.SaveChangesAsync();
 
-                // Optional: persist or attach to DTO if needed by caller
-                // Example: calculationDTO.ResultJson = JsonSerializer.Serialize(result);
-                // If you have a Calculation entity, you could save it here.
+                return result.Id; 
 
-                return status;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message.ToString());
                 return -1;
+            }
+        }
+
+        public async Task<CuttingPlan> GetCuttingPlanAsync(long id)
+        {
+            try
+            {
+                return await _context.CuttingPlans.FirstOrDefaultAsync(i=> i.Id == id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return null;
             }
         }
 
@@ -764,357 +781,6 @@ namespace SmartCut.Shared.Services
                     new SmartCut.Shared.Helpers.Orientation(l,h,w)
                 };
             }
-
-        //    _logger.LogInformation("Block volume: {bv}, total order volume: {ov}", blockVolume, totalOrderVolume);
-
-        //                // Try ILP approach first (if OR-Tools available)
-        //                CuttingPlanSummary? summary = null;
-
-        //                bool ortoolsAvailable = false;
-        //                try
-        //                {
-        //                    // detect OR-Tools by trying to load type (keeps compile-time optional)
-        //                    var ortoolsType = Type.GetType("Google.OrTools.LinearSolver.Solver, Google.OrTools");
-        //                    ortoolsAvailable = ortoolsType != null;
-        //                }
-        //                catch
-        //                {
-        //                    ortoolsAvailable = false;
-        //                }
-
-        //                if (ortoolsAvailable)
-        //                {
-        //                    try
-        //                    {
-        //                        summary = SolveWithILP(block, orderLines);
-        //                        _logger.LogInformation("ILP solver succeeded.");
-        //                    }
-        //                    catch (Exception ex)
-        //                    {
-        //                        _logger.LogWarning(ex, "ILP solver failed, falling back to greedy packing.");
-        //                        summary = null;
-        //                    }
-        //                }
-
-        //                // If ILP wasn't available or failed, fallback to greedy 3D guillotine-like heuristic
-        //                if (summary == null)
-        //                {
-        //                    summary = Greedy3DPacking(block, orderLines);
-        //                    summary.Notes = (summary.Notes ?? "") + (ortoolsAvailable ? "ILP failed, used greedy fallback." : "OR-Tools not available, used greedy fallback.");
-        //                }
-
-        //                // Log summary
-        //                _logger.LogInformation("Cutting Plan Summary: BlocksNeeded={blocks}, WasteVol={waste}, TotalProduced={prod}",
-        //                    summary.BlocksNeeded, summary.WasteVolume, summary.ProducedQuantities.Sum(kv => kv.Value));
-
-        //                // TODO: persist summary if needed
-
-        //                return 0; // success
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                _logger.LogError(ex, ex.Message.ToString());
-        //                return -1;
-        //            }
-        //        }
-
-        //        // ---------------------------
-        //        // ILP solver using OR-Tools
-        //        // ---------------------------
-        //        private CuttingPlanSummary? SolveWithILP(Block block, List<OrderLineDTO> lines)
-        //        {
-        //            // Note: This method expects Google.OrTools to be referenced.
-        //            // If OR-Tools is not installed, this method should not be called.
-        //            // The ILP model here is a pattern-based simplification:
-        //            // 1) For each candidate layer height (distinct heights of order lines), we compute a 2D packing pattern that yields counts per item for ONE layer.
-        //            // 2) We then create integer variables that represent how many of each layer we place in a block (subject to block.Height).
-        //            // 3) Using these patterns, we compute how many items a single block can produce depending on combination of layers.
-        //            // 4) Finally, we choose the minimum number of blocks to meet demands (this becomes another ILP).
-        //            //
-        //            // This is a simplification and not full 3D guillotine packing, but it leverages ILP to combine layer patterns optimally.
-
-        //            // Because this method uses OR-Tools types, keep all OR-Tools code inside to avoid compile errors if package missing.
-        //#if NET8_0_OR_GREATER
-        //            // If you compile against .NET 8 and have Google.OrTools package, the following code will run.
-        //#endif
-
-        //            // Attempt to load OR-Tools types via reflection to avoid hard dependency at compile time;
-        //            // but the recommended approach is to add the Google.OrTools NuGet and directly use its API.
-        //            Type? solverType = Type.GetType("Google.OrTools.LinearSolver.Solver, Google.OrTools");
-        //            if (solverType == null)
-        //                throw new InvalidOperationException("OR-Tools not found.");
-
-        //            // --- Build layer patterns ---
-        //            var uniqueHeights = lines.Select(l => l.Height).Distinct().OrderBy(h => h).ToList();
-
-        //            // For each height, compute a 2D packing using a simple greedy skyline/guillotine in the XY plane for that layer height.
-        //            var patterns = new List<LayerPattern>();
-        //            foreach (var h in uniqueHeights)
-        //            {
-        //                var layerPattern = PackLayer2D(Convert.ToInt32(block.Width), Convert.ToInt32(block.Length), h, lines);
-        //                if (layerPattern.TotalPlaced > 0)
-        //                    patterns.Add(layerPattern);
-        //            }
-
-        //            if (patterns.Count == 0)
-        //                throw new InvalidOperationException("No feasible layer patterns found (maybe all item heights > block height).");
-
-        //            // Now we attempt to determine how many of each pattern to put into ONE BLOCK (sum patternHeight * count <= block.Height)
-        //            // and then how many blocks are needed to satisfy all orders.
-        //            // Build ILP using OR-Tools (integer variables).
-        //            // We'll build a two-stage ILP: variables layersInBlock[p] = number of that pattern per block.
-        //            // Then compute itemsPerBlock[i] = sum_p layersInBlock[p] * pattern.PlacedCounts[i]
-        //            // Finally choose blocksCount (integer) and ensure blocksCount * itemsPerBlock[i] >= demand_i minimizing blocksCount.
-        //            //
-        //            // This is nonlinear if written raw (product blocksCount * itemsPerBlock variables). Instead we use patternBlockCount[p]
-        //            // = total number of pattern layers used across ALL blocks (global count), and blocksCount variable.
-        //            // Constraints:
-        //            //   sum_p patternHeight[p] * patternBlockCount[p] <= blocksCount * block.Height
-        //            //   For each item i: sum_p patternBlockCount[p] * pattern.PlacedCounts[i] >= demand[i]
-        //            // objective: minimize blocksCount
-        //            //
-        //            // This is linear (patternBlockCount and blocksCount are integer variables).
-
-        //            // Now create solver and variables via reflection-invoked OR-Tools API for flexibility.
-        //            // For readability and maintainability I'd normally reference OR-Tools directly. Below I'll assume OR-Tools is available
-        //            // and call it directly (so please add Google.OrTools package); reflection here would make the code unreadable.
-
-        //            // --- Direct usage (recommended) ---
-        //#if GOOGLE_ORTOOLS
-        //        // If you have Google.OrTools referenced at compile time, use the following:
-        //        var solver = Solver.CreateSolver("SCIP"); // or "CBC_MIXED_INTEGER_PROGRAMMING"
-        //        if (solver == null)
-        //            throw new InvalidOperationException("Could not create OR-Tools solver.");
-
-        //        int pCount = patterns.Count;
-        //        int itemCount = lines.Count;
-
-        //        // Variables: patternBlockCount[p] >= 0 integer
-        //        var patternBlockCount = new Google.OrTools.LinearSolver.Variable[pCount];
-        //        for (int p = 0; p < pCount; ++p)
-        //        {
-        //            patternBlockCount[p] = solver.MakeIntVar(0.0, double.PositiveInfinity, $"patCount_{p}");
-        //        }
-
-        //        // blocksCount integer >= 0
-        //        var blocksCount = solver.MakeIntVar(0.0, double.PositiveInfinity, "blocksCount");
-
-        //        // Height constraint: sum_p patternHeight[p] * patternBlockCount[p] <= block.Height * blocksCount
-        //        var heightExpr = solver.MakeConstraint(0, double.PositiveInfinity, "heightCap"); // we'll set upper via expression
-        //        {
-        //            // add LHS - block.Height * blocksCount <= 0
-        //            for (int p = 0; p < pCount; ++p)
-        //                heightExpr.SetCoefficient(patternBlockCount[p], patterns[p].Height);
-
-        //            heightExpr.SetCoefficient(blocksCount, -block.Height);
-        //            heightExpr.SetUpperBound(0.0);
-        //        }
-
-        //        // Demand constraints: for each item i: sum_p patternBlockCount[p] * pattern.PlacedCounts[i] >= demand[i]
-        //        for (int i = 0; i < itemCount; ++i)
-        //        {
-        //            var c = solver.MakeConstraint(lines[i].Quantity, double.PositiveInfinity, $"demand_{i}");
-        //            for (int p = 0; p < pCount; ++p)
-        //            {
-        //                int placed = patterns[p].GetPlacedCountForLineIndex(i);
-        //                if (placed > 0)
-        //                    c.SetCoefficient(patternBlockCount[p], placed);
-        //            }
-        //        }
-
-        //        // Objective: minimize blocksCount
-        //        var objective = solver.Objective();
-        //        objective.SetCoefficient(blocksCount, 1);
-        //        objective.SetMinimization();
-
-        //        var resultStatus = solver.Solve();
-        //        if (resultStatus != Solver.OPTIMAL && resultStatus != Solver.FEASIBLE)
-        //            throw new InvalidOperationException($"OR-Tools solver status: {resultStatus}");
-
-        //        // Build summary
-        //        var summary = new CuttingPlanSummary();
-        //        summary.BlocksNeeded = (int)Math.Ceiling(blocksCount.SolutionValue());
-        //        summary.TotalBlockVolume = block.Width * block.Length * block.Height;
-        //        summary.TotalOrderVolume = lines.Sum(l => l.Width * l.Length * l.Height * l.Quantity);
-        //        summary.ProducedQuantities = new Dictionary<OrderLineDTO, int>();
-        //        for (int i = 0; i < itemCount; ++i)
-        //        {
-        //            double produced = 0;
-        //            for (int p = 0; p < pCount; ++p)
-        //                produced += patterns[p].GetPlacedCountForLineIndex(i) * patternBlockCount[p].SolutionValue();
-        //            summary.ProducedQuantities[lines[i]] = (int)Math.Floor(produced + 1e-6);
-        //        }
-        //        summary.WasteVolume = summary.BlocksNeeded * summary.TotalBlockVolume - summary.ProducedQuantities.Sum(kv => kv.Key.Width * kv.Key.Length * kv.Key.Height * kv.Value);
-        //        return summary;
-        //#else
-        //            // If you don't have Google.OrTools define GOOGLE_ORTOOLS if you add it. For now throw to signal ILP not available.
-        //            throw new InvalidOperationException("Direct OR-Tools compile-time usage not enabled. Build with Google.OrTools or disable ILP branch.");
-        //#endif
-        //        }
-
-        //        // ---------------------------
-        //        // Greedy 3D guillotine-like heuristic
-        //        // ---------------------------
-        //        private CuttingPlanSummary Greedy3DPacking(Block block, List<OrderLineDTO> lines)
-        //        {
-        //            // Strategy:
-        //            // 1) Allow XY rotations (swap length/width).
-        //            // 2) Create layers by selecting an item height (tallest-first).
-        //            // 3) For each layer height, pack 2D rectangle packing into block.Width x block.Length using simple shelf algorithm.
-        //            // 4) For every time one block is filled in height, count items produced.
-        //            // 5) Repeat blocks until demands are met or a max blocks threshold reached.
-
-        //            var remaining = lines.ToDictionary(l => l, l => l.Quantity); // quantities left
-        //            var summary = new CuttingPlanSummary();
-        //            summary.TotalBlockVolume = block.Width * block.Length * block.Height;
-        //            summary.TotalOrderVolume = lines.Sum(l => l.Width * l.Length * l.Height * l.Quantity);
-
-        //            int blocksUsed = 0;
-        //            int safetyLimit = 10000; // avoid infinite loops
-        //            while (remaining.Values.Any(q => q > 0) && safetyLimit-- > 0)
-        //            {
-        //                blocksUsed++;
-        //                int usedHeight = 0;
-        //                var producedThisBlock = lines.ToDictionary(l => l, l => 0);
-
-        //                // Create layers until block height exhausted
-        //                while (usedHeight < block.Height)
-        //                {
-        //                    // choose the best layer height among items that still need production and fit in remaining height
-        //                    var candidateHeights = remaining.Where(kv => kv.Value > 0).Select(kv => kv.Key.Height).Distinct()
-        //                        .Where(h => h <= (block.Height - usedHeight)).OrderByDescending(h => h).ToList();
-        //                    if (!candidateHeights.Any()) break;
-
-        //                    bool layerPlaced = false;
-        //                    foreach (var layerH in candidateHeights)
-        //                    {
-        //                        // try pack layer using shelf (row) packing across block.Length and block.Width
-        //                        var layerPacking = PackLayer2D(block.Width, block.Length, layerH, lines, remaining);
-
-        //                        if (layerPacking.TotalPlaced == 0)
-        //                            continue;
-
-        //                        // apply placement: reduce remaining quantities
-        //                        foreach (var kv in layerPacking.PlacedCountsPerLine)
-        //                        {
-        //                            if (kv.Value <= 0) continue;
-        //                            producedThisBlock[kv.Key] += kv.Value;
-        //                            remaining[kv.Key] -= kv.Value;
-        //                            if (remaining[kv.Key] < 0) remaining[kv.Key] = 0;
-        //                        }
-
-        //                        usedHeight += layerH;
-        //                        layerPlaced = true;
-        //                        break; // pick one layer at a time (first-fit by tallest)
-        //                    }
-
-        //                    if (!layerPlaced) break; // can't place any layer in remaining height
-        //                }
-
-        //                // Add producedThisBlock to summary
-        //                foreach (var kv in producedThisBlock)
-        //                {
-        //                    if (!summary.ProducedQuantities.ContainsKey(kv.Key))
-        //                        summary.ProducedQuantities[kv.Key] = 0;
-        //                    summary.ProducedQuantities[kv.Key] += kv.Value;
-        //                }
-
-        //                // safety stop if no items produced in a block (avoid infinite loop)
-        //                if (producedThisBlock.All(kv => kv.Value == 0))
-        //                {
-        //                    summary.Notes = "Greedy packing could not place any new items in the current block - some items may not fit.";
-        //                    break;
-        //                }
-        //            }
-
-        //            summary.BlocksNeeded = blocksUsed;
-        //            float producedVolume = summary.ProducedQuantities.Sum(kv => kv.Key.Width * kv.Key.Length * kv.Key.Height * kv.Value);
-        //            summary.WasteVolume = summary.BlocksNeeded * summary.TotalBlockVolume - producedVolume;
-        //            return summary;
-        //        }
-
-        //        // Helper: simple 2D layer packing (greedy shelf algorithm). This variant returns counts assuming unlimited copies (limited by remaining if provided).
-        //        private LayerPattern PackLayer2D(int blockW, int blockL, int layerH, List<OrderLineDTO> lines, Dictionary<OrderLineDTO, int>? remaining = null)
-        //        {
-        //            // We'll create a simple shelf packer: fill rows across length; each shelf height = max item height in shelf (here all equal to layerH),
-        //            // we place items left-to-right; we allow rotation in XY plane (swap length/width) to try to fit more.
-        //            // lines is the master list; we will attempt placement for items whose Height == layerH (only those make sense for this layer).
-        //            var pattern = new LayerPattern(layerH);
-        //            // consider only items with matching height
-        //            var candidates = lines.Where(l => l.Height == layerH).ToList();
-        //            if (!candidates.Any()) return pattern;
-
-        //            // We'll sort candidates by area descending to place big rectangles first
-        //            var ordered = candidates.OrderByDescending(c => c.Width * c.Length).ToList();
-
-        //            // shelf packing: maintain current row Y offset (not needed for counts), with remaining length and width
-        //            int remainingWidth = blockW;
-        //            int remainingLength = blockL;
-        //            // We'll simulate using rows along the Length: i.e., form shelves that span blockW and stacking shelves along Length
-        //            var shelfRemainingLength = blockL;
-        //            int shelfHeight = layerH; // all items in layer have the same height by definition
-        //            int posX = 0;
-        //            int posY = 0;
-
-        //            // We'll maintain placements counts per item
-        //            foreach (var item in ordered)
-        //            {
-        //                int allowed = remaining == null ? item.Quantity : remaining.GetValueOrDefault(item, item.Quantity);
-        //                if (allowed <= 0) continue;
-
-        //                // compute how many of this item fit per shelf cell with rotation attempts
-        //                // compute in tile grid: how many fit across width (W) and length (L)
-        //                int fitW = Math.Max(0, blockW / item.Width);
-        //                int fitL = Math.Max(0, blockL / item.Length);
-        //                int fitRotW = Math.Max(0, blockW / item.Length);
-        //                int fitRotL = Math.Max(0, blockL / item.Width);
-
-        //                int perBlockIfOnlyThis = Math.Max(fitW * fitL, fitRotW * fitRotL);
-        //                if (perBlockIfOnlyThis <= 0) continue;
-
-        //                // But we are packing layer-so per-layer we can fit:
-        //                int perLayerFit;
-        //                // compute per-layer by dividing area heuristically:
-        //                int across = blockW / item.Width;
-        //                int down = blockL / item.Length;
-        //                int acrossRot = blockW / item.Length;
-        //                int downRot = blockL / item.Width;
-        //                perLayerFit = Math.Max(across * down, acrossRot * downRot);
-
-        //                if (perLayerFit <= 0) continue;
-
-        //                // Limit by remaining demand
-        //                int placeCount = Math.Min(perLayerFit, allowed);
-
-        //                pattern.PlacedCountsPerLine[item] = placeCount;
-        //                pattern.TotalPlaced += placeCount;
-        //            }
-
-        //            return pattern;
-        //        }
-
-        //        // Helper class for layer packing pattern
-        //        private class LayerPattern
-        //        {
-        //            public int Height { get; }
-        //            // PlacedCountsPerLine uses object reference equality to OrderLineDTO; ensure same instances passed
-        //            public Dictionary<OrderLineDTO, int> PlacedCountsPerLine { get; } = new();
-
-        //            public LayerPattern(int h)
-        //            {
-        //                Height = h;
-        //            }
-
-        //            public int TotalPlaced => PlacedCountsPerLine.Values.Sum();
-
-        //            // Convert to index-based get (for ILP path, if you build mapping)
-        //            public int GetPlacedCountForLineIndex(int i)
-        //            {
-        //                if (i < 0) return 0;
-        //                var kv = PlacedCountsPerLine.ElementAtOrDefault(i);
-        //                return kv.Equals(default(KeyValuePair<OrderLineDTO, int>)) ? 0 : kv.Value;
-        //            }
-        //        }
 
 
     }
