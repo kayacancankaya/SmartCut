@@ -610,8 +610,7 @@ namespace SmartCut.Shared.Services
                 };
                 await _context.CuttingPlans.AddAsync(result);
                 await _context.CutEntries.AddRangeAsync(planEntries);
-                await _context.SaveChangesAsync();
-
+               
                 //make all CutEntryId in positions
                 foreach (var pos in allPositions)
                 {
@@ -629,8 +628,6 @@ namespace SmartCut.Shared.Services
                         dim.CutEntryId = entry.Id;
                     }
                 }
-                await _context.Positions.AddRangeAsync(allPositions);
-                await _context.Dimensions.AddRangeAsync(dimensions);
                 await _context.SaveChangesAsync();
                 return result.Id; 
 
@@ -642,16 +639,19 @@ namespace SmartCut.Shared.Services
             }
         }
 
-        public async Task<CuttingPlan> GetCuttingPlanAsync(long id)
+        public async Task<CuttingPlan?> GetCuttingPlanAsync(long id)
         {
             try
             {
-                return await _context.CuttingPlans
+                CuttingPlan? cuttingPlan = await _context.CuttingPlans
                                     .Include(c => c.CutEntries)
                                         .ThenInclude(e => e.Positions)   // relación 1:N
+                                            .ThenInclude(p => p.OrderLine) // relación 1:1
                                     .Include(c => c.CutEntries)
                                         .ThenInclude(e => e.Dimension)   // relación 1:1
+                                            .ThenInclude(d => d.OrderLine) // relación 1:1
                                     .FirstOrDefaultAsync(i => i.Id == id);
+                return cuttingPlan;
 
             }
             catch (Exception ex)

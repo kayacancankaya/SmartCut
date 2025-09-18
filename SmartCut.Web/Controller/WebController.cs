@@ -187,7 +187,7 @@ namespace SmartCut.Web.Controller
             }
         }
         [HttpGet("getcuttingplan")]
-        public async Task<ActionResult<CuttingPlan>> GetCuttingPlanAsync(long id)
+        public async Task<ActionResult<CuttingPlan?>> GetCuttingPlanAsync(long id)
         {
             try
             {

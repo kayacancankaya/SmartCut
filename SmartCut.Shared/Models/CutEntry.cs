@@ -16,10 +16,11 @@ namespace SmartCut.Shared.Models
         [Required]
         public int QuantityFulfilled { get; set; }
 
-        [ForeignKey(nameof(OrderLineId))]
-        public OrderLine? OrderLine { get; set; }
         public List<Position> Positions { get; set; } = new();
         public Dimension? Dimension { get; set; } 
+
+        [ForeignKey(nameof(OrderLineId))]
+        public OrderLine? OrderLine { get; set; }
 
         [ForeignKey(nameof(CuttingPlanId))]
         public CuttingPlan? CuttingPlan { get; set; }

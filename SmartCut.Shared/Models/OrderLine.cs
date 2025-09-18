@@ -18,16 +18,16 @@ namespace SmartCut.Shared.Models
         public long OrderId { get; set; }
         [Required]
         [MaxLength(255)]
-        public string? StockCode { get; set; } = string.Empty;
+        public string StockCode { get; set; } = string.Empty;
         [Required]
         [MaxLength(450)]
-        public string? StockName { get; set; } = string.Empty;
+        public string StockName { get; set; } = string.Empty;
         [Required]
         [MaxLength(450)]
-        public string? Normalized_StockName { get; set; } = string.Empty;
+        public string Normalized_StockName { get; set; } = string.Empty;
         [Required]
         [MaxLength(450)]
-        public string? InvoiceNumber { get; set; } 
+        public string InvoiceNumber { get; set; } = string.Empty; 
         [Required]
         public int Line { get; set; }
         [Required]
@@ -36,7 +36,7 @@ namespace SmartCut.Shared.Models
         public float ConversionRate { get; set; }
 
         [Required]
-        public char? TransactionTypeCode { get; set; } = 'E';
+        public char TransactionTypeCode { get; set; } = 'E';
         [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         [Required]
         public DateTime Date { get; set; } = DateTime.Now;
@@ -51,9 +51,9 @@ namespace SmartCut.Shared.Models
         public float VAT { get; set; } // STHAR_KDV
 
         [Required]
-        public short? WarehouseCode { get; set; } = 0; // STHAR_DEPO
-        public string? Description { get; set; } = string.Empty;// STHAR_ACIKLAMA
-        public string? Normalized_Description { get; set; } = string.Empty;// STHAR_ACIKLAMA
+        public short WarehouseCode { get; set; } = 0; // STHAR_DEPO
+        public string Description { get; set; } = string.Empty;// STHAR_ACIKLAMA
+        public string Normalized_Description { get; set; } = string.Empty;// STHAR_ACIKLAMA
 
         public float SalePrice1 { get; set; } // STHAR_SATISK
         public float CostPrice1 { get; set; } // STHAR_MALFISK
@@ -88,20 +88,20 @@ namespace SmartCut.Shared.Models
         public bool IsActive { get; set; } = true;
         [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         [Required]
-        public DateTime? CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
         [Required]
         [MaxLength(450)]
         public string CreatedBy { get; set; } = string.Empty;
 
         [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
-        public DateTime? UpdatedAt { get; set; } = DateTime.Now;
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
         [MaxLength(450)]
         public string UpdatedBy { get; set; } = string.Empty;
         [ForeignKey(nameof(OrderId))]
         public Order? Order { get; set; }
-        public Dimension Dimension { get; set; } = new();
-        public List<Position> Positions { get; set; } = new();
-        public List<CutEntry> CutEntries { get; set; } = new();
+        public Dimension? Dimension { get; set; }
+        public ICollection<Position>? Positions { get; set; } 
+        public ICollection<CutEntry>? CutEntries { get; set; }
         [NotMapped]
         public bool IsSelected { get; set; } = false;
     }

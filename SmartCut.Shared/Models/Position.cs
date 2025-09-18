@@ -28,8 +28,8 @@ namespace SmartCut.Shared.Models
         [Required]
         public float Z { get; set; }
         [ForeignKey(nameof(OrderLineId))]
-        public OrderLine? OrderLine { get; set; }
+        public OrderLine? OrderLine { get; set; } = new OrderLine();
         [ForeignKey(nameof(CutEntryId))]
-        public CutEntry? CutEntry { get; set; }
+        public CutEntry? CutEntry { get; set; } = new CutEntry();
     }
 }

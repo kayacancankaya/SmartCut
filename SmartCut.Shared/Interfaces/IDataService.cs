@@ -13,6 +13,5 @@ namespace SmartCut.Shared.Interfaces
         Task<bool> ImportOrdersAsync(List<OrderDTO> orders);
         Task<bool> ImportBlocksAsync(List<BlockDTO> blocks);
         Task<long> CalculateCuttingPlanAsync(CalculationDTO dTO);
-
     }
 }
