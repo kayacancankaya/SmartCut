@@ -48,55 +48,55 @@ namespace SmartCut.Shared.Models
 
         [MaxLength(100)]
         public string? WarehouseReceiptNumber { get; set; }
-        public char? Code1 { get; set; }
-        public char? Code2 { get; set; }
-        public char? Code3 { get; set; }
-        public char? Code4 { get; set; }
-        public char? Code5 { get; set; }
-        public short? PaymentDay { get; set; }
+        public char? Code1 { get; set; } = ' ';
+        public char? Code2 { get; set; } = ' ';
+        public char? Code3 { get; set; } = ' ';
+        public char? Code4 { get; set; } = ' ';
+        public char? Code5 { get; set; } = ' ';
+        public short? PaymentDay { get; set; } = 0;
 
         [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         [Required]
         public DateTime? PaymentDate { get; set; } =DateTime.MinValue;
-        public char? VATIncludedFlag { get; set; }             // KDV_DAHILMI - char(1) NULL
-        public short? InvoiceItemCount { get; set; }           // faturadaki kalemler - smallint NULL
+        public char? VATIncludedFlag { get; set; } = ' ';            // KDV_DAHILMI - char(1) NULL
+        public short? InvoiceItemCount { get; set; } = 0;          // faturadaki kalemler - smallint NULL
         public float TotalQuantity { get; set; } = 0;
         public float TotalAmount { get; set; } = 0;
 
         [MaxLength(100)]
-        public string? PlanCode { get; set; }                      // PLA_KODU - varchar(8) NULL   
+        public string? PlanCode { get; set; } = string.Empty;                    // PLA_KODU - varchar(8) NULL   
         public bool IsActive { get; set; } = true;
-        public string? Reserved1 { get; set; }
-        public string? Reserved2 { get; set; }
-        public string? Normalized_Reserved1 { get; set; }
-        public string? Normalized_Reserved2 { get; set; }
+        public string? Reserved1 { get; set; } = string.Empty;
+        public string? Reserved2 { get; set; } = string.Empty;
+        public string? Normalized_Reserved1 { get; set; } = string.Empty;
+        public string? Normalized_Reserved2 { get; set; } = string.Empty;
         public float FReserved3 { get; set; }
         public float FReserved4 { get; set; }
         public float FReserved5 { get; set; }
-        public char? CReserved6 { get; set; }
-        public byte? BReserved7 { get; set; }
-        public short? IReserved8 { get; set; }
+        public char? CReserved6 { get; set; } = ' ';
+        public byte? BReserved7 { get; set; } = new byte();
+        public short? IReserved8 { get; set; } = 0;
         public int? LReserved9 { get; set; }
         [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime? DReserved10 { get; set; } = DateTime.MinValue;
 
         [MaxLength(100)]
-        public string? ProjectCode { get; set; }
+        public string? ProjectCode { get; set; } = string.Empty;
         [MaxLength(100)]
-        public string? ConditionCode { get; set; }
+        public string? ConditionCode { get; set; } = string.Empty;
         [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime? PriceDate { get; set; } = DateTime.MinValue;
         [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime? ConditionDate { get; set; } = DateTime.MinValue;
-        public byte? ExportType { get; set; }
+        public byte? ExportType { get; set; } = new byte();
         [MaxLength(450)]
-        public string? CustomsNumber { get; set; }
+        public string? CustomsNumber { get; set; } = string.Empty;
         [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime? CustomsDate { get; set; } = DateTime.MinValue;
         [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime? ExecutionDate { get; set; } = DateTime.MinValue;
         [MaxLength(450)]
-        public string? ExportReferenceNumber { get; set; }
+        public string? ExportReferenceNumber { get; set; } = string.Empty;
         [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         [Required]
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
@@ -108,35 +108,35 @@ namespace SmartCut.Shared.Models
         public DateTime? UpdatedAt { get; set; } = DateTime.Now;
         [MaxLength(450)]
         public string UpdatedBy { get; set; } = string.Empty;
-        public short? IncomingBranchCode { get; set; }
-        public short? OutgoingBranchCode { get; set; }
+        public short? IncomingBranchCode { get; set; } = 0;
+        public short? OutgoingBranchCode { get; set; } = 0;
         public char ApprovalType { get; set; } = 'A';
         public int ApprovalNumber { get; set; }
-        public short BusinessCode { get; set; }
+        public short BusinessCode { get; set; } = 0;
 
         [MaxLength(8)]
-        public string? PaymentCode { get; set; }
-        public float CostUnit { get; set; }
-        public short? PaymentDueDay { get; set; }
+        public string? PaymentCode { get; set; } = string.Empty;
+        public float CostUnit { get; set; } = 0;
+        public short? PaymentDueDay { get; set; } = 0;
         [MaxLength(450)]
-        public string? JobCode { get; set; }
+        public string? JobCode { get; set; } = string.Empty;
         [MaxLength(450)]
-        public string? GovernmentInvoiceNumber { get; set; }
-        public int? ElectronicDocument { get; set; }
+        public string? GovernmentInvoiceNumber { get; set; } = string.Empty;
+        public int? ElectronicDocument { get; set; } = 0;
         [MaxLength(450)]
-        public string? ExternalAppId { get; set; }
+        public string? ExternalAppId { get; set; } = string.Empty;
         [MaxLength(450)]
-        public string? ExternalReferenceId { get; set; }
-        public int? HalfFat { get; set; }
+        public string? ExternalReferenceId { get; set; } = string.Empty;
+        public int? HalfFat { get; set; } = 0;
         public float InvoiceAltM3 { get; set; }
         [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime? DovBazTar { get; set; } = DateTime.MinValue;
         public float OTVTevTutar { get; set; }
-        public short? TopGirDepo { get; set; }
-        public char? BForm { get; set; }
+        public short? TopGirDepo { get; set; } = 0;
+        public char? BForm { get; set; } = ' ';
         public int? WithholdingRefund { get; set; }
-        public char? NotInvoice { get; set; }
-        public int? Accommodation { get; set; }
+        public char? NotInvoice { get; set; } = ' ';
+        public int? Accommodation { get; set; } = 0;
 
         public ICollection<OrderLine> OrderLines { get; set; } = new List<OrderLine>();
     }

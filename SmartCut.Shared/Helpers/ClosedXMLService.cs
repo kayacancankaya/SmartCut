@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Logging;
 using SmartCut.Shared.Interfaces;
-using SmartCut.Shared.Models;
+using SmartCut.Shared.Models.DTOs;
 
 namespace SmartCut.Shared.Helpers
 {

@@ -62,10 +62,10 @@ namespace SmartCut.Shared.Models
         [Required]
         [MaxLength(3)]
 
-        public string CurrencyType { get; set; } = "USD"; 
+        public string CurrencyType { get; set; } = "USD";
 
 
-        public short? PaymentDay { get; set; } // STHAR_ODEGUN
+        public short? PaymentDay { get; set; } = 0;
 
         [Required]
         [MaxLength(450)]
@@ -99,9 +99,6 @@ namespace SmartCut.Shared.Models
         public string UpdatedBy { get; set; } = string.Empty;
         [ForeignKey(nameof(OrderId))]
         public Order? Order { get; set; }
-        public Dimension? Dimension { get; set; }
-        public ICollection<Position>? Positions { get; set; } 
-        public ICollection<CutEntry>? CutEntries { get; set; }
         [NotMapped]
         public bool IsSelected { get; set; } = false;
     }

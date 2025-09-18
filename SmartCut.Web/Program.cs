@@ -56,6 +56,11 @@ builder.Services.AddScoped<IExcelService, ClosedXMLService>();
 builder.Services.AddScoped<BreadcrumbService>(); 
 builder.Services.AddScoped<NotificationService>();
 
+builder.Services.AddControllers()
+    .AddJsonOptions(opt =>
+    {
+        opt.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    });
 
 builder.Services.AddHttpClient<ApiClient>(client =>
 {

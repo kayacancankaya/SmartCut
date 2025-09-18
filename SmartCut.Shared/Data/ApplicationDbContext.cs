@@ -45,18 +45,6 @@ namespace SmartCut.Shared.Data
                 .HasOne(o => o.Order)
                 .WithMany(o => o.OrderLines)
                 .HasForeignKey(o => o.OrderId);
-            modelBuilder.Entity<Position>()
-                .HasOne(o => o.OrderLine)
-                .WithMany(o => o.Positions)
-                .HasForeignKey(o => o.OrderLineId);
-            modelBuilder.Entity<Dimension>()
-                .HasOne(o => o.OrderLine)
-                .WithOne(o => o.Dimension)
-                .HasForeignKey<Dimension>(o => o.OrderLineId);
-            modelBuilder.Entity<CutEntry>()
-                .HasOne(o => o.OrderLine)
-                .WithMany(o => o.CutEntries)
-                .HasForeignKey(o => o.OrderLineId);
             modelBuilder.Entity<CutEntry>()
                 .HasOne(o => o.CuttingPlan)
                 .WithMany(o => o.CutEntries)

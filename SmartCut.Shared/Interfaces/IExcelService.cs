@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
-using SmartCut.Shared.Models;
+using SmartCut.Shared.Models.DTOs;
 
 namespace SmartCut.Shared.Interfaces
 {

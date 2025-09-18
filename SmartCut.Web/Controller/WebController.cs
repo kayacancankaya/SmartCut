@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartCut.Shared.Models;
 using SmartCut.Shared.Interfaces;
+using System.Text.Json;
+using SmartCut.Shared.Models.DTOs;
 namespace SmartCut.Web.Controller
 {
     [ApiController]
@@ -168,7 +170,7 @@ namespace SmartCut.Web.Controller
             }
         }
         [HttpPost("calculatecuttingplan")]
-        public async Task<ActionResult<long>> CalculateCuttingPlan([FromBody] CalculationDTO dTO)
+        public async Task<ActionResult<CuttingPlanDTO?>> CalculateCuttingPlan([FromBody] CalculationDTO dTO)
         {
             try
             {
@@ -177,21 +179,6 @@ namespace SmartCut.Web.Controller
                     return BadRequest("Calculation data is null.");
                 }
                 var response = await _data.CalculateCuttingPlanAsync(dTO);
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message.ToString());
-                return StatusCode(500, "Internal server error");
-            }
-        }
-        [HttpGet("getcuttingplan")]
-        public async Task<ActionResult<CuttingPlan?>> GetCuttingPlanAsync(long id)
-        {
-            try
-            {
-                var response = await _data.GetCuttingPlanAsync(id);
                 return Ok(response);
             }
             catch (Exception ex)

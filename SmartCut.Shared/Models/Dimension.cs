@@ -24,9 +24,7 @@ namespace SmartCut.Shared.Models
         public float Y { get; set; }
         [Required]
         public float Z { get; set; }
-        [ForeignKey(nameof(OrderLineId))]
-        public OrderLine? OrderLine { get; set; } 
-        [ForeignKey(nameof(CutEntryId))]
-        public CutEntry? CutEntry { get; set; }
+
+
     }
 }

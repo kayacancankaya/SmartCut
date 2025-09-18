@@ -6,7 +6,11 @@ using SmartCut.Shared.Data;
 using SmartCut.Shared.Helpers;
 using SmartCut.Shared.Interfaces;
 using SmartCut.Shared.Models;
+using SmartCut.Shared.Models.DTOs;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 namespace SmartCut.Shared.Services
 {
@@ -437,19 +441,19 @@ namespace SmartCut.Shared.Services
                 return;
             }
         }
-        public async Task<long> CalculateCuttingPlanAsync(CalculationDTO calculationDTO)
+        public async Task<CuttingPlanDTO?> CalculateCuttingPlanAsync(CalculationDTO calculationDTO)
         {
             try
             {
                 if (calculationDTO.BlockId <= 0)
-                    return -2;
+                    return new CuttingPlanDTO();
                 if (calculationDTO.OrderLineIDs == null)
-                    return -3;
+                    return new CuttingPlanDTO();
                 if (calculationDTO.OrderLineIDs.Count == 0)
-                    return -3;
+                    return new CuttingPlanDTO();
                 Block? block = await _context.Blocks.FirstOrDefaultAsync(b => b.Id == calculationDTO.BlockId);
                 if (block == null)
-                    return -2;
+                    return new CuttingPlanDTO();
                 double blockVolume = (double)block.Width * (double)block.Height * (double)block.Length;
 
                 List<OrderLine> orderLines = new();
@@ -457,7 +461,11 @@ namespace SmartCut.Shared.Services
                 {
                     var ol = await _context.OrderLines.FirstOrDefaultAsync(o => o.Id == id);
                     if (ol != null)
+                    {
+                        ol.Order = await _context.Orders.FirstOrDefaultAsync(o => o.InvoiceNumber == ol.InvoiceNumber);
                         orderLines.Add(ol);
+                    }
+                    
                 }
                 double totalOrderVolume = 0d;
                 foreach (var line in orderLines)
@@ -524,6 +532,7 @@ namespace SmartCut.Shared.Services
 
                 // Group placements by order line
                 var planEntries = new List<CutEntry>();
+                var planEntriesDTO = new List<CutEntryDTO>();
                 var placementsGrouped = placements.GroupBy(p => p.OrderLineId);
                 List<Dimension> dimensions = new();
                 List<SmartCut.Shared.Models.Position> allPositions = new();
@@ -553,17 +562,44 @@ namespace SmartCut.Shared.Services
                         Y = dimsOriginal[1],
                         Z = dimsOriginal[2]
                     };
-                    
+
+                    OrderDTO orderDTO = new OrderDTO
+                    {
+                        InvoiceNumber = orderLines.Where(ol => ol.Id == grp.Key).Select(l => l.InvoiceNumber).FirstOrDefault() ?? string.Empty,
+                        Line = orderLines.Where(ol => ol.Id == grp.Key).Select(l=>l.Line).FirstOrDefault(),
+                        Width = orderLines.Where(ol => ol.Id == grp.Key).Select(l => l.Width).FirstOrDefault(),
+                        Length = orderLines.Where(ol => ol.Id == grp.Key).Select(l => l.Length).FirstOrDefault(),
+                        Height = orderLines.Where(ol => ol.Id == grp.Key).Select(l => l.Height).FirstOrDefault(),
+                        Quantity = orderLines.Where(ol => ol.Id == grp.Key).Select(l => l.Quantity).FirstOrDefault(),
+                        StockCode = orderLines.Where(ol => ol.Id == grp.Key).Select(l => l.StockCode).FirstOrDefault() ?? string.Empty,
+                        StockName = orderLines.Where(ol => ol.Id == grp.Key).Select(l => l.StockName).FirstOrDefault() ?? string.Empty,
+                        CustomerCode = orderLines.Where(ol => ol.Id == grp.Key).Select(l => l.CustomerCode).FirstOrDefault() ?? string.Empty,
+                        CustomerName = orderLines.Where(ol => ol.Id == grp.Key).Select(l => l.CustomerName).FirstOrDefault() ?? string.Empty,
+                        Description = orderLines.Where(ol => ol.Id == grp.Key).Select(l => l.Description).FirstOrDefault() ?? string.Empty,
+                    };
+
+                    planEntriesDTO.Add(new CutEntryDTO
+                    {
+                        OrderLineId = grp.Key,
+                        QuantityFulfilled = positions.Count,
+                        Positions = posList,
+                        Dimension = dimension,
+                        Order = orderDTO,
+                    });
                     planEntries.Add(new CutEntry
                     {
                         OrderLineId = grp.Key,
                         QuantityFulfilled = positions.Count,
                         Positions = posList,
-                        Dimension = dimension
+                        Dimension = dimension,
+                        OrderLine = orderLines.FirstOrDefault(ol => ol.Id == grp.Key)
                     });
+
+      
                     allPositions.AddRange(posList);
                     if (!dimensions.Any(d => d.OrderLineId == grp.Key))
                         dimensions.Add(dimension);
+
                 }
 
                 // Identify shortfalls per order line for explanation
@@ -629,37 +665,79 @@ namespace SmartCut.Shared.Services
                     }
                 }
                 await _context.SaveChangesAsync();
-                return result.Id; 
+               
+                CuttingPlanDTO cuttingPlanDTO = new CuttingPlanDTO
+                {
+                    Id = result.Id,
+                    Status = result.Status,
+                    Explanation = result.Explanation,
+                    ScrapVolume = result.ScrapVolume,
+                    PercentFulfilled = result.PercentFulfilled,
+                    CutEntries = planEntriesDTO,
+                };
+                return cuttingPlanDTO; 
 
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message.ToString());
-                return -1;
+                return new CuttingPlanDTO();
             }
         }
 
-        public async Task<CuttingPlan?> GetCuttingPlanAsync(long id)
-        {
-            try
-            {
-                CuttingPlan? cuttingPlan = await _context.CuttingPlans
-                                    .Include(c => c.CutEntries)
-                                        .ThenInclude(e => e.Positions)   // relación 1:N
-                                            .ThenInclude(p => p.OrderLine) // relación 1:1
-                                    .Include(c => c.CutEntries)
-                                        .ThenInclude(e => e.Dimension)   // relación 1:1
-                                            .ThenInclude(d => d.OrderLine) // relación 1:1
-                                    .FirstOrDefaultAsync(i => i.Id == id);
-                return cuttingPlan;
+        //public async Task<CuttingPlanDTO?> GetCuttingPlanAsync(long id)
+        //{
+        //    try
+        //    {
+        //        CuttingPlanDTO dTO = new();
+        //        CuttingPlan? cuttingPlan = await _context.CuttingPlans
+        //                            .FirstOrDefaultAsync(i => i.Id == id);
+        //        if (cuttingPlan == null)
+        //            return null;
+        //        List<CutEntry> cutEntries = await _context.CutEntries
+        //                                            .Where(i => i.CuttingPlanId == id)
+        //                                            .ToListAsync();
+        //        if (cutEntries == null)
+        //            return null;
+        //        if(cutEntries.Count() == 0)
+        //            return null;
+        //        List<Dimension> dimensions = new();
+        //        List<SmartCut.Shared.Models.Position> positions = new();
+        //        List<OrderLine> orderLines = new();
+        //        foreach (var entry in cutEntries)
+        //        {
+        //            Dimension? dimension = await _context.Dimensions
+        //                                        .FirstOrDefaultAsync(d => d.CutEntryId == entry.Id);
+        //            if (dimension != null)
+        //                dimensions.Add(dimension);
+        //            var ol = await _context.OrderLines
+        //                        .FirstOrDefaultAsync(o => o.Id == entry.OrderLineId);
+        //            if (ol != null)
+        //                orderLines.Add(ol);
+        //            List<SmartCut.Shared.Models.Position> pos = await _context.Positions
+        //                                                .Where(p => p.CutEntryId == entry.Id)
+        //                                                .ToListAsync();
+        //            if (pos != null)
+        //                positions.AddRange(pos);
 
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message.ToString());
-                return null;
-            }
-        }
+
+        //        }
+        //        if (positions == null) return null;
+        //        if (dimensions == null) return null;
+        //        dTO.CuttingPlan = cuttingPlan;
+        //        dTO.CutEntries = cutEntries;
+        //        dTO.Positions = positions;
+        //        dTO.Dimensions = dimensions;
+
+        //        return dTO;
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogError(ex, ex.Message.ToString());
+        //        return null;
+        //    }
+        //}
 
         // Local types and helpers for packing algorithm
         bool TryPlaceUnit(UnitRequest unit, List<FreeBox> freeList, out Placement? placement)

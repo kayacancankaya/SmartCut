@@ -5,6 +5,7 @@
 @using SmartCut.Shared.Services
 @using SmartCut.Shared.Layout.Components
 @using SmartCut.Shared.Models.ViewModels
+@using SmartCut.Shared.Models.DTOs
 @inject BreadcrumbService BreadcrumbService
 @inject NotificationService NotificationService
 @inject ApiClient CalculationService
@@ -161,16 +162,16 @@
                             @foreach (var entry in CuttingPlan.CutEntries)
                             {
                                 <tr>
-                                    <th>@entry.OrderLine.InvoiceNumber</th>
-                                    <th>@entry.OrderLine.Line</th>
-                                    <th>@entry.OrderLine.Width</th>
-                                    <th>@entry.OrderLine.Height</th>
-                                    <th>@entry.OrderLine.Length</th>
-                                    <th>@entry.OrderLine.StockCode</th>
-                                    <th>@entry.OrderLine.StockName</th>
-                                    <th>@entry.OrderLine.CustomerCode</th>
-                                    <th>@entry.OrderLine.CustomerName</th>
-                                    <th>@entry.OrderLine.Quantity</th>
+                                    <th>@entry.Order.InvoiceNumber</th>
+                                    <th>@entry.Order.Line</th>
+                                    <th>@entry.Order.Width</th>
+                                    <th>@entry.Order.Height</th>
+                                    <th>@entry.Order.Length</th>
+                                    <th>@entry.Order.StockCode</th>
+                                    <th>@entry.Order.StockName</th>
+                                    <th>@entry.Order.CustomerCode</th>
+                                    <th>@entry.Order.CustomerName</th>
+                                    <th>@entry.Order.Quantity</th>
                                     <th>@entry.QuantityFulfilled</th>
 
                                 </tr>
@@ -189,14 +190,15 @@
 }
 @if (isVisualizing)
 {
-    <div class="cutting-plan-container border" 
-         style="position: relative; width:600px; height:400px; background:#f8f9fa;">
+    string divCSS = $"position: relative; width:{SelectedBlock.Width}px; height:{SelectedBlock.Height}px; background:black;";
+    <div class="cutting-plan-container border mb-5" 
+         style="@divCSS">
         @foreach (var item in placementViewModels)
         {
-            string css = $"position:absolute;left:{item.X}px;top:{item.Y}px;width:{item.W}px;height:{item.H}px;background-color:{item.Color};opacity:0.8;border:1px solid #333;font-size:10px;color:#fff;text-align:center;overflow:hidden;";
+            string css = $"position:absolute;left:{item.X}px;top:{item.Y}px;width:{item.W}px;height:{item.L}px;background-color:{item.Color};opacity:0.8;border:1px solid #333;font-size:10px;color:#fff;text-align:center;overflow:hidden;";
             <div class="placement-box" 
                  style="@css">
-                "ID:"@item.OrderLineId
+
             </div>
         }
     </div>
@@ -207,7 +209,7 @@
     private IEnumerable<OrderLine>? Orders { get; set; } = new List<OrderLine>();
     private List<OrderLine> SelectedOrders { get; set; } = new List<OrderLine>();
     private List<long> SelectedOrderIds { get; set; } = new List<long>();
-    private CuttingPlan? CuttingPlan { get; set; }
+    private CuttingPlanDTO? CuttingPlan { get; set; }
     private string lonelyMessage = Localizer.Get("Loading...");
     protected override async Task OnInitializedAsync()
     {
@@ -274,8 +276,8 @@
                 BlockId = SelectedBlock.Id,
                 OrderLineIDs = SelectedOrderIds.ToList()
             };
-            var result = await CalculationService.CalculateCuttingPlanAsync(calculationDTO);
-            CuttingPlan = await CalculationService.GetCuttingPlanAsync(result);
+            CuttingPlan = await CalculationService.CalculateCuttingPlanAsync(calculationDTO);
+
             if(CuttingPlan == null)
             {
                 NotificationService.ShowError(Localizer.Get("An error occurred while calculating."));
@@ -300,25 +302,25 @@
         {
             showCuttingPlan = false;
             await Task.Delay(500);
-
-            // Convert placements from your calculation result
-            if (CuttingPlan != null)
+            var rnd = new Random();
+            placementViewModels = new();
+            foreach(var entry in CuttingPlan.CutEntries)
             {
-                var allPlacements = CuttingPlan.CutEntries
-                    .SelectMany(cp => cp.Positions.Select(pos => new Placement
-                    {
-                        OrderLineId = cp.OrderLineId,
-                        X = pos.X,
-                        Y = pos.Y,
-                        Z = pos.Z,
-                        W = cp.Dimension.X,
-                        L = cp.Dimension.Y,
-                        H = cp.Dimension.Z
-                    }))
-                    .ToList();
-
-                BuildPlacementViewModels(allPlacements);
+                foreach (var position in entry.Positions)
+                {
+                    PlacementViewModel placementModel = new();
+                    placementModel.OrderLineId = position.OrderLineId;
+                    placementModel.X = position.X;
+                    placementModel.Y = position.Y;
+                    placementModel.Z = position.Z;
+                    placementModel.W = entry.Dimension.X;
+                    placementModel.L = entry.Dimension.Y;
+                    placementModel.H = entry.Dimension.Z;
+                    placementModel.Color = $"#{rnd.Next(0x1000000):X6}";
+                    placementViewModels.Add(placementModel);
+                }
             }
+            
 
             isVisualizing = true;
         }
@@ -330,20 +332,6 @@
             showCuttingPlan = true;
         }
     }
-    private void BuildPlacementViewModels(List<Placement> placements)
-    {
-        var rnd = new Random();
-        placementViewModels = placements.Select(p => new PlacementViewModel
-        {
-            OrderLineId = p.OrderLineId,
-            X = p.X,
-            Y = p.Y,
-            Z = p.Z,
-            W = p.W,
-            H = p.H,
-            L = p.L,
-            Color = $"#{rnd.Next(0x1000000):X6}" // random color per part
-        }).ToList();
-    }
+
 
 }

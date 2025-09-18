@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using SmartCut.Shared.Models;
+using SmartCut.Shared.Models.DTOs;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace SmartCut.Shared.Services
 {
@@ -142,35 +144,21 @@ namespace SmartCut.Shared.Services
                 return false;
             }
         }
-        public async Task<long> CalculateCuttingPlanAsync(CalculationDTO dto)
+        public async Task<CuttingPlanDTO?> CalculateCuttingPlanAsync(CalculationDTO dto)
         {
             try
             {
                 var response = await _http.PostAsJsonAsync($"api/web/calculatecuttingplan",dto);
-                if (response.IsSuccessStatusCode)
-                {
-                    var result = await response.Content.ReadFromJsonAsync<int>();
-                    return result;
-                }
-                return -1;
+                
+                if(response.IsSuccessStatusCode)
+                    return await response.Content.ReadFromJsonAsync<CuttingPlanDTO>();
+
+                return new CuttingPlanDTO();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message.ToString());
-                return -1;
-            }
-        }
-        public async Task<CuttingPlan?> GetCuttingPlanAsync(long id)
-        {
-            try
-            {
-                var response = await _http.GetFromJsonAsync<CuttingPlan?>($"api/web/getcuttingplan?id={id}");
-                return response;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message.ToString());
-                return null;
+                return new CuttingPlanDTO();
             }
         }
     }
