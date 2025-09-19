@@ -71,6 +71,19 @@ namespace SmartCut.Shared.Services
                 return new List<Block>();
             }
         }
+        public async Task<List<CuttingPlanDTO>?> GetCalculationsAsync(int pageNumber = 1, int pageSize = 10, int status = 0, float percentFulfilled = 0, string invoiceNumber = "", int line = 0, string stockCode = "", string stockName = "", string customerCode = "", string customerName = "")
+        {
+            try
+            {
+                var response = await _http.GetFromJsonAsync<List<CuttingPlanDTO>?>($"api/web/getcalculations?pageNumber={pageNumber}&pageSize={pageSize}&status={status}&percentFulfilled={percentFulfilled}&invoiceNumber={invoiceNumber}&line={line}&stockCode={stockCode}&stockName={stockName}&customerCode={customerCode}&customerName={customerName}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return new List<CuttingPlanDTO>();
+            }
+        }
         public async Task<bool> CreateOrderAsync(OrderDTO order)
         {
             try

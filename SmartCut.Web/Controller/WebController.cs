@@ -68,6 +68,21 @@ namespace SmartCut.Web.Controller
                 return StatusCode(500, "Internal server error");
             }
         }
+
+        [HttpGet("getcalculations")]
+        public async Task<ActionResult<IEnumerable<Block>?>> GetCalculations(int pageNumber = 1, int pageSize = 10, int status = 0, float percentFulfilled = 0, string invoiceNumber = "", int line = 0, string stockCode = "", string stockName = "", string customerCode = "", string customerName = "")
+        {
+            try
+            {
+                var response = await _data.GetCalculationsAsync(pageNumber, pageSize, status, percentFulfilled,invoiceNumber,line, stockCode,stockName, customerCode, customerName);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return StatusCode(500, "Internal server error");
+            }
+        }
         [HttpPost("createorder")]
         public async Task<IActionResult> CreateOrder([FromBody] OrderDTO order)
         {

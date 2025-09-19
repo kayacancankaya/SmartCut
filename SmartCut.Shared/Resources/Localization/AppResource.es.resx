@@ -723,4 +723,91 @@
   <data name="Calculate" xml:space="preserve">
     <value>Calcular</value>
   </data>
+  <data name="Calculation List" xml:space="preserve">
+    <value>Lista de Cálculo</value>
+  </data>
+  <data name="No calculation found." xml:space="preserve">
+    <value>No se encontró ningún cálculo.</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Estado</value>
+  </data>
+  <data name="Scrap" xml:space="preserve">
+    <value>Merma</value>
+  </data>
+  <data name="Fulfilled" xml:space="preserve">
+    <value>Completado</value>
+  </data>
+  <data name="No cut entries." xml:space="preserve">
+    <value>No hay cortes registrados. </value>
+  </data>
+  <data name="Quantity Fulfilled" xml:space="preserve">
+    <value>Candidad Completado</value>
+  </data>
+  <data name="Positions" xml:space="preserve">
+    <value>Posiciones</value>
+  </data>
+  <data name="No customer order found." xml:space="preserve">
+    <value>No se encontró ningún pedido de cliente.</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Cantidad</value>
+  </data>
+  <data name="Dimension" xml:space="preserve">
+    <value>Dimensión</value>
+  </data>
+  <data name="No dimension data." xml:space="preserve">
+    <value>No se encontró ningún dimensión.</value>
+  </data>
+  <data name="No positions available." xml:space="preserve">
+    <value>No se pudo encontrar posiciones.</value>
+  </data>
+  <data name="Calculations" xml:space="preserve">
+    <value>Cálculos</value>
+  </data>
+  <data name="No calculations found." xml:space="preserve">
+    <value>No se pudo encontrar los cálculos en el sistema.</value>
+  </data>
+  <data name="View Selected Orders" xml:space="preserve">
+    <value>Ver Pedidos Seleccionados</value>
+  </data>
+  <data name="Calculation Result" xml:space="preserve">
+    <value>Resultado de Cálculo</value>
+  </data>
+  <data name="Id" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="Scrap Volume" xml:space="preserve">
+    <value>Volumen de Merma</value>
+  </data>
+  <data name="Percent Fulfilled" xml:space="preserve">
+    <value>Porcentaje Cumplido</value>
+  </data>
+  <data name="Visualize Calculation" xml:space="preserve">
+    <value>Visualizar Cálculo</value>
+  </data>
+  <data name="Please select a block first." xml:space="preserve">
+    <value>Por favor, seleccione un bloque primero.</value>
+  </data>
+  <data name="Please select order." xml:space="preserve">
+    <value>Por favor, seleccione un pedido.</value>
+  </data>
+  <data name="An error occurred while calculating." xml:space="preserve">
+    <value>Ocurrió un error al calcular.</value>
+  </data>
+  <data name="An error occurred while visualizing cutting plan." xml:space="preserve">
+    <value>Ocurrió un error al visualizar el plan de corte.</value>
+  </data>
+  <data name="An error occurred while navigating." xml:space="preserve">
+    <value>Ocurrió un error al navegar.</value>
+  </data>
+  <data name="List Calculations" xml:space="preserve">
+    <value>Listado de Cálculos</value>
+  </data>
+  <data name="Show Details" xml:space="preserve">
+    <value>Mostrar Detalles</value>
+  </data>
+  <data name="Hide Details" xml:space="preserve">
+    <value>Ocultar Detalles</value>
+  </data>
 </root>

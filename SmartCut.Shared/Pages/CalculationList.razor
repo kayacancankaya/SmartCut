@@ -1,0 +1,210 @@
+﻿@page "/list-calculations"
+@using SmartCut.Shared.Models
+@using SmartCut.Shared.Resources.Localization
+@using SmartCut.Shared.Services
+@using SmartCut.Shared.Layout.Components
+@using SmartCut.Shared.Models.ViewModels
+@using SmartCut.Shared.Models.DTOs
+@inject BreadcrumbService BreadcrumbService
+@inject NotificationService NotificationService
+@inject ApiClient CalculationService
+<div class="card">
+    <div class="card-overlay"></div>
+    <div class="card-inner">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="card-title mb-0">@Localizer.Get("Calculation List")</h3>
+        </div>
+        <div class="card-body btn-container">
+
+            @if (isLoading)
+            {
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">@lonelyMessage</span>
+                </div>
+            }
+
+            else if (Calculations == null)
+            {
+                <div class="alert alert-info">@Localizer.Get("No calculation found.")</div>
+            }
+
+            else if (!Calculations.Any())
+            {
+                <div class="alert alert-info">@Localizer.Get("No calculation found.")</div>
+            }
+
+            else
+            {
+                @foreach (var plan in Calculations)
+                {
+                    <div class="card mb-2 p-3">
+                        <h5>@plan.Explanation</h5>
+                        <p>@Localizer.Get("Status"): @plan.Status</p>
+                        <p>@Localizer.Get("Scrap"): @plan.ScrapVolume</p>
+                         <p>@Localizer.Get("Fulfilled"): @plan.PercentFulfilled %</p>
+                        <button class="btn btn-primary" style="width:150px;max-height:25px;" @onclick="() => TogglePlan(plan.)">
+                            @(showPlanDetail ? Localizer.Get("Hide Details") : Localizer.Get("Show Details"))
+                        </button>
+                        @if (showPlanDetail)
+                        {
+                            @if (plan.CutEntries == null)
+                            {
+                                <div class="text-muted">@Localizer.Get("No cut entries.")</div>
+                            }
+                            else if (!plan.CutEntries.Any())
+                            {
+                                <div class="text-muted">@Localizer.Get("No cut entries.")</div>
+                            }
+                            else 
+                            {
+                                <ul class="list-group">
+                                    @foreach (var entry in plan.CutEntries)
+                                    {
+                                        var entryId = $"entry-{entry.Id}";
+                                        <li class="list-group-item">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <a class="fw-bold" data-bs-toggle="collapse" href="@($"#collapse-{entryId}")" role="button" aria-expanded="false" aria-controls="@($"collapse-{entryId}")">
+                                                        @Localizer.Get("Cut Entry") #@entry.Id
+                                                    </a>
+                                                    <div class="small text-muted">@Localizer.Get("Quantity fulfilled"): @entry.QuantityFulfilled</div>
+                                                </div>
+                                                <div class="text-end">
+                                                    <small class="text-muted">@Localizer.Get("Positions"): @entry.Positions?.Count ?? 0</small>
+                                                </div>
+                                            </div>
+
+                                            <div class="collapse mt-2" id="@($"collapse-{entryId}")">
+                                                <div class="card card-body">
+                                                    <div class="row">
+                                                        <div class="col-12 col-md-6 mb-2">
+                                                            <h6>@Localizer.Get("Customer Order")</h6>
+                                                            @if (entry.Order == null)
+                                                            {
+                                                                <div class="text-muted">@Localizer.Get("No customer order found.")</div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <dl class="row mb-0">
+                                                                    <dt class="col-4">Id</dt>
+                                                                    <dd class="col-8">@entry.OrderLineId</dd>
+                                                                    <dt class="col-4">@Localizer.Get("Customer Order Number")</dt>
+                                                                    <dd class="col-8">@entry.Order.InvoiceNumber</dd>
+                                                                    <dt class="col-4">@Localizer.Get("Order Line Number")</dt>
+                                                                    <dd class="col-8">@entry.Order.Line</dd>
+                                                                    <dt class="col-4">@Localizer.Get("Quantity")</dt>
+                                                                    <dd class="col-8">@entry.Order.Quantity</dd>
+                                                                    <dt class="col-4">@Localizer.Get("Customer Code")</dt>
+                                                                    <dd class="col-8">@entry.Order.CustomerCode</dd>
+                                                                    <dt class="col-4">@Localizer.Get("Customer Name")</dt>
+                                                                    <dd class="col-8">@entry.Order.CustomerName</dd>
+                                                                    <dt class="col-4">@Localizer.Get("Product Code")</dt>
+                                                                    <dd class="col-8">@entry.Order.StockCode</dd>
+                                                                    <dt class="col-4">@Localizer.Get("Product Name")</dt>
+                                                                    <dd class="col-8">@entry.Order.StockName</dd>
+                                                                </dl>
+                                                            }
+                                                        </div>
+
+                                                        <div class="col-12 col-md-6 mb-2">
+                                                            <h6>@Localizer.Get("Dimension")</h6>
+                                                            @if (entry.Dimension == null)
+                                                            {
+                                                                <div class="text-muted">@Localizer.Get("No dimension data.")</div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <dl class="row mb-0">
+                                                                    <dt class="col-6">Width</dt>
+                                                                    <dd class="col-6">@entry.Dimension.X</dd>
+                                                                    <dt class="col-6">Height</dt>
+                                                                    <dd class="col-6">@entry.Dimension.Y</dd>
+                                                                    <dt class="col-6">Depth</dt>
+                                                                    <dd class="col-6">@entry.Dimension.Z</dd>
+                                                                </dl>
+                                                            }
+                                                        </div>
+                                                    </div>
+
+                                                    <hr />
+
+                                                    <h6>@Localizer.Get("Positions"): (@(entry.Positions?.Count ?? 0))</h6>
+                                                    @if (entry.Positions == null)
+                                                    {
+                                                        <div class="text-muted">@Localizer.Get("No positions available.")</div>
+                                                    }
+                                                    else if (!entry.Positions.Any())
+                                                    {
+                                                        <div class="text-muted">@Localizer.Get("No positions available.")</div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <table class="table table-sm">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>@Localizer.Get("Width")</th>
+                                                                    <th>@Localizer.Get("Height")</th>
+                                                                    <th>@Localizer.Get("Depth")</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach (var pos in entry.Positions)
+                                                                {
+                                                                    <tr>
+                                                                        <td>@pos.Id</td>
+                                                                        <td>@pos.X</td>
+                                                                        <td>@pos.Y</td>
+                                                                        <td>@pos.Z</td>
+                                                                    </tr>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+
+                                </ul>
+
+                            }
+                        }
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private IEnumerable<CuttingPlanDTO>? Calculations { get; set; }
+    private bool isLoading = true;
+    private string lonelyMessage = Localizer.Get("Loading...");
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        BreadcrumbService.SetBreadcrumbs(new List<BreadcrumbItem>
+        {
+            new() { Title = Localizer.Get("Home"), Url = "/", IsActive = false },
+            new() { Title = Localizer.Get("Calculations"), Url = "/calculations", IsActive = false } ,
+            new() { Title = Localizer.Get("Calculation List"), Url = "/list-calculations", IsActive = true }
+
+        });
+
+        Calculations = await CalculationService.GetCalculationsAsync(1, 10, 0, 0, string.Empty, 0, string.Empty, string.Empty, string.Empty, string.Empty);
+        if (Calculations == null)
+        {
+            lonelyMessage = Localizer.Get("No calculations found.");
+            return;
+        }
+        if (!Calculations.Any())
+            lonelyMessage = Localizer.Get("No calculations found.");
+        isLoading = false;
+    }
+    private void TogglePlan(CuttingPlanDTO dto)
+    {
+        dto.ShowDetails = !dto.ShowDetails;
+    }
+}

@@ -7,6 +7,7 @@ using SmartCut.Shared.Helpers;
 using SmartCut.Shared.Interfaces;
 using SmartCut.Shared.Models;
 using SmartCut.Shared.Models.DTOs;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -93,6 +94,98 @@ namespace SmartCut.Shared.Services
             {
                 _logger.LogError(ex, ex.Message.ToString());
                 return new List<Block>();
+            }
+        }
+        public async Task<List<CuttingPlanDTO>?> GetCalculationsAsync(int pageNumber, int pageSize, int status, float percentFulfilled, string InvoiceNumber, int line,string stockCode,string stockName,string customerCode,string customerName)
+        {
+            try
+            {
+                if (pageNumber <= 0) pageNumber = 1;
+                if (pageSize <= 0) pageSize = 10;
+               string rawSQL = "SELECT DISTINCT cp.Id, cp.Status, cp.Explanation, cp.ScrapVolume, cp.PercentFulfilled " +
+                    "FROM CuttingPlans cp " +
+                    "JOIN CutEntries ce ON cp.Id = ce.CuttingPlanId " +
+                    "JOIN OrderLines ol ON ce.OrderLineId = ol.Id " +
+                    "WHERE 1=1 ";
+                if (status > 0)
+                    rawSQL += $" AND cp.Status = {status} ";
+                if (percentFulfilled > 0)
+                    rawSQL += $" AND cp.PercentFulfilled >= {percentFulfilled} ";
+                if (!string.IsNullOrEmpty(InvoiceNumber))
+                    rawSQL += $" AND ol.InvoiceNumber LIKE '%{InvoiceNumber}%' ";
+                if (line > 0)
+                    rawSQL += $" AND ol.Line = {line} ";
+                if (!string.IsNullOrEmpty(stockCode))
+                    rawSQL += $" AND ol.StockCode LIKE '%{stockCode}%' ";
+                if (!string.IsNullOrEmpty(stockName))
+                {
+                    var normalizedStockName = stockName.ToUpperInvariant();
+                    rawSQL += $" AND ol.Normalized_StockName LIKE '%{normalizedStockName}%' ";
+                }
+                if (!string.IsNullOrEmpty(customerCode))
+                    rawSQL += $" AND ol.CustomerCode LIKE '%{customerCode}%' ";
+                if (!string.IsNullOrEmpty(customerName))
+                {
+                    var normalizedCustomerName = customerName.ToUpperInvariant();
+                    rawSQL += $" AND ol.Normalized_CustomerName LIKE '%{normalizedCustomerName}%' ";
+                }
+                rawSQL += " ORDER BY cp.Id DESC ";
+                rawSQL += $" LIMIT {pageSize} OFFSET {(pageNumber - 1) * pageSize};";
+                
+                var calculations = await _context.CuttingPlans.FromSqlRaw(rawSQL).ToListAsync();
+                
+                List<CuttingPlanDTO> calculationDTOs = new();
+                foreach (var calc in calculations)
+                {
+                    CuttingPlanDTO dto = new CuttingPlanDTO()
+                    {
+                        Id = calc.Id,
+                        Status = calc.Status,
+                        Explanation = calc.Explanation,
+                        ScrapVolume = calc.ScrapVolume,
+                        PercentFulfilled = calc.PercentFulfilled,
+                        CutEntries = new List<CutEntryDTO>()
+                    };
+                    var cutEntries = await _context.CutEntries.Where(ce => ce.CuttingPlanId == calc.Id).ToListAsync();
+                    if (cutEntries != null)
+                    {
+                        foreach (var entry in cutEntries)
+                        {
+                            CutEntryDTO entryDTO = new CutEntryDTO()
+                            {
+                                Id = entry.Id,
+                                OrderLineId = entry.OrderLineId,
+                                QuantityFulfilled = entry.QuantityFulfilled,
+                                Positions = await _context.Positions.Where(p => p.CutEntryId == entry.Id).ToListAsync(),
+                                Dimension = await _context.Dimensions.FirstOrDefaultAsync(d => d.CutEntryId == entry.Id),
+                                Order = await _context.OrderLines.Where(ol => ol.Id == entry.OrderLineId).Select(ol => new OrderDTO
+                                {
+                                    InvoiceNumber = ol.InvoiceNumber,
+                                    Line = ol.Line,
+                                    StockCode = ol.StockCode,
+                                    StockName = ol.StockName,
+                                    CustomerCode = ol.CustomerCode,
+                                    CustomerName = ol.CustomerName,
+                                    Description = ol.Description,
+                                    Quantity = ol.Quantity,
+                                    Width = ol.Width,
+                                    Length = ol.Length,
+                                    Height = ol.Height
+                                }).FirstOrDefaultAsync() ?? new OrderDTO()
+                            };
+                            dto.CutEntries.Add(entryDTO);
+                        }
+                    }
+
+                    calculationDTOs.Add(dto);
+                }
+
+                return calculationDTOs;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return new List<CuttingPlanDTO>();
             }
         }
         public async Task<bool> CreateBlockAsync(Block block)
@@ -461,10 +554,7 @@ namespace SmartCut.Shared.Services
                 {
                     var ol = await _context.OrderLines.FirstOrDefaultAsync(o => o.Id == id);
                     if (ol != null)
-                    {
-                        ol.Order = await _context.Orders.FirstOrDefaultAsync(o => o.InvoiceNumber == ol.InvoiceNumber);
                         orderLines.Add(ol);
-                    }
                     
                 }
                 double totalOrderVolume = 0d;

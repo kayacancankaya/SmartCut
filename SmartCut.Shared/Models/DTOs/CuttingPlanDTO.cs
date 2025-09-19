@@ -11,5 +11,6 @@ namespace SmartCut.Shared.Models.DTOs
         public float ScrapVolume { get; set; }
         [Required]
         public float PercentFulfilled { get; set; }
+        public bool ShowDetails { get; set; } = false;
     }
 }
