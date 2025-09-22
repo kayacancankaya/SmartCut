@@ -11,7 +11,7 @@ namespace SmartCut.Shared.Helpers
     public sealed class Placement
     {
         // Order line identifier satisfied by this placement
-        public long OrderLineId { get; set; }
+        public int OrderLineId { get; set; }
 
         // Position of the placed part within the block (mm), aligned to free-box origin
         public float X { get; set; }

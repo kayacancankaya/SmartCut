@@ -119,7 +119,7 @@
 @code {
     private OrderDTO order = new OrderDTO();
     private SmartCut.Shared.Models.ValidationErrors errors = new SmartCut.Shared.Models.ValidationErrors();
-    private bool buttonDisabled = false;
+    private string buttonDisabled = string.Empty;
     protected override void OnInitialized()
     {
         BreadcrumbService.SetBreadcrumbs(new List<BreadcrumbItem>
@@ -159,7 +159,7 @@
             if (errors.HasErrors)
                 return; // stop submit
 
-            buttonDisabled = true;
+            buttonDisabled = "disabled";
             bool result = await OrderService.CreateOrderAsync(order);
             if (result)
             {
@@ -170,10 +170,12 @@
             {
                 NotificationService.ShowError("Failed to save order");
             }
+            buttonDisabled = string.Empty;
         }
         catch (Exception)
         {
             NotificationService.ShowError("An error occured while saving order");
+            buttonDisabled = string.Empty;
         }
 
     }

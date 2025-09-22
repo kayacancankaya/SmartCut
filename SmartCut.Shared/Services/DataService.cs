@@ -102,7 +102,7 @@ namespace SmartCut.Shared.Services
             {
                 if (pageNumber <= 0) pageNumber = 1;
                 if (pageSize <= 0) pageSize = 10;
-               string rawSQL = "SELECT DISTINCT cp.Id, cp.Status, cp.Explanation, cp.ScrapVolume, cp.PercentFulfilled " +
+               string rawSQL = "SELECT DISTINCT cp.Id, cp.BlockId, cp.Status, cp.Explanation, cp.ScrapVolume, cp.PercentFulfilled " +
                     "FROM CuttingPlans cp " +
                     "JOIN CutEntries ce ON cp.Id = ce.CuttingPlanId " +
                     "JOIN OrderLines ol ON ce.OrderLineId = ol.Id " +
@@ -774,64 +774,8 @@ namespace SmartCut.Shared.Services
                 return new CuttingPlanDTO();
             }
         }
-
-        //public async Task<CuttingPlanDTO?> GetCuttingPlanAsync(long id)
-        //{
-        //    try
-        //    {
-        //        CuttingPlanDTO dTO = new();
-        //        CuttingPlan? cuttingPlan = await _context.CuttingPlans
-        //                            .FirstOrDefaultAsync(i => i.Id == id);
-        //        if (cuttingPlan == null)
-        //            return null;
-        //        List<CutEntry> cutEntries = await _context.CutEntries
-        //                                            .Where(i => i.CuttingPlanId == id)
-        //                                            .ToListAsync();
-        //        if (cutEntries == null)
-        //            return null;
-        //        if(cutEntries.Count() == 0)
-        //            return null;
-        //        List<Dimension> dimensions = new();
-        //        List<SmartCut.Shared.Models.Position> positions = new();
-        //        List<OrderLine> orderLines = new();
-        //        foreach (var entry in cutEntries)
-        //        {
-        //            Dimension? dimension = await _context.Dimensions
-        //                                        .FirstOrDefaultAsync(d => d.CutEntryId == entry.Id);
-        //            if (dimension != null)
-        //                dimensions.Add(dimension);
-        //            var ol = await _context.OrderLines
-        //                        .FirstOrDefaultAsync(o => o.Id == entry.OrderLineId);
-        //            if (ol != null)
-        //                orderLines.Add(ol);
-        //            List<SmartCut.Shared.Models.Position> pos = await _context.Positions
-        //                                                .Where(p => p.CutEntryId == entry.Id)
-        //                                                .ToListAsync();
-        //            if (pos != null)
-        //                positions.AddRange(pos);
-
-
-        //        }
-        //        if (positions == null) return null;
-        //        if (dimensions == null) return null;
-        //        dTO.CuttingPlan = cuttingPlan;
-        //        dTO.CutEntries = cutEntries;
-        //        dTO.Positions = positions;
-        //        dTO.Dimensions = dimensions;
-
-        //        return dTO;
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, ex.Message.ToString());
-        //        return null;
-        //    }
-        //}
-
-        // Local types and helpers for packing algorithm
         bool TryPlaceUnit(UnitRequest unit, List<FreeBox> freeList, out Placement? placement)
-            {
+        {
                 placement = null;
 
                 // Candidate best
@@ -931,14 +875,12 @@ namespace SmartCut.Shared.Services
 
                 return false;
             }
-
             void AddIfValid(FreeBox box, List<FreeBox> list)
             {
                 const float eps = 1e-3f;
                 if (box.W > eps && box.H > eps && box.L > eps)
                     list.Add(box);
             }
-
             void PruneFreeList(List<FreeBox> list)
             {
                 // Remove any box fully contained in another
@@ -956,7 +898,6 @@ namespace SmartCut.Shared.Services
                     }
                 }
             }
-
             bool Contains(FreeBox outer, FreeBox inner)
             {
                 return inner.X >= outer.X - 1e-3f &&
@@ -966,7 +907,6 @@ namespace SmartCut.Shared.Services
                        inner.Y + inner.H <= outer.Y + outer.H + 1e-3f &&
                        inner.Z + inner.L <= outer.Z + outer.L + 1e-3f;
             }
-
             List<SmartCut.Shared.Helpers.Orientation> GetOrientations(float w, float h, float l)
             {
                 // 6 axis-aligned rotations

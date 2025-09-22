@@ -37,7 +37,7 @@
                                     iconHoverWidth="105px"
                                     disabled="@buttonsDisabled" />
 
-                        <InputFileComponent @ref="fileInput" OnFileSelected="ImportFromExcelAsync" />
+                        <InputFileComponent @ref="fileInput" OnFileSelected="ImportFromExcelAsync" disabled="@buttonsDisabled" />
 
                         <ListButton buttonText="@Localizer.Get("Export to Excel")" buttonBackgroundColor="#185C37"
                                     svg="@exportIcon"
@@ -132,7 +132,7 @@
     private string platform => FormFactor.GetPlatform();
     private string factor => FormFactor.GetFormFactor();
     private List<OrderDTO> orders = new List<OrderDTO>();
-    private bool buttonsDisabled = false;
+    private string buttonsDisabled = "disabled";
     private bool showOrders = false;
     private bool showCustomerCode = false;
     private bool showCustomerName = false;
@@ -180,7 +180,7 @@
     {
         try
         {
-            buttonsDisabled = true;
+            buttonsDisabled = "disabled";
             StateHasChanged();
             bool isWeb = factor == "Web";
             isWeb = true;
@@ -219,14 +219,14 @@
                 }
                 ToggleColumns(orders);
                 showOrders = true;
-                buttonsDisabled = false;
+                buttonsDisabled = string.Empty;
             }
 
         }
         catch (Exception)
         {
             NotificationService.ShowError(Localizer.Get("File selection was cancelled or failed."));
-            buttonsDisabled = false;
+            buttonsDisabled = string.Empty;
         }
     }
     private void ToggleColumns(List<OrderDTO> orders)
@@ -254,18 +254,18 @@
     {
         try
         {
-            buttonsDisabled = true;
+            buttonsDisabled = "disabled";
             StateHasChanged();
             if (orders == null)
             {
                 NotificationService.ShowError(Localizer.Get("No orders to save."));
-                buttonsDisabled = false;
+                buttonsDisabled = string.Empty;
                 return;
             }
             if (orders.Count() <= 0)
             {
                 NotificationService.ShowError(Localizer.Get("No orders to save."));
-                buttonsDisabled = false;
+                buttonsDisabled = string.Empty;
                 return;
             }
             var result = await BlockService.ImportOrdersAsync(orders);
@@ -279,12 +279,12 @@
             {
                 NotificationService.ShowError(Localizer.Get("Failed to save orders."));
             }
-            buttonsDisabled = false;
+            buttonsDisabled = string.Empty;
         }
         catch (Exception)
         {
             Localizer.Get("Failed to save orders.");
-            buttonsDisabled = false;
+            buttonsDisabled = string.Empty;
         }
     }
 }

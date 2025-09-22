@@ -107,7 +107,7 @@
     private string platform => FormFactor.GetPlatform(); 
     private string factor => FormFactor.GetFormFactor();
     private List<BlockDTO> blocks = new List<BlockDTO>();
-    private bool buttonsDisabled = false;
+    private string buttonsDisabled = string.Empty;
     private bool showBlocks = false;
     private bool showMaterial = false;
     private bool showDescription = false;
@@ -152,7 +152,7 @@
     {
         try
         {
-            buttonsDisabled = true;
+            buttonsDisabled = "disabled";
             StateHasChanged(); 
             bool isWeb = factor == "Web";
             isWeb = true;
@@ -191,14 +191,14 @@
                 }
                 ToggleColumns(blocks);
                 showBlocks = true;
-                buttonsDisabled = false;
+                buttonsDisabled = string.Empty;
             }
 
         }
         catch (Exception)
         {
             NotificationService.ShowError(Localizer.Get("File selection was cancelled or failed."));
-            buttonsDisabled = false;
+            buttonsDisabled = string.Empty;
         }
     }
     private void ToggleColumns(List<BlockDTO> blocks)
@@ -223,18 +223,18 @@
     {
         try
         {
-            buttonsDisabled = true;
+            buttonsDisabled = "disabled";
             StateHasChanged();
             if (blocks == null )
             {
                 NotificationService.ShowError(Localizer.Get("No block to save."));
-                buttonsDisabled = false;
+                buttonsDisabled = string.Empty; 
                 return;
             }
             if (blocks.Count() <= 0)
             {
                 NotificationService.ShowError(Localizer.Get("No blocks to save."));
-                buttonsDisabled = false;
+                buttonsDisabled = string.Empty;
                 return;
             }
             var result = await BlockService.ImportBlocksAsync(blocks);
@@ -248,12 +248,12 @@
             {
                 NotificationService.ShowError(Localizer.Get("Failed to save block"));
             }
-            buttonsDisabled = false;
+            buttonsDisabled = string.Empty;
         }
         catch (Exception)
         {
             Localizer.Get("Failed to save blocks.");
-            buttonsDisabled = false;
+            buttonsDisabled = string.Empty;
         }
     }
 }

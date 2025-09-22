@@ -21,16 +21,11 @@
                     <div class="col-12 btn-container d-flex align-items-center justify-content-start">
                         <ListButton buttonText="@Localizer.Get("Add New")" buttonBackgroundColor="#20c997"
                                     svg="@plusSquareSvg"
-                                    OnClicked="NavigateToCreate"
-                                    disabled="@buttonsDisabled" />
+                                    OnClicked="NavigateToCreate" />
 
-                        <ListButton buttonText="@Localizer.Get("List Calculations")" buttonBackgroundColor="#4a90e2"
+                        <ListButton buttonText="@Localizer.Get("List")" buttonBackgroundColor="#4a90e2"
                                     svg="@listSvg"
-                                    OnClicked="NavigateToList"
-                                    buttonWidth="175px"
-                                    transformIcon="125px"
-                                    iconHoverWidth="105px"
-                                    disabled="@buttonsDisabled" />
+                                    OnClicked="NavigateToList" />
 
                  
                     </div>
@@ -43,7 +38,6 @@
     </div>
 </div>
 @code{
-    private bool buttonsDisabled = false;
     private MarkupString plusSquareSvg = new MarkupString(@"
 <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-plus-square-fill' viewBox='0 0 16 16'>
   <path d='M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z'/>
@@ -59,6 +53,15 @@
         <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' class='bi bi-file-earmark-arrow-up-fill' viewBox='0 0 16 16'>
             <path d='M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M6.354 9.854a.5.5 0 0 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 8.707V12.5a.5.5 0 0 1-1 0V8.707z'/>
         </svg>");
+    protected override void OnInitialized()
+    {
+        BreadcrumbService.SetBreadcrumbs(new List<BreadcrumbItem>
+        {
+            new() { Title = Localizer.Get("Home"), Url = "/", IsActive = false },
+            new() { Title = Localizer.Get("Calculation"), Url = "/calculation", IsActive = true }
+
+        });
+    }
     private void NavigateToCreate()
     {
         try

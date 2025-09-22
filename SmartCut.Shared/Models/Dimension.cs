@@ -13,11 +13,11 @@ namespace SmartCut.Shared.Models
         [Required]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long Id { get; set; }
+        public int Id { get; set; }
         [Required]
-        public long OrderLineId { get; set; }
+        public int OrderLineId { get; set; }
         [Required]
-        public long CutEntryId { get; set; }
+        public int CutEntryId { get; set; }
         [Required]
         public float X { get; set; }
         [Required]

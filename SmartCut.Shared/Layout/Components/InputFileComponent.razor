@@ -2,14 +2,27 @@
 <InputFile id="file" OnChange="OnFileSelectedInternal" style="display:none;" />
 
 <label for="file" class="file-btn">
-    <span class="text">@Localizer.Get("Import from Excel")</span>
-    <span class="icon">
-        @importIcon
-    </span>
+    @if (DisabledAttr != null)
+    {
+        <div class="spinner-wrapper">
+            <span class="spinner-border spinner-border-sm text-primary" role="status" aria-hidden="true"></span>
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    }
+    else
+    {
+        <span class="text">@Localizer.Get("Import from Excel")</span>
+        <span class="icon">
+            @importIcon
+        </span>
+    }
+    
 </label>
 
 @code {
     [Parameter] public EventCallback<InputFileChangeEventArgs> OnFileSelected { get; set; }
+    [Parameter] public string disabled { get; set; } = string.Empty;
+    private string? DisabledAttr => disabled == "disabled" ? "disabled" : null;
 
     private async Task OnFileSelectedInternal(InputFileChangeEventArgs e)
     {

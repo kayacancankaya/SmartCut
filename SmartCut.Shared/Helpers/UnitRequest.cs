@@ -9,7 +9,7 @@ namespace SmartCut.Shared.Helpers
     public sealed class UnitRequest
     {
         // Order line identifier this unit belongs to
-        public long OrderLineId { get; set; }
+        public int OrderLineId { get; set; }
 
         // Dimensions (mm) after rotation decision during packing loop
         public float W { get; set; }

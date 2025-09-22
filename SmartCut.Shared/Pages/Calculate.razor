@@ -17,101 +17,232 @@
                 @Localizer.Get("Calculate")
             </h3>
         </div>
-        <div class="card-body btn-container">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6 col-md-12">
+        @if (isLoading)
+        {
+            <div class="spinner-border text-info" role="status">
+                <span class="visually-hidden">@lonelyMessage</span>
+            </div>
+        }
+        else
+        {
+            <div class="card-body btn-container">
+                <div class="container">
+                    <div class="row">
                         @if (Blocks != null)
                         {
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">@Localizer.Get("Block Name")</th>
-                                        <th scope="col">@Localizer.Get("Width")</th>
-                                        <th scope="col">@Localizer.Get("Length")</th>
-                                        <th scope="col">@Localizer.Get("Height")</th>
-                                        <th scope="col">@Localizer.Get("Material")</th>
-                                        <th scope="col">@Localizer.Get("Description")</th>
-                                        <th scope="col">@Localizer.Get("Created At")</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var block in Blocks)
-                                    {
-                                        <tr>
-                                            <td style="text-align:center;justify-content:center">
-                                                <input type="checkbox"
-                                                       checked="@(SelectedBlock == block)"
-                                                       @onchange="e => OnBlockChanged(block, e)" />
-                                            </td>
+                            <div class="col-12 mb-3">
+                                @if (showBlocks)
+                                {
+                                    <button class="btn btn-primary mb-2" @onclick="HideBlocks">@Localizer.Get("Hide Blocks")</button>
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">@Localizer.Get("Block Name")</th>
+                                                <th scope="col">@Localizer.Get("Width")</th>
+                                                <th scope="col">@Localizer.Get("Length")</th>
+                                                <th scope="col">@Localizer.Get("Height")</th>
+                                                <th scope="col">@Localizer.Get("Material")</th>
+                                                <th scope="col">@Localizer.Get("Description")</th>
+                                                <th scope="col">@Localizer.Get("Created At")</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var block in Blocks)
+                                            {
+                                                <tr>
+                                                    <td style="text-align:center;justify-content:center">
+                                                        <input type="checkbox"
+                                                        checked="@(SelectedBlock == block)"
+                                                        @onchange="e => OnBlockChanged(block, e)" />
+                                                    </td>
 
-                                            <td>@block.Name</td>
-                                            <td>@block.Width</td>
-                                            <td>@block.Length</td>
-                                            <td>@block.Height</td>
-                                            <td>@block.Material</td>
-                                            <td>@block.Description</td>
-                                            <td>@block.CreatedAt.ToString("g")</td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
+                                                    <td>@block.Name</td>
+                                                    <td>@block.Width</td>
+                                                    <td>@block.Length</td>
+                                                    <td>@block.Height</td>
+                                                    <td>@block.Material</td>
+                                                    <td>@block.Description</td>
+                                                    <td>@block.CreatedAt.ToString("g")</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                }
+                                else
+                                {
+                                    <button class="btn btn-primary" @onclick="ShowBlocks">@Localizer.Get("Show Blocks")</button>
+                                }
+
+                            </div>
                         }
-                    </div>
-                    <div class="col-lg-6 col-md-12">
+
                         @if (Orders != null)
                         {
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">@Localizer.Get("Customer Order Number")</th>
-                                        <th scope="col">@Localizer.Get("Order Line Number")</th>
-                                        <th scope="col">@Localizer.Get("Width")</th>
-                                        <th scope="col">@Localizer.Get("Length")</th>
-                                        <th scope="col">@Localizer.Get("Height")</th>
-                                        <th scope="col">@Localizer.Get("Quantity")</th>
-                                        <th scope="col">@Localizer.Get("Product Code")</th>
-                                        <th scope="col">@Localizer.Get("Product Name")</th>
-                                        <th scope="col">@Localizer.Get("Customer Code")</th>
-                                        <th scope="col">@Localizer.Get("Customer Name")</th>
-                                        <th scope="col">@Localizer.Get("Description")</th>
-                                        <th scope="col">@Localizer.Get("Created At")</th>
-                                        <th scope="col">@Localizer.Get("Add")</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var order in Orders)
-                                    {
-                                        <tr>
-                                            <td>@order.InvoiceNumber</td>
-                                            <td>@order.Line</td>
-                                            <td>@order.Width</td>
-                                            <td>@order.Length</td>
-                                            <td>@order.Height</td>
-                                            <td>@order.Quantity</td>
-                                            <td>@order.StockCode</td>
-                                            <td>@order.StockName</td>
-                                            <td>@order.CustomerCode</td>
-                                            <td>@order.CustomerName</td>
-                                            <td>@order.Description</td>
-                                            <td>@order.CreatedAt</td>
-                                            <td><button class="btn btn-success" @onclick="() => AddOrderToCalculation(order)">@Localizer.Get("Add")</button></td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
+                            <div class="col-12 mb-3">
+                                @if (showOrders)
+                                {
+                                    <button class="btn btn-primary mb-2" @onclick="HideOrders">@Localizer.Get("Hide Orders")</button>
+
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>    
+                                                <th scope="col">@Localizer.Get("Customer Order Number")</th>
+                                                <th scope="col">@Localizer.Get("Order Line Number")</th>
+                                                <th scope="col">@Localizer.Get("Width")</th>
+                                                <th scope="col">@Localizer.Get("Length")</th>
+                                                <th scope="col">@Localizer.Get("Height")</th>
+                                                <th scope="col">@Localizer.Get("Quantity")</th>
+                                                <th scope="col">@Localizer.Get("Product Code")</th>
+                                                <th scope="col">@Localizer.Get("Product Name")</th>
+                                                <th scope="col">@Localizer.Get("Customer Code")</th>
+                                                <th scope="col">@Localizer.Get("Customer Name")</th>
+                                                <th scope="col">@Localizer.Get("Description")</th>
+                                                <th scope="col">@Localizer.Get("Created At")</th>
+                                                <th scope="col">@Localizer.Get("Add")</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var order in Orders)
+                                            {
+                                                <tr>
+                                                    <td>@order.InvoiceNumber</td>
+                                                    <td>@order.Line</td>
+                                                    <td>@order.Width</td>
+                                                    <td>@order.Length</td>
+                                                    <td>@order.Height</td>
+                                                    <td>@order.Quantity</td>
+                                                    <td>@order.StockCode</td>
+                                                    <td>@order.StockName</td>
+                                                    <td>@order.CustomerCode</td>
+                                                    <td>@order.CustomerName</td>
+                                                    <td>@order.Description</td>
+                                                    <td>@order.CreatedAt</td>
+                                                    <td><button class="btn btn-success" @onclick="() => AddOrderToCalculation(order)">@Localizer.Get("Add")</button></td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-primary" @onclick="ShowOrders">@Localizer.Get("Show Orders")</button>
+                                }
+                            </div>
                         }
+                        <div class="col-12 mb-3">
+                            <div style="float:left">
+                                @if(SelectedOrders != null)
+                                {
+                                    if(SelectedOrders.Count > 0)
+                                    {
+                                        <button style="max-width:250px;" class="btn btn-primary mr-3" @onclick="ToggleAddedOrders">@Localizer.Get("View Added Orders") (@SelectedOrders.Count)</button>
+                                    } 
+                                }
+
+                                <ActionButton @ref="calculationButton" actionType="6" OnClicked="OpenConfirmationModal" disabled=@disabled />
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <ActionButton actionType="6" OnClicked="CalculateAsync" />
-        </div>
+            </div>
+        }
+
     </div>
 </div>
-<button class="btn btn-primary" @onclick="ShowCalculationResult" style="margin-top:10px;">@Localizer.Get("View Selected Orders") (@SelectedOrders.Count)</button>
+@if(isCalculated)
+{
+    @if(CuttingPlan != null)
+    {
+        if(CuttingPlan.CutEntries != null)
+        {
+            if (CuttingPlan.CutEntries.Count > 0)
+            {
+                <button class="btn btn-primary" @onclick="ShowCalculationResult" style="margin-top:10px;">@Localizer.Get("View Selected Orders") (@CuttingPlan.CutEntries.Count)</button>
+            }
+        }
+    }
+
+}
+
+@if (showAddedOrders)
+{
+
+    <div class="custom-modal-overlay">
+        <div class="custom-modal">
+            <div class="custom-modal-header">
+                <h5>@Localizer.Get("Selected Orders")</h5>
+
+                <button type="button" class="btn-close" @onclick="CloseAddedOrders"></button>
+
+            </div>
+            <div class="custom-modal-body">
+                @if (SelectedOrders == null)
+                {
+                    <p class="alert-danger">@Localizer.Get("No orders added.")</p>
+                }
+                else if (SelectedOrders.Count == 0)
+                {
+                    <p class="alert-danger">@Localizer.Get("No orders added.")</p>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">@Localizer.Get("Customer Order Number")</th>
+                                    <th scope="col">@Localizer.Get("Order Line Number")</th>
+                                    <th scope="col">@Localizer.Get("Width")</th>
+                                    <th scope="col">@Localizer.Get("Length")</th>
+                                    <th scope="col">@Localizer.Get("Height")</th>
+                                    <th scope="col">@Localizer.Get("Quantity")</th>
+                                    <th scope="col">@Localizer.Get("Product Code")</th>
+                                    <th scope="col">@Localizer.Get("Product Name")</th>
+                                    <th scope="col">@Localizer.Get("Customer Code")</th>
+                                    <th scope="col">@Localizer.Get("Customer Name")</th>
+                                    <th scope="col">@Localizer.Get("Description")</th>
+                                    <th scope="col">@Localizer.Get("Created At")</th>
+                                    <th scope="col">@Localizer.Get("Remove")</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var entry in SelectedOrders)
+                                {
+                                    <tr>
+                                        <th>@entry.InvoiceNumber</th>
+                                        <th>@entry.Line</th>
+                                        <th>@entry.Width</th
+                                        <th>@entry.Length</th>
+                                        <th>@entry.Height</th>
+                                        <th>@entry.Quantity</th>
+                                        <th>@entry.StockCode</th>
+                                        <th>@entry.StockName</th>
+                                        <th>@entry.CustomerCode</th>
+                                        <th>@entry.CustomerName</th>
+                                        <th>@entry.Description</th>
+                                        <th>@entry.CreatedAt</th>
+                                        <th><button class="btn btn-danger" @onclick="() => RemoveOrder(entry)">@Localizer.Get("Remove")</button></th>
+
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                }
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="CloseAddedOrders">@Localizer.Get("Close")</button>
+            </div>
+
+        </div>
+    </div>
+}
+
 @if (showCuttingPlan)
 {
 
@@ -126,6 +257,9 @@
             <div class="custom-modal-body">
                 <div class="container">
                     <div class="row">
+                        <div class="col">
+                            <p><strong>@Localizer.Get("Block"):</strong> @CuttedBlock?.Name * @CuttedBlock?.Width * @CuttedBlock?.Length * @CuttedBlock?.Height</p>
+                        </div>
                         <div class="col">
                             <p><strong>@Localizer.Get("Id"):</strong> @CuttingPlan?.Id</p>
                         </div>
@@ -165,13 +299,14 @@
                                     <th>@entry.Order.InvoiceNumber</th>
                                     <th>@entry.Order.Line</th>
                                     <th>@entry.Order.Width</th>
-                                    <th>@entry.Order.Height</th>
                                     <th>@entry.Order.Length</th>
+                                    <th>@entry.Order.Height</th>
+                                    <th>@entry.Order.Quantity</th>
                                     <th>@entry.Order.StockCode</th>
                                     <th>@entry.Order.StockName</th>
                                     <th>@entry.Order.CustomerCode</th>
                                     <th>@entry.Order.CustomerName</th>
-                                    <th>@entry.Order.Quantity</th>
+                                    <th>@entry.Order.Description</th>
                                     <th>@entry.QuantityFulfilled</th>
 
                                 </tr>
@@ -181,35 +316,51 @@
                     </table>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" style="background-color:lightgray">
                 <button type="button" class="btn btn-secondary" @onclick="CloseCalculationResult">@Localizer.Get("Close")</button>
             </div>
 
         </div>
     </div>
 }
+
+<Confirmation @ref="confirmationRef" OnApproved="HandleConfirmationApproved" OnClose="HandleConfirmationClosed" />
+
 @if (isVisualizing)
 {
-    string divCSS = $"position: relative; width:{SelectedBlock.Width}px; height:{SelectedBlock.Length}px; background:black;";
-    <div class="cutting-plan-container border mb-5"
-         style="@divCSS">
-        @foreach (var item in placementViewModels)
-        {
-            string css = $"position:absolute;left:{item.X}px;top:{item.Z}px;width:{item.W}px;height:{item.L}px;background-color:{item.Color};opacity:0.8;border:1px solid #333;font-size:10px;color:#fff;text-align:center;overflow:hidden;";
-            <div class="placement-box"
-                 style="@css">
-            </div>
-        }
-    </div>
+    @if(CuttedBlock!=null)
+    {
+         string divCSS = $"position: relative; width:{CuttedBlock.Width}px; height:{CuttedBlock.Length}px; background:black;";
+        <div class="cutting-plan-container border mb-5"
+        style="@divCSS">
+            @foreach (var item in placementViewModels)
+            {
+                string css = $"position:absolute;left:{item.X}px;top:{item.Z}px;width:{item.W}px;height:{item.L}px;background-color:{item.Color};opacity:0.8;border:1px solid #333;font-size:10px;color:#fff;text-align:center;overflow:hidden;";
+                <div class="placement-box"
+                style="@css">
+                </div>
+            }
+        </div>        
+    }
+    else
+    {
+        <p class="alert-danger">@Localizer.Get("No blocks found.")</p>
+    }
+
 }
+
 @code {
     private IEnumerable<SmartCut.Shared.Models.Block>? Blocks { get; set; }
     private SmartCut.Shared.Models.Block? SelectedBlock { get; set; }
+    private SmartCut.Shared.Models.Block? CuttedBlock { get; set; }
     private IEnumerable<OrderLine>? Orders { get; set; } = new List<OrderLine>();
     private List<OrderLine> SelectedOrders { get; set; } = new List<OrderLine>();
-    private List<long> SelectedOrderIds { get; set; } = new List<long>();
+    private List<int> SelectedOrderIds { get; set; } = new List<int>();
     private CuttingPlanDTO? CuttingPlan { get; set; }
+    private bool isLoading = true;
     private string lonelyMessage = Localizer.Get("Loading...");
+    private string disabled = string.Empty;
+    private ActionButton calculationButton;
     protected override async Task OnInitializedAsync()
     {
         BreadcrumbService.SetBreadcrumbs(new List<BreadcrumbItem>
@@ -222,7 +373,14 @@
         Blocks = await CalculationService.GetBlocksAsync(1, 10, string.Empty, string.Empty, string.Empty);
 
         Orders = await CalculationService.GetOrdersAsync(1, 10, string.Empty, 0, string.Empty, string.Empty, string.Empty, string.Empty);
+        isLoading = false;
     }
+    private bool showBlocks = true;
+    private bool showOrders = false;
+    private void ShowBlocks() => showBlocks = true;
+    private void HideBlocks() => showBlocks = false;
+    private void ShowOrders() => showOrders = true;
+    private void HideOrders() => showOrders = false;
     private void OnBlockChanged(SmartCut.Shared.Models.Block block, ChangeEventArgs e)
     {
         bool isChecked = e.Value is bool b && b;
@@ -250,11 +408,13 @@
         SelectedOrderIds.Add(order.Id);
         await Task.CompletedTask;
     }
+    private bool isCalculated = false;
     private async Task CalculateAsync()
     {
         try
         {
-
+            isCalculated = false;
+            disabled = "disabled";
             if (SelectedBlock == null)
             {
                 NotificationService.ShowError(Localizer.Get("Please select a block first."));
@@ -282,12 +442,26 @@
                 NotificationService.ShowError(Localizer.Get("An error occurred while calculating."));
                 return;
             }
+            else if (CuttingPlan.CutEntries.Count == 0)
+            {
+                NotificationService.ShowError(Localizer.Get("An error occurred while calculating."));
+                return;
+            }
             showCuttingPlan = true;
+            isCalculated = true;
+            showBlocks = false;
+            showOrders = false;
+            CuttedBlock = SelectedBlock;
+            SelectedBlock = null;
+            SelectedOrders= new List<OrderLine>();
+            disabled = string.Empty;
 
         }
         catch (Exception)
         {
             NotificationService.ShowError(Localizer.Get("An error occurred while calculating."));
+            isCalculated = false;
+            disabled = string.Empty;
         }
     }
     private bool showCuttingPlan = false;
@@ -332,5 +506,47 @@
         }
     }
 
+    private Confirmation confirmationRef;
+    private void OpenConfirmationModal()
+    {
+        if (SelectedBlock == null)
+        {
+            NotificationService.ShowError(Localizer.Get("Please select a block first."));
+            return;
+        }
+        if (SelectedOrders == null || SelectedOrders.Count == 0)
+        {
+            NotificationService.ShowError(Localizer.Get("Please select order."));
+            return;
+        }
+        confirmationRef.DisplayClass = "d-block";
+        confirmationRef.ModalType = 1;
+        confirmationRef.Delegate = nameof(CalculateAsync);
+    }
+    private async Task HandleConfirmationApproved()
+    {
+        confirmationRef.DisplayClass = "d-none";
+        if (confirmationRef.Delegate == nameof(CalculateAsync))
+        {
+            await CalculateAsync();
+        }
+    }
+    private void HandleConfirmationClosed()
+    {
+        confirmationRef.DisplayClass = "d-none";
+    }
+    private bool showAddedOrders = false;
+    private void ToggleAddedOrders() => showAddedOrders = !showAddedOrders;
+    private void CloseAddedOrders() => showAddedOrders = false;
 
+    private void RemoveOrder(OrderLine order)
+    {
+        var orderToRemove = SelectedOrders.FirstOrDefault(o => o.InvoiceNumber == order.InvoiceNumber &&
+                                                                o.Line == order.Line);
+        if (orderToRemove != null)
+        {
+            SelectedOrders.Remove(orderToRemove);
+            SelectedOrderIds.Remove(orderToRemove.Id);
+        }
+    }
 }

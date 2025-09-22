@@ -1,15 +1,25 @@
 ﻿@using SmartCut.Shared.Resources.Localization
 <button @onclick="OnClicked"
-        style="--background-color:@BackgroundColor;--background-color-dark:@BackgroundColorDark;"
-        disabled="@disabled"        
->
-    @ButtonText
+style="--background-color:@BackgroundColor;--background-color-dark:@BackgroundColorDark;"
+disabled="@DisabledAttr">
+    @if (DisabledAttr!=null)
+    {
+        <div class="spinner-wrapper">
+            <span class="spinner-border spinner-border-sm @SpinnerColor" role="status" aria-hidden="true"></span>
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    }
+    else
+    {
+        @ButtonText
+    }
 </button>
 
 @code {
     [Parameter] public int actionType { get; set; } = 1; // 1: Save, 2: Delete, 3: Update, 4: Add, 5: List
     [Parameter] public EventCallback OnClicked { get; set; }
-    [Parameter] public bool disabled { get; set; } = false;
+    [Parameter] public string disabled { get; set; } = string.Empty;
+    private string? DisabledAttr => disabled == "disabled" ? "disabled" : null;
     private string ButtonText => actionType switch
     {
         1 => Localizer.Get("Save"),
@@ -18,6 +28,7 @@
         4 => Localizer.Get("Add"),
         5 => Localizer.Get("List"),
         6 => Localizer.Get("Calculate"),
+        7 => Localizer.Get("Remove"),
         _ => Localizer.Get("List")
     };
 
@@ -29,6 +40,7 @@
         4 => "#0d6efd",
         5 => "#6c757d",
         6 => "#198754",
+        7 => "#dc3545",
         _ => "#6c757d"
     };
 
@@ -40,7 +52,18 @@
         4 => "#084298",
         5 => "#343a40",
         6 => "#146c43",
+        7 => "#b02a37",
         _ => "#343a40"
     };
+    private string SpinnerColor => actionType switch
+    {
+        1 => "text-success",
+        2 => "text-danger",
+        3 => "text-warning",
+        4 => "text-success",
+        5 => "text-primary",
+        6 => "text-success",
+        7 => "text-danger",
+        _ => "text-primary"
+    };
 }
-

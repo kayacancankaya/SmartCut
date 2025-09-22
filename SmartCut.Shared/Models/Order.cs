@@ -8,7 +8,7 @@ namespace SmartCut.Shared.Models
         [Required]
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long OrderId { get; set; }
+        public int OrderId { get; set; }
         [Required]
         public string CompanyId { get; set; } = string.Empty;
 

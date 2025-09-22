@@ -4,7 +4,7 @@ namespace SmartCut.Shared.Models.DTOs
 {
     public class CuttingPlanDTO
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
         public int Status { get; set; }
         public string Explanation { get; set; } = string.Empty;
         public List<CutEntryDTO> CutEntries { get; set; } = new();

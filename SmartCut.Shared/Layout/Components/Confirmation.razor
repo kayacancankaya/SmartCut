@@ -1,0 +1,40 @@
+﻿@using Resources.Localization
+<div class="modal show @DisplayClass" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content @BorderColor">
+            <div class="modal-header @BgColor text-white">
+                <h5 class="modal-title">@Localizer.Get("Warning")</h5>
+                <button type="button" class="btn-close" @onclick="() => CloseAsync()"></button>
+            </div>
+            <div class="modal-body">
+                <p>@Message</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success" @onclick="() => ApprovedAsync()">@Localizer.Get("Yes")</button>
+                <button class="btn btn-secondary" @onclick="() => CloseAsync()">@Localizer.Get("No")</button>
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    [Parameter] public string DisplayClass { get; set; } = "d-none";
+    [Parameter] public int ModalType { get; set; } = 1; // 1: Success, 2: Warning, 3: Danger
+    [Parameter] public string Delegate { get; set; } = string.Empty; // if main page has more than one confirmation, this will be used to determine which method to call
+    private string BgColor => ModalType == 1 ? "bg-success" : ModalType == 2 ? "bg-warning" : "bg-danger";
+    private string BorderColor => ModalType == 1 ? "border-success" : ModalType == 2 ? "border-warning" : "border-danger";
+    private string Message => ModalType == 1 ? Localizer.Get("Do you want to save this record?") : ModalType == 2 ? Localizer.Get("Do you want to update this record?") : Localizer.Get("Do you want to delete this record?");
+
+    [Parameter] public EventCallback OnApproved { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    private async Task ApprovedAsync()
+    {
+        await OnApproved.InvokeAsync(null);
+    }
+
+    private async Task CloseAsync()
+    {
+        await OnClose.InvokeAsync(null);
+    }
+
+}

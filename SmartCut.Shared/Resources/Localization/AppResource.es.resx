@@ -463,7 +463,7 @@
     <value>N.º de Carga</value>
   </data>
   <data name="Label Info" xml:space="preserve">
-    <value>Informed de Etiqueta</value>
+    <value>Informes de Etiqueta</value>
   </data>
   <data name="Packing List" xml:space="preserve">
     <value>Lista de Paquete</value>
@@ -718,7 +718,7 @@
     <value>No se encontraron bloques.</value>
   </data>
   <data name="No orders found." xml:space="preserve">
-    <value>No se encontraron ordenes.</value>
+    <value>No se encontraron pedidos.</value>
   </data>
   <data name="Calculate" xml:space="preserve">
     <value>Calcular</value>
@@ -809,5 +809,47 @@
   </data>
   <data name="Hide Details" xml:space="preserve">
     <value>Ocultar Detalles</value>
+  </data>
+  <data name="Cut Entry" xml:space="preserve">
+    <value>Entrada de Corte</value>
+  </data>
+  <data name="Hide Blocks" xml:space="preserve">
+    <value>Ocultar Bloques</value>
+  </data>
+  <data name="Hide Orders" xml:space="preserve">
+    <value>Ocultar Pedidos</value>
+  </data>
+  <data name="Show Blocks" xml:space="preserve">
+    <value>Mostrar Bloques</value>
+  </data>
+  <data name="Show Orders" xml:space="preserve">
+    <value>Mostrar Pedidos</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>El Aviso</value>
+  </data>
+  <data name="Do you want to save this record?" xml:space="preserve">
+    <value>¿Desea guardar este registro?</value>
+  </data>
+  <data name="Do you want to update this record?" xml:space="preserve">
+    <value>¿Desea actualizar este registro?</value>
+  </data>
+  <data name="Do you want to delete this record?" xml:space="preserve">
+    <value>¿Desea eleminar este registro?</value>
+  </data>
+  <data name="View Added Orders" xml:space="preserve">
+    <value>Pedidos Agregados</value>
+  </data>
+  <data name="Selected Orders" xml:space="preserve">
+    <value>Ordenes Seleccionados</value>
+  </data>
+  <data name="No orders added." xml:space="preserve">
+    <value>No se encontraron pedidos.</value>
+  </data>
+  <data name="Order Info" xml:space="preserve">
+    <value>Informes de Pedido</value>
+  </data>
+  <data name="Position Info" xml:space="preserve">
+    <value>Informes de Posiciones</value>
   </data>
 </root>

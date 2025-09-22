@@ -9,6 +9,6 @@ namespace SmartCut.Shared.Models
     public class CalculationDTO
     {
         public int BlockId { get; set; }
-        public List<long> OrderLineIDs { get; set; } = new List<long>();
+        public List<int> OrderLineIDs { get; set; } = new List<int>();
     }
 }

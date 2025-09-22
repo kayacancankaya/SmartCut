@@ -75,3 +75,29 @@
     .file-btn:active .icon svg {
         transform: scale(0.8);
     }
+
+
+    .file-btn:disabled {
+        cursor: not-allowed;
+        background-color: #ccc !important;
+        color: #666 !important;
+        box-shadow: inset 1px 1px 3px #999, inset -1px -1px 3px #bbb;
+        pointer-events: none; /* disables hover/active interactions */
+    }
+
+        .file-btn:disabled .icon {
+            transform: translateX(var(--TransformIcon));
+            width: var(--IconWidth);
+        }
+
+        .file-btn:disabled:hover {
+            box-shadow: inset 1px 1px 3px #999, inset -1px -1px 3px #bbb;
+            background-color: #ccc !important;
+        }
+
+.spinner-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}

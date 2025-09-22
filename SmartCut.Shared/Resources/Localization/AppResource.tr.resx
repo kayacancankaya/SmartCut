@@ -745,7 +745,7 @@
     <value>Karşılanan Miktar</value>
   </data>
   <data name="Positions" xml:space="preserve">
-    <value>Mevkiler</value>
+    <value>Konum</value>
   </data>
   <data name="No customer order found." xml:space="preserve">
     <value>Müşteri siparişi bulunamadı.</value>
@@ -760,7 +760,7 @@
     <value>Boyut bulunamadı.</value>
   </data>
   <data name="No positions available." xml:space="preserve">
-    <value>Mevkiler bulunamadı.</value>
+    <value>Konum bulunamadı.</value>
   </data>
   <data name="Calculations" xml:space="preserve">
     <value>Hesaplamalar</value>
@@ -802,12 +802,54 @@
     <value>Sayfa geçisinde hata oluştu.</value>
   </data>
   <data name="List Calculations" xml:space="preserve">
-    <value>Listado de Cálculos</value>
+    <value>Listele</value>
   </data>
   <data name="Show Details" xml:space="preserve">
     <value>Detay Göster</value>
   </data>
   <data name="Hide Details" xml:space="preserve">
     <value>Detayları Gizle</value>
+  </data>
+  <data name="Cut Entry" xml:space="preserve">
+    <value>Kesim Girişi</value>
+  </data>
+  <data name="Hide Blocks" xml:space="preserve">
+    <value>Blokları Gizle</value>
+  </data>
+  <data name="Hide Orders" xml:space="preserve">
+    <value>Siparişleri Gizle</value>
+  </data>
+  <data name="Show Blocks" xml:space="preserve">
+    <value>Blokları Göster</value>
+  </data>
+  <data name="Show Orders" xml:space="preserve">
+    <value>Siparişleri Göster</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Uyarı</value>
+  </data>
+  <data name="Do you want to save this record?" xml:space="preserve">
+    <value>Kayıt İşlemini Onaylıyor Musunuz?</value>
+  </data>
+  <data name="Do you want to update this record?" xml:space="preserve">
+    <value>Bu kaydı güncellemek istiyor musunuz?</value>
+  </data>
+  <data name="Do you want to delete this record?" xml:space="preserve">
+    <value>Bu kaydı silmek istiyor musunuz?</value>
+  </data>
+  <data name="View Added Orders" xml:space="preserve">
+    <value>Eklenen Siparişleri Göster</value>
+  </data>
+  <data name="Selected Orders" xml:space="preserve">
+    <value>Seçilen Siparişler</value>
+  </data>
+  <data name="No orders added." xml:space="preserve">
+    <value>Hiç sipariş eklenmedi.</value>
+  </data>
+  <data name="Order Info" xml:space="preserve">
+    <value>Sipariş Bilgisi</value>
+  </data>
+  <data name="Position Info" xml:space="preserve">
+    <value>Konum Bilgisi</value>
   </data>
 </root>
