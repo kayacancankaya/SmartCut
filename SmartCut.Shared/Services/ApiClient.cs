@@ -45,11 +45,11 @@ namespace SmartCut.Shared.Services
                 return new List<OrderLine>();
             }
         }
-        public async Task<IEnumerable<Block>?> GetAllBlocksAsync()
+        public async Task<IEnumerable<Block>?> GetAllBlocksAsync(string companyId)
         {
             try
             {
-                var response = await _http.GetFromJsonAsync<IEnumerable<Block>?>($"api/web/getallblocks");
+                var response = await _http.GetFromJsonAsync<IEnumerable<Block>?>($"api/web/getallblocks?companyId={companyId}");
                 return response;
             }
             catch (Exception ex)

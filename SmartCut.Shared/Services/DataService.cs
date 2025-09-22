@@ -54,11 +54,11 @@ namespace SmartCut.Shared.Services
                 return new List<OrderLine>();
             }
         }
-        public async Task<IEnumerable<Block>?> GetAllBlocksAsync()
+        public async Task<IEnumerable<Block>?> GetAllBlocksAsync(string companyId)
         {
             try
             {
-                return await _context.Blocks.OrderBy(n => n.Name).ToListAsync();
+                return await _context.Blocks.Where(c=>c.CompanyId == companyId).OrderBy(n => n.Name).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -921,6 +921,6 @@ namespace SmartCut.Shared.Services
                 };
             }
 
-
+  
     }
 }
