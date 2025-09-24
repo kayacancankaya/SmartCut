@@ -12,6 +12,7 @@
 @inject ApiClient BlockService
 @inject IExcelService ExcelService
 @inject IFormFactor FormFactor
+@inject IJSRuntime JS
 
 <div class="card">
     <div class="card-overlay"></div>
@@ -217,7 +218,49 @@
     }
     private async Task ExportToExcelAsync()
     {
-        NavigationManager.NavigateTo("block-create");
+        try
+        {
+            buttonsDisabled = "disabled";
+            StateHasChanged();
+            IEnumerable<Block> blocks = await BlockService.GetAllBlocksAsync("0");
+            if (blocks == null)
+            {
+                NotificationService.ShowError(Localizer.Get("An error occurred while fetching blocks from the system."));
+                buttonsDisabled = string.Empty;
+                return;
+            }
+            else if (blocks.Count() <= 0)
+            {
+                NotificationService.ShowError(Localizer.Get("No blocks to export."));
+                buttonsDisabled = string.Empty;
+                return;
+            }
+            byte[] excelBytes = ExcelService.ExportBlocks(blocks);
+            if (excelBytes == null)
+            {
+                NotificationService.ShowError(Localizer.Get("Failed to export blocks."));
+                buttonsDisabled = string.Empty;
+                return;
+            }
+            else if (excelBytes.Length == 0)
+            {
+                NotificationService.ShowError(Localizer.Get("Failed to export blocks."));
+                buttonsDisabled = string.Empty;
+                return;
+            }
+             var fileName = $"{Localizer.Get("Blocks")}_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
+
+            await JS.InvokeVoidAsync("openFileInNewTab", fileName, Convert.ToBase64String(excelBytes));
+            buttonsDisabled = string.Empty;
+
+ 
+        }
+        catch (Exception ex)
+        {
+            NotificationService.ShowError(Localizer.Get("Failed to export blocks.") + " " + ex.Message);
+            buttonsDisabled = string.Empty;
+            return;
+        }
     }
     private async Task SaveBlocksAsync()
     {

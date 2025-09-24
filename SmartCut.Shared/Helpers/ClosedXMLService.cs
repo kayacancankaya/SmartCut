@@ -1,7 +1,10 @@
 ﻿using ClosedXML.Excel;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SmartCut.Shared.Interfaces;
+using SmartCut.Shared.Models;
+using SmartCut.Shared.Resources.Localization;
 using SmartCut.Shared.Models.DTOs;
 
 namespace SmartCut.Shared.Helpers
@@ -9,9 +12,11 @@ namespace SmartCut.Shared.Helpers
     public class ClosedXMLService : IExcelService
     {
         private readonly ILogger<ClosedXMLService> _logger;
-        public ClosedXMLService(ILogger<ClosedXMLService> logger)
+        private readonly IConfiguration _configuration;
+        public ClosedXMLService(ILogger<ClosedXMLService> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _configuration = configuration;
         }
         public async Task<List<OrderDTO>> ImportOrdersAsync(IBrowserFile file)
         {
@@ -137,5 +142,75 @@ namespace SmartCut.Shared.Helpers
                 return new List<BlockDTO>();
             }
         }
+        public byte[] ExportBlocks(IEnumerable<Block> blocks)
+        {
+            try
+            {
+
+                using var workbook = new XLWorkbook();
+                var ws = workbook.Worksheets.Add("Blocks");
+
+
+                var imagePath = Path.Combine(_configuration["BasePath"], "images", "logos", blocks.Select(c => c.CompanyId).FirstOrDefault().ToString(), "brandlogo.png");
+                if (File.Exists(imagePath))
+                {
+                    var img = ws.AddPicture(imagePath)
+                                .MoveTo(ws.Cell("A1"))
+                                .WithSize(100, 100);
+                }
+
+                // 2. Title row (merged + styled)
+                ws.Range("A1:G1").Merge().Value = Localizer.Get("Block List");
+                ws.Range("A1:G1").Style
+                    .Font.SetBold()
+                    .Font.SetFontSize(18)
+                    .Fill.SetBackgroundColor(XLColor.LightBlue)
+                    .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+                // 3. Header row
+                ws.Cell(3, 1).Value = "Id";
+                ws.Cell(3, 3).Value = "Name";
+                ws.Cell(3, 4).Value = "Length";
+                ws.Cell(3, 5).Value = "Width";
+                ws.Cell(3, 6).Value = "Height";
+                ws.Cell(3, 7).Value = "Material";
+                ws.Cell(3, 8).Value = "Created At";
+
+                ws.Range("A3:G3").Style
+                    .Font.SetBold()
+                    .Fill.SetBackgroundColor(XLColor.Orange)
+                    .Alignment.SetHorizontal(XLAlignmentHorizontalValues.Center);
+
+                // 4. Fill rows from Block objects
+                int row = 4;
+                foreach (var block in blocks)
+                {
+                    ws.Cell(row, 1).Value = block.Id;
+                    ws.Cell(row, 2).Value = block.Name;
+                    ws.Cell(row, 3).Value = block.Length;
+                    ws.Cell(row, 4).Value = block.Width;
+                    ws.Cell(row, 5).Value = block.Height;
+                    ws.Cell(row, 6).Value = block.Material;
+                    ws.Cell(row, 7).Value = block.CreatedAt;
+
+                    row++;
+                }
+
+                // 5. Make table stylish
+                ws.Range(3, 1, row - 1, 8).CreateTable();
+
+                ws.Columns().AdjustToContents();
+
+                using var stream = new MemoryStream();
+                workbook.SaveAs(stream);
+                return stream.ToArray();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error exporting blocks to Excel");
+                return Array.Empty<byte>();
+            }
+        }
+
     }
 }

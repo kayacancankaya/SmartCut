@@ -25,11 +25,11 @@ namespace SmartCut.Web.Controller
         }
 
         [HttpGet("getallblocks")]
-        public async Task<ActionResult<IEnumerable<Block>?>> GetAllBlocks()
+        public async Task<ActionResult<IEnumerable<Block>?>> GetAllBlocks(string companyId)
         {
             try
             {
-                var response = await _data.GetAllBlocksAsync();
+                var response = await _data.GetAllBlocksAsync(companyId);
                 return Ok(response);
             }
             catch (Exception ex)
