@@ -852,4 +852,10 @@
   <data name="Position Info" xml:space="preserve">
     <value>Position Info</value>
   </data>
+  <data name="Partly fulfilled" xml:space="preserve">
+    <value>Partly fulfilled</value>
+  </data>
+  <data name="Not fulfilled" xml:space="preserve">
+    <value>Not fulfilled</value>
+  </data>
 </root>

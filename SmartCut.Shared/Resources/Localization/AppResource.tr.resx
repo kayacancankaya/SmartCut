@@ -852,4 +852,10 @@
   <data name="Position Info" xml:space="preserve">
     <value>Konum Bilgisi</value>
   </data>
+  <data name="Partly fulfilled" xml:space="preserve">
+    <value>Kısmen karşılandı</value>
+  </data>
+  <data name="Not fulfilled" xml:space="preserve">
+    <value>Karşılanmadı</value>
+  </data>
 </root>
