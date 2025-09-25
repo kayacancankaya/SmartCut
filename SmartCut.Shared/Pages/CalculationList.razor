@@ -35,31 +35,41 @@
 
             else
             {
+                string status = string.Empty;
+                string statusCSS = string.Empty;
                 @foreach (var plan in Calculations)
                 {
+                    @plan.Status == 3 ? status = Localizer.Get("Fulfilled") : plan.Status == 4 ? Localizer.Get("Partly fullfilled") : Localizer.Get("Not fulfilled");
+                    @plan.Status == 3 ? @statusCSS = "color:green;font-weight:bold;" : plan.Status == 4 ? "color:yellow;font-weight:bold;" : "color:red;font-weight:bold;";
                     <div class="card mb-2 p-3">
                         <h5>@plan.Explanation</h5>
                          <ul class="list-group mt-3">
                             <li class="list-group-item">
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div>
-                                          <p>@Localizer.Get("Block Name"):</p>
-                                          <p>@Localizer.Get("Status"): @plan.Status</p>
-                                          <p>@Localizer.Get("Scrap"): @plan.ScrapVolume</p>
-                                          <p>@Localizer.Get("Fulfilled"): @plan.PercentFulfilled %</p>
+                                          <p>@Localizer.Get("Block"):@plan.Block.Name @plan.Block.Width * @plan.Block.Length * @plan.Block.Height</p>
+                                          <p>@Localizer.Get("Total Volume"): @plan.TotalVolume</p>
+                                        @if (plan.Status != 3)
+                                        {
+                                            <p>@Localizer.Get("Scrap"): <span style="@statusCSS">@plan.ScrapVolume</span></p>
+                                        }
+
                                     </div>
                                     <div>
-                                          <p>@Localizer.Get("Status"): @plan.Status</p>
-                                          <p>@Localizer.Get("Scrap"): @plan.ScrapVolume</p>
-                                          <p>@Localizer.Get("Fulfilled"): @plan.PercentFulfilled %</p>
+                                          <p>@Localizer.Get("Status"): @status</p>
+                                          <p >@Localizer.Get("Fulfilled"): @plan.PercentFulfilled %</p>
                                     </div>
                                 </div>
                             </li>
                          </ul>
-
-                        <button class="btn btn-primary" style="width:150px;max-height:35px;text-align:center;" @onclick="() => TogglePlan(plan)">
+                         <div class="d-flex align-items-start justify-content-center">
+                        <button class="btn btn-primary mt-3" style="max-width:150px;max-height:35px;text-align:center;" @onclick="() => TogglePlan(plan)">
                             @(plan.ShowDetails? Localizer.Get("Hide Details") : Localizer.Get("Show Details"))
                         </button>
+                        <button class="btn btn-warning mt-3 ml-3" style="max-width:150px;max-height:35px;text-align:center;" @onclick="() => ToggleNotIncludedToPlan(plan)">
+                            @(plan.ShowDetails? Localizer.Get("Hide Details") : Localizer.Get("Show Details"))
+                        </button>
+                                </div>
                         @if (plan.ShowDetails)
                         {
                             @if (plan.CutEntries == null)
@@ -157,7 +167,7 @@
                                                                             </thead>
                                                                             <tbody>
                                                                                 @foreach (var pos in entry.Positions)
-                                                                                {
+                                                                                { 
                                                                                     <tr>
                                                                                         <td>@pos.Id</td>
                                                                                         <td>@pos.X</td>
