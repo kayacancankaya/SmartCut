@@ -39,8 +39,8 @@
                 string statusCSS = string.Empty;
                 @foreach (var plan in Calculations)
                 {
-                    @plan.Status == 3 ? status = Localizer.Get("Fulfilled") : plan.Status == 4 ? Localizer.Get("Partly fullfilled") : Localizer.Get("Not fulfilled");
-                    @plan.Status == 3 ? @statusCSS = "color:green;font-weight:bold;" : plan.Status == 4 ? "color:yellow;font-weight:bold;" : "color:red;font-weight:bold;";
+                    status = @plan.Status == 3 ? status = Localizer.Get("Fulfilled") : plan.Status == 4 ? Localizer.Get("Partly fullfilled") : Localizer.Get("Not fulfilled");
+                    statusCSS = @plan.Status == 3 ? @statusCSS = "color:green;font-weight:bold;" : plan.Status == 4 ? "color:yellow;font-weight:bold;" : "color:red;font-weight:bold;";
                     <div class="card mb-2 p-3">
                         <h5>@plan.Explanation</h5>
                          <ul class="list-group mt-3">
@@ -229,5 +229,6 @@
     private void TogglePlan(CuttingPlanDTO dto) => dto.ShowDetails = !dto.ShowDetails;
     private void TogglePositions(CutEntryDTO dto) => dto.ShowPositions = !dto.ShowPositions;
     private void ToggleOrders(CutEntryDTO dto) => dto.ShowOrders = !dto.ShowOrders;
+    private void ToggleNotIncludedToPlan(CuttingPlanDTO dto) => dto.ShowNotIncludedDetails = !dto.ShowNotIncludedDetails;
     
 }
