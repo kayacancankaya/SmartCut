@@ -58,6 +58,19 @@ namespace SmartCut.Shared.Services
                 return new List<Block>();
             }
         }
+        public async Task<IEnumerable<OrderDTO>?> GetAllOrdersAsync(string companyId)
+        {
+            try
+            {
+                var response = await _http.GetFromJsonAsync<IEnumerable<OrderDTO>?>($"api/web/getallorders?companyId={companyId}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return new List<OrderDTO>();
+            }
+        }
         public async Task<IEnumerable<Block>?> GetBlocksAsync(int pageNumber=1,int pageSize = 10,string name ="",string description = "",string material = "")
         {
             try

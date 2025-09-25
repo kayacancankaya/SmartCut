@@ -15,6 +15,8 @@ namespace SmartCut.Shared.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
+        public string CompanyId { get; set; } = string.Empty;
+        [Required]
         public int OrderLineId { get; set; }
         [Required]
         public int CutEntryId { get; set; }

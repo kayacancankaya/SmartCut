@@ -9,6 +9,7 @@ namespace SmartCut.Shared.Models.DTOs
     public class OrderDTO
     {
         public string InvoiceNumber { get; set; } = string.Empty;
+        public string CompanyId { get; set; } = string.Empty;
         public int Line { get; set; }
         public float Width { get; set; }
         public float Length { get; set; }

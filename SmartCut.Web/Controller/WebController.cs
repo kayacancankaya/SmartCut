@@ -39,6 +39,21 @@ namespace SmartCut.Web.Controller
             }
         }
 
+        [HttpGet("getallorders")]
+        public async Task<ActionResult<IEnumerable<OrderDTO>?>> GetAllOrders(string companyId)
+        {
+            try
+            {
+                var response = await _data.GetAllOrdersAsync(companyId);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return StatusCode(500, "Internal server error");
+            }
+        }
+
         [HttpGet("getblocks")]
         public async Task<ActionResult<IEnumerable<Block>?>> GetBlocks(int pageNumber=10,int pageSize = 1,string name = "",string description = "",string material = "")
         {

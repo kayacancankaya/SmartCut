@@ -39,7 +39,7 @@
                         iconHoverWidth="105px" 
                         disabled="@buttonsDisabled"/>
 
-                        <InputFileComponent OnFileSelected="ImportFromExcelAsync"/>
+                        <InputFileComponent OnFileSelected="ImportFromExcelAsync" disabled="@buttonsDisabled" />
 
                         <ListButton buttonText="@Localizer.Get("Export to Excel")" buttonBackgroundColor="#185C37"
                         svg="@exportIcon"
@@ -235,24 +235,25 @@
                 buttonsDisabled = string.Empty;
                 return;
             }
-            byte[] excelBytes = ExcelService.ExportBlocks(blocks);
-            if (excelBytes == null)
+            byte[] bytes = ExcelService.ExportBlocks(blocks);
+            
+            if (bytes == null)
             {
                 NotificationService.ShowError(Localizer.Get("Failed to export blocks."));
                 buttonsDisabled = string.Empty;
                 return;
             }
-            else if (excelBytes.Length == 0)
+            
+            else if (bytes.Length <= 0)
             {
                 NotificationService.ShowError(Localizer.Get("Failed to export blocks."));
                 buttonsDisabled = string.Empty;
                 return;
             }
-             var fileName = $"{Localizer.Get("Blocks")}_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
 
-            await JS.InvokeVoidAsync("openFileInNewTab", fileName, Convert.ToBase64String(excelBytes));
             buttonsDisabled = string.Empty;
-
+            string fileName = $"{Localizer.Get("Orders")}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.xlsx";
+            await JS.InvokeVoidAsync("openFileInNewTab", fileName, Convert.ToBase64String(bytes));
  
         }
         catch (Exception ex)

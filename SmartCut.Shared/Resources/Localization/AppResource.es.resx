@@ -622,7 +622,7 @@
     <value>Bloque</value>
   </data>
   <data name="Orders" xml:space="preserve">
-    <value>Las Órdenes</value>
+    <value>Los Pedidos</value>
   </data>
   <data name="Block List" xml:space="preserve">
     <value>Lista de Bloque</value>
@@ -854,5 +854,11 @@
   </data>
   <data name="Blocks" xml:space="preserve">
     <value>Bloques</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="Order" xml:space="preserve">
+    <value>Pedido</value>
   </data>
 </root>

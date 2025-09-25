@@ -66,6 +66,38 @@ namespace SmartCut.Shared.Services
                 return new List<Block>();
             }
         }
+        public async Task<IEnumerable<OrderDTO>?> GetAllOrdersAsync(string companyId)
+        {
+            try
+            {
+                IEnumerable<OrderLine> order = await _context.OrderLines.Where(c=>c.CompanyId == companyId).OrderBy(n => n.InvoiceNumber).ThenBy(l=>l.Line).ToListAsync();
+                List<OrderDTO> orderDTOs = new();
+                foreach (var o in order)
+                {
+                    OrderDTO dto = new OrderDTO()
+                    {
+                        InvoiceNumber = o.InvoiceNumber,
+                        Line = o.Line,
+                        StockCode = o.StockCode,
+                        StockName = o.StockName,
+                        CustomerCode = o.CustomerCode,
+                        CustomerName = o.CustomerName,
+                        Description = o.Description,
+                        Quantity = o.Quantity,
+                        Width = o.Width,
+                        Length = o.Length,
+                        Height = o.Height
+                    };
+                    orderDTOs.Add(dto);
+                }
+                return orderDTOs;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return new List<OrderDTO>();
+            }
+        }
         public async Task<IEnumerable<Block>?> GetBlocksAsync(int pageNumber, int pageSize, string name, string description, string material)
         {
             try
@@ -102,7 +134,7 @@ namespace SmartCut.Shared.Services
             {
                 if (pageNumber <= 0) pageNumber = 1;
                 if (pageSize <= 0) pageSize = 10;
-               string rawSQL = "SELECT DISTINCT cp.Id, cp.BlockId, cp.Status, cp.Explanation, cp.ScrapVolume, cp.PercentFulfilled " +
+               string rawSQL = "SELECT DISTINCT cp.Id,cp.CompanyId, cp.BlockId, cp.Status, cp.Explanation, cp.ScrapVolume, cp.PercentFulfilled " +
                     "FROM CuttingPlans cp " +
                     "JOIN CutEntries ce ON cp.Id = ce.CuttingPlanId " +
                     "JOIN OrderLines ol ON ce.OrderLineId = ol.Id " +
@@ -772,6 +804,7 @@ namespace SmartCut.Shared.Services
             {
                 _logger.LogError(ex, ex.Message.ToString());
                 return new CuttingPlanDTO();
+
             }
         }
         bool TryPlaceUnit(UnitRequest unit, List<FreeBox> freeList, out Placement? placement)

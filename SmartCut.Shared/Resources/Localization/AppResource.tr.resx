@@ -855,4 +855,10 @@
   <data name="Blocks" xml:space="preserve">
     <value>Bloklar</value>
   </data>
+  <data name="Name" xml:space="preserve">
+    <value>İsim</value>
+  </data>
+  <data name="Order" xml:space="preserve">
+    <value>Sipariş</value>
+  </data>
 </root>

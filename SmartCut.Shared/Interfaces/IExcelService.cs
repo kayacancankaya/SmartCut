@@ -9,5 +9,6 @@ namespace SmartCut.Shared.Interfaces
         Task<List<OrderDTO>> ImportOrdersAsync(IBrowserFile file);
         Task<List<BlockDTO>> ImportBlocksAsync(IBrowserFile file);
         byte[] ExportBlocks(IEnumerable<Block> BlockList);
+        byte[] ExportOrders(IEnumerable<OrderDTO> Orders);
     }
 }

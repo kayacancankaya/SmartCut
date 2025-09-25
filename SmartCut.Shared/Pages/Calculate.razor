@@ -418,16 +418,19 @@
             if (SelectedBlock == null)
             {
                 NotificationService.ShowError(Localizer.Get("Please select a block first."));
+                disabled = string.Empty;
                 return;
             }
             if (SelectedOrders == null)
             {
                 NotificationService.ShowError(Localizer.Get("Please select order."));
+                disabled = string.Empty;
                 return;
             }
             if (SelectedOrders.Count == 0)
             {
                 NotificationService.ShowError(Localizer.Get("Please select order."));
+                disabled = string.Empty;
                 return;
             }
             CalculationDTO calculationDTO = new CalculationDTO
@@ -440,11 +443,13 @@
             if (CuttingPlan == null)
             {
                 NotificationService.ShowError(Localizer.Get("An error occurred while calculating."));
+                disabled = string.Empty;
                 return;
             }
             else if (CuttingPlan.CutEntries.Count == 0)
             {
                 NotificationService.ShowError(Localizer.Get("An error occurred while calculating."));
+                disabled = string.Empty;
                 return;
             }
             showCuttingPlan = true;

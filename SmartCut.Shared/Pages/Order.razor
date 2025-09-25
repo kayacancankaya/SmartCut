@@ -9,10 +9,10 @@
 @inject BreadcrumbService BreadcrumbService
 @inject NotificationService NotificationService
 @inject NavigationManager NavigationManager
-@inject ApiClient BlockService
+@inject ApiClient OrderService
 @inject IExcelService ExcelService
 @inject IFormFactor FormFactor
-
+@inject IJSRuntime JS
 <div class="card">
     <div class="card-overlay"></div>
     <div class="card-inner">
@@ -132,7 +132,7 @@
     private string platform => FormFactor.GetPlatform();
     private string factor => FormFactor.GetFormFactor();
     private List<OrderDTO> orders = new List<OrderDTO>();
-    private string buttonsDisabled = "disabled";
+    private string buttonsDisabled = string.Empty;
     private bool showOrders = false;
     private bool showCustomerCode = false;
     private bool showCustomerName = false;
@@ -248,7 +248,51 @@
     }
     private async Task ExportToExcelAsync()
     {
-        NavigationManager.NavigateTo("order-create");
+        try
+        {
+            buttonsDisabled = "disabled";
+            StateHasChanged();
+            IEnumerable<OrderDTO> orders = await OrderService.GetAllOrdersAsync("0");
+            if (orders == null)
+            {
+                NotificationService.ShowError(Localizer.Get("An error occurred while fetching orders from the system."));
+                buttonsDisabled = string.Empty;
+                return;
+
+            }
+            else if (orders.Count() <= 0)
+            {
+                NotificationService.ShowError(Localizer.Get("No orders to export."));
+                buttonsDisabled = string.Empty;
+                return;
+            }
+            byte[] bytes = ExcelService.ExportOrders(orders);
+
+            if (bytes == null)
+            {
+                NotificationService.ShowError(Localizer.Get("Failed to export orders."));
+                buttonsDisabled = string.Empty;
+                return;
+            }
+
+            else if (bytes.Length <= 0)
+            {
+                NotificationService.ShowError(Localizer.Get("Failed to export orders."));
+                buttonsDisabled = string.Empty;
+                return;
+            }
+
+            buttonsDisabled = string.Empty;
+            string fileName = $"{Localizer.Get("Orders")}_{DateTime.Now.ToString("yyyyMMdd_HHmmss")}.xlsx";
+            await JS.InvokeVoidAsync("openFileInNewTab", fileName, Convert.ToBase64String(bytes));
+
+        }
+        catch (Exception ex)
+        {
+            NotificationService.ShowError(Localizer.Get("Failed to export orders.") + " " + ex.Message);
+            buttonsDisabled = string.Empty;
+            return;
+        }
     }
     private async Task SaveOrdersAsync()
     {
@@ -268,7 +312,7 @@
                 buttonsDisabled = string.Empty;
                 return;
             }
-            var result = await BlockService.ImportOrdersAsync(orders);
+            var result = await OrderService.ImportOrdersAsync(orders);
             if (result)
             {
                 NotificationService.ShowSuccess(Localizer.Get("Orders saved successfully."));

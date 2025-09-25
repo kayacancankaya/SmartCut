@@ -14,7 +14,7 @@ namespace SmartCut.Shared.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-
+        public string CompanyId { get; set; } = "0";
         public int OrderId { get; set; }
         [Required]
         [MaxLength(255)]
