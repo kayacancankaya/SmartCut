@@ -639,29 +639,25 @@ namespace SmartCut.Shared.Services
                 // Packing loop
                 foreach (var unit in units)
                 {
-                    var found = TryPlaceUnit(unit, free, out var placement);
-                    if (found && placement != null)
-                    {
-                        placements.Add(placement);
-                        placedCount++;
-                    }
+                    Placement placement = TryPlaceUnit(unit, free);
+                    placements.Add(placement);
                 }
 
                 // Aggregate results
-                double placedVolume = placements.Sum(p => (double)p.W * p.H * p.L);
+                double placedVolume = placements.Where(i=>i.IsPlaced).Sum(p => (double)p.W * p.H * p.L);
                 double scrapVolume = Math.Max(0d, blockVolume - placedVolume);
                 double percentFulfilled = totalOrderVolume <= 0 ? 0 : Math.Min(100.0, (placedVolume / totalOrderVolume) * 100.0);
 
                 // Group placements by order line
                 var planEntries = new List<CutEntry>();
                 var planEntriesDTO = new List<CutEntryDTO>();
-                var placementsGrouped = placements.GroupBy(p => p.OrderLineId);
+                var placementsGrouped = placements.Where(i=>i.IsPlaced).GroupBy(p => p.OrderLineId);
                 List<Dimension> dimensions = new();
                 List<SmartCut.Shared.Models.Position> allPositions = new();
                 foreach (var grp in placementsGrouped)
                 {
                     int counter = 0;
-                    var positions = grp.Select(g => new float[] { g.X, g.Y, g.Z }).ToList();
+                    var positions = grp.Select(g => new float[] { g.X, g.Y, g.Z, g.W,g.H,g.L }).ToList();
                     List<SmartCut.Shared.Models.Position> posList = new();
                     foreach (var position in positions) {
                         counter++;
@@ -671,7 +667,10 @@ namespace SmartCut.Shared.Services
                             QuantityLine = counter,
                             X = position[0],
                             Y = position[1],
-                            Z = position[2]
+                            Z = position[2],
+                            Ex = position[3],
+                            Ey = position[4],
+                            Ez = position[5]
                         };
                         posList.Add(position1);
                     }
@@ -703,18 +702,22 @@ namespace SmartCut.Shared.Services
                     planEntriesDTO.Add(new CutEntryDTO
                     {
                         OrderLineId = grp.Key,
+                        OrderQuantity = orderLines.Where(ol => ol.Id == grp.Key).Select(l => l.Quantity).FirstOrDefault(),
                         QuantityFulfilled = positions.Count,
                         Positions = posList,
                         Dimension = dimension,
                         Order = orderDTO,
+                        IsFulfilled = positions.Count >= orderLines.Where(ol => ol.Id == grp.Key).Select(l => l.Quantity).FirstOrDefault() ? true : false
                     });
                     planEntries.Add(new CutEntry
                     {
                         OrderLineId = grp.Key,
                         QuantityFulfilled = positions.Count,
                         Positions = posList,
+                        TotalVolume = (float)orderDTO.Width * orderDTO.Height * orderDTO.Length * orderDTO.1,
                         Dimension = dimension,
-                        OrderLine = orderLines.FirstOrDefault(ol => ol.Id == grp.Key)
+                        OrderLine = orderLines.FirstOrDefault(ol => ol.Id == grp.Key),
+                        IsFulfilled = positions.Count >= orderLines.Where(ol => ol.Id == grp.Key).Select(l => l.Quantity).FirstOrDefault() ? true : false
                     });
 
       
@@ -723,7 +726,61 @@ namespace SmartCut.Shared.Services
                         dimensions.Add(dimension);
 
                 }
-
+                List<OrderLine> unfulfilledLines = new();
+                foreach (var line in orderLines)
+                {
+                    if (!placementsGrouped.Any(g => g.Key == line.Id))
+                        unfulfilledLines.Add(line);
+                }
+                foreach (var line in unfulfilledLines)
+                {
+                    planEntriesDTO.Add(new CutEntryDTO
+                    {
+                        OrderLineId = line.Id,
+                        OrderQuantity = line.Quantity,
+                        QuantityFulfilled = 0,
+                        TotalVolume = (float)line.Width * line.Height * line.Length * line.Quantity,
+                        Positions = new List<SmartCut.Shared.Models.Position>(),
+                        Dimension = new Dimension
+                        {
+                            OrderLineId = line.Id,
+                            X = line.Width,
+                            Y = line.Height,
+                            Z = line.Length
+                        },
+                        Order = new OrderDTO
+                        {
+                            InvoiceNumber = line.InvoiceNumber,
+                            Line = line.Line,
+                            Width = line.Width,
+                            Length = line.Length,
+                            Height = line.Height,
+                            Quantity = line.Quantity,
+                            StockCode = line.StockCode ?? string.Empty,
+                            StockName = line.StockName ?? string.Empty,
+                            CustomerCode = line.CustomerCode ?? string.Empty,
+                            CustomerName = line.CustomerName ?? string.Empty,
+                            Description = line.Description ?? string.Empty,
+                        },
+                        IsFulfilled = false
+                    });
+                    planEntries.Add(new CutEntry
+                    {
+                        OrderLineId = line.Id,
+                        QuantityFulfilled = 0,
+                        Positions = new List<SmartCut.Shared.Models.Position>(),
+                        TotalVolume = (float)line.Width * line.Height * line.Length * line.Quantity,
+                        Dimension = new Dimension
+                        {
+                            OrderLineId = line.Id,
+                            X = line.Width,
+                            Y = line.Height,
+                            Z = line.Length
+                        },
+                        OrderLine = line,
+                        IsFulfilled = false
+                    });
+                }
                 // Identify shortfalls per order line for explanation
                 var shortfalls = new List<string>();
                 var requestedById = orderLines.ToDictionary(k => k.Id, v => Convert.ToInt32(v.Quantity));
@@ -807,9 +864,9 @@ namespace SmartCut.Shared.Services
 
             }
         }
-        bool TryPlaceUnit(UnitRequest unit, List<FreeBox> freeList, out Placement? placement)
+        Placement TryPlaceUnit(UnitRequest unit, List<FreeBox> freeList)
         {
-                placement = null;
+                Placement placement = new();
 
                 // Candidate best
                 int bestIdx = -1;
@@ -903,10 +960,19 @@ namespace SmartCut.Shared.Services
                     PruneFreeList(freeList);
 
                     placement = p;
-                    return true;
+                    placement.IsPlaced = true;
+                    return placement;
                 }
-
-                return false;
+                placement = new Placement();
+                placement.IsPlaced = false;
+                placement.OrderLineId = unit.OrderLineId;
+                placement.W = unit.W;
+                placement.H = unit.H;
+                placement.L = unit.L;
+                placement.X = 0f;
+                placement.Y = 0f;
+                placement.Z = 0f;
+                return placement ;
             }
             void AddIfValid(FreeBox box, List<FreeBox> list)
             {

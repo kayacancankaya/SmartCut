@@ -22,5 +22,6 @@ namespace SmartCut.Shared.Helpers
         public float W { get; set; }
         public float H { get; set; }
         public float L { get; set; }
+        public bool IsPlaced { get; set; } = false;
     }
 }

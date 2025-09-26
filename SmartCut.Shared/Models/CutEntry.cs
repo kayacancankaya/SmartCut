@@ -17,6 +17,10 @@ namespace SmartCut.Shared.Models
         public int CuttingPlanId { get; set; }
         [Required]
         public int QuantityFulfilled { get; set; }
+        [Required]
+        public bool IsFulfilled { get; set; } = false;
+        [Required]
+        public float TotalVolume { get; set; }
 
         public List<Position> Positions { get; set; } = new();
         public Dimension? Dimension { get; set; } = new();

@@ -29,6 +29,12 @@ namespace SmartCut.Shared.Models
         public float Y { get; set; }
         [Required]
         public float Z { get; set; }
+        [Required]
+        public float Ex { get; set; }
+        [Required]
+        public float Ey { get; set; }
+        [Required]
+        public float Ez { get; set; }
 
 
     }
