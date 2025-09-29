@@ -19,6 +19,8 @@ namespace SmartCut.Shared.Models
         [Required]
         public int BlockId { get; set; }
         [Required]
+        public float TotalVolume { get; set; }
+        [Required]
         public int Status { get; set; }
         [Required]
         public string Explanation { get; set; } = string.Empty;

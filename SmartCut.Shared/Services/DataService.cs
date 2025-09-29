@@ -134,7 +134,7 @@ namespace SmartCut.Shared.Services
             {
                 if (pageNumber <= 0) pageNumber = 1;
                 if (pageSize <= 0) pageSize = 10;
-               string rawSQL = "SELECT DISTINCT cp.Id,cp.CompanyId, cp.BlockId, cp.Status, cp.Explanation, cp.ScrapVolume, cp.PercentFulfilled " +
+               string rawSQL = "SELECT DISTINCT cp.Id,cp.CompanyId, cp.BlockId, cp.Status, cp.Explanation,cp.TotalVolume, cp.ScrapVolume, cp.PercentFulfilled " +
                     "FROM CuttingPlans cp " +
                     "JOIN CutEntries ce ON cp.Id = ce.CuttingPlanId " +
                     "JOIN OrderLines ol ON ce.OrderLineId = ol.Id " +
@@ -174,10 +174,13 @@ namespace SmartCut.Shared.Services
                         Id = calc.Id,
                         Status = calc.Status,
                         Explanation = calc.Explanation,
+                        TotalVolume = calc.TotalVolume,
                         ScrapVolume = calc.ScrapVolume,
                         PercentFulfilled = calc.PercentFulfilled,
                         CutEntries = new List<CutEntryDTO>()
                     };
+                    var block = await _context.Blocks.Where(i => i.Id == calc.BlockId).FirstOrDefaultAsync();
+                    dto.Block = block;
                     var cutEntries = await _context.CutEntries.Where(ce => ce.CuttingPlanId == calc.Id).ToListAsync();
                     if (cutEntries != null)
                     {
@@ -714,7 +717,6 @@ namespace SmartCut.Shared.Services
                         OrderLineId = grp.Key,
                         QuantityFulfilled = positions.Count,
                         Positions = posList,
-                        TotalVolume = (float)orderDTO.Width * orderDTO.Height * orderDTO.Length * orderDTO.1,
                         Dimension = dimension,
                         OrderLine = orderLines.FirstOrDefault(ol => ol.Id == grp.Key),
                         IsFulfilled = positions.Count >= orderLines.Where(ol => ol.Id == grp.Key).Select(l => l.Quantity).FirstOrDefault() ? true : false
@@ -739,7 +741,6 @@ namespace SmartCut.Shared.Services
                         OrderLineId = line.Id,
                         OrderQuantity = line.Quantity,
                         QuantityFulfilled = 0,
-                        TotalVolume = (float)line.Width * line.Height * line.Length * line.Quantity,
                         Positions = new List<SmartCut.Shared.Models.Position>(),
                         Dimension = new Dimension
                         {
@@ -769,7 +770,6 @@ namespace SmartCut.Shared.Services
                         OrderLineId = line.Id,
                         QuantityFulfilled = 0,
                         Positions = new List<SmartCut.Shared.Models.Position>(),
-                        TotalVolume = (float)line.Width * line.Height * line.Length * line.Quantity,
                         Dimension = new Dimension
                         {
                             OrderLineId = line.Id,
@@ -820,6 +820,8 @@ namespace SmartCut.Shared.Services
                     Status = status,
                     Explanation = explanation,
                     CutEntries = planEntries,
+                    BlockId = block.Id,
+                    TotalVolume = (float)totalOrderVolume,
                     ScrapVolume = (float)scrapVolume,
                     PercentFulfilled = (float)percentFulfilled
                 };

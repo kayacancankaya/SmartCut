@@ -49,7 +49,7 @@
                                     <div>
                                           <p>@Localizer.Get("Block"):@plan.Block.Name @plan.Block.Width * @plan.Block.Length * @plan.Block.Height</p>
                                           <p>@Localizer.Get("Total Volume"): @plan.TotalVolume</p>
-                                        @if (plan.Status != 3)
+
                                         {
                                             <p>@Localizer.Get("Scrap"): <span style="@statusCSS">@plan.ScrapVolume</span></p>
                                         }
@@ -211,8 +211,8 @@
         BreadcrumbService.SetBreadcrumbs(new List<BreadcrumbItem>
         {
             new() { Title = Localizer.Get("Home"), Url = "/", IsActive = false },
-            new() { Title = Localizer.Get("Calculations"), Url = "/calculation", IsActive = false } ,
-            new() { Title = Localizer.Get("Calculation List"), Url = "/list-calculations", IsActive = true }
+            new() { Title = Localizer.Get("Plans"), Url = "/calculation", IsActive = false } ,
+            new() { Title = Localizer.Get("Plan List"), Url = "/list-calculations", IsActive = true }
 
         });
 

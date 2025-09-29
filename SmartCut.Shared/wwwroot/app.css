@@ -201,3 +201,26 @@ h1:focus {
     .card-body .form-class {
         grid-template-columns: 1fr;
     }
+
+
+    #three-container {
+        
+        position: relative;
+        background: #f7f7f7;
+        border: 1px solid #ddd;
+        overflow: hidden;
+    }
+
+    #three-tooltip {
+        position: absolute;
+        pointer-events: none;
+        background: rgba(0,0,0,0.8);
+        color: white;
+        padding: 6px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        transform: translate(-50%, -120%);
+        display: none;
+        white-space: nowrap;
+        z-index: 10;
+    }

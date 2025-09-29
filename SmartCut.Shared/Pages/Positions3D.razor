@@ -1,0 +1,48 @@
+﻿@page "/positions3d"
+@using SmartCut.Shared.Models
+@inject IJSRuntime JS
+
+<h3>3D Positions View</h3>
+
+<div id="three-container" style="width: 100%;
+        height: 600px;border:1px solid #ccc;"></div>
+<!-- tooltip injected / managed by JS, but keep a placeholder for CSS to apply -->
+<div id="three-tooltip" style="display:none;"></div>
+
+<button @onclick="Reload">Reload / Re-render</button>
+<button @onclick="DisposeJs">Destroy Viewer</button>
+
+@code {
+    // Replace this with DB loaded data in real usage
+    private List<Position> Positions = new()
+    {
+        new Position{ Id=1, OrderLineId=10, QuantityLine=1, CutEntryId=1, X=0, Y=0, Z=0, Ex=210, Ey=10, Ez=280 },
+        new Position{ Id=2, OrderLineId=2, QuantityLine=1, CutEntryId=2, X=0, Y=10, Z=0, Ex=210, Ey=10, Ez=280 },
+        new Position{ Id=3, OrderLineId=9, QuantityLine=1, CutEntryId=3, X=0, Y=20, Z=0, Ex=210, Ey=8, Ez=280 },
+        new Position{ Id=4, OrderLineId=9, QuantityLine=2, CutEntryId=3, X=0, Y=28, Z=0, Ex=210, Ey=8, Ez=280 },
+        new Position{ Id=5, OrderLineId=1, QuantityLine=1, CutEntryId=4, X=0, Y=36, Z=0, Ex=210, Ey=8, Ez=280 },
+        new Position{ Id=6, OrderLineId=1, QuantityLine=2, CutEntryId=4, X=0, Y=44, Z=0, Ex=210, Ey=8, Ez=280 },
+        new Position{ Id=7, OrderLineId=4, QuantityLine=1, CutEntryId=5, X=0, Y=52, Z=0, Ex=120, Ey=12, Ez=160 },
+        new Position{ Id=8, OrderLineId=4, QuantityLine=2, CutEntryId=5, X=120, Y=52, Z=0, Ex=12, Ey=120, Ez=160 }
+    };
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // First time render
+            await JS.InvokeVoidAsync("renderPositions3D", Positions);
+        }
+    }
+
+    private async Task Reload()
+    {
+        // call again after potential data change
+        await JS.InvokeVoidAsync("renderPositions3D", Positions);
+    }
+
+    private async Task DisposeJs()
+    {
+        await JS.InvokeVoidAsync("destroyPositions3D");
+    }
+}

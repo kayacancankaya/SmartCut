@@ -861,4 +861,7 @@
   <data name="Order" xml:space="preserve">
     <value>Orders</value>
   </data>
+  <data name="Plans" xml:space="preserve">
+    <value>Plans</value>
+  </data>
 </root>
