@@ -864,4 +864,16 @@
   <data name="Plans" xml:space="preserve">
     <value>Plans</value>
   </data>
+  <data name="Partly Fulfilled" xml:space="preserve">
+    <value>Partly Fulfilled</value>
+  </data>
+  <data name="Total Volume" xml:space="preserve">
+    <value>Total Volume</value>
+  </data>
+  <data name="Show Not Included" xml:space="preserve">
+    <value>Show Not Included</value>
+  </data>
+  <data name="Hide Not Included" xml:space="preserve">
+    <value>Hide Not Included</value>
+  </data>
 </root>

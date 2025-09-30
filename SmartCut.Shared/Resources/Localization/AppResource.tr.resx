@@ -864,4 +864,16 @@
   <data name="Plans" xml:space="preserve">
     <value>Planlar</value>
   </data>
+  <data name="Partly Fulfilled" xml:space="preserve">
+    <value>Kısmen Tamamlandı</value>
+  </data>
+  <data name="Total Volume" xml:space="preserve">
+    <value>Toplam Hacim</value>
+  </data>
+  <data name="Show Not Included" xml:space="preserve">
+    <value>Eklenmeyenleri Göster</value>
+  </data>
+  <data name="Hide Not Included" xml:space="preserve">
+    <value>Eklenmeyenleri Gizle</value>
+  </data>
 </root>
