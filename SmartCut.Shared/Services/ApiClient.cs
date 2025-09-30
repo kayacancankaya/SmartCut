@@ -58,6 +58,7 @@ namespace SmartCut.Shared.Services
                 return new List<Block>();
             }
         }
+        
         public async Task<IEnumerable<OrderDTO>?> GetAllOrdersAsync(string companyId)
         {
             try
@@ -82,6 +83,19 @@ namespace SmartCut.Shared.Services
             {
                 _logger.LogError(ex, ex.Message.ToString());
                 return new List<Block>();
+            }
+        }
+        public async Task<CuttingPlanDTO?> GetCuttingPlanByIdAsync(int cuttingId)
+        {
+            try
+            {
+                var response = await _http.GetFromJsonAsync<CuttingPlanDTO?>($"api/web/getcuttingplanbyid?cuttingId={cuttingId}");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return new CuttingPlanDTO();
             }
         }
         public async Task<List<CuttingPlanDTO>?> GetCalculationsAsync(int pageNumber = 1, int pageSize = 10, int status = 0, float percentFulfilled = 0, string invoiceNumber = "", int line = 0, string stockCode = "", string stockName = "", string customerCode = "", string customerName = "")

@@ -223,6 +223,105 @@ namespace SmartCut.Shared.Services
                 return new List<CuttingPlanDTO>();
             }
         }
+        public async Task<CuttingPlanDTO?> GetCuttingPlanByIdAsync(int cuttingPlanId)
+        {
+            try
+            {
+                CuttingPlan? cuttingPlan = await _context.CuttingPlans.Where(c => c.Id == cuttingPlanId).FirstOrDefaultAsync();
+                if (cuttingPlan == null) return null;
+                Block? block = await _context.Blocks.Where(b => b.Id == cuttingPlan.BlockId).FirstOrDefaultAsync();
+                if (block == null) return null;
+                List<CutEntry> cutEntries = await _context.CutEntries.Where(c => c.CuttingPlanId == cuttingPlan.Id &&
+                                                                                   c.IsFulfilled == true).ToListAsync();
+                List<CutEntry> notCuttedEntries = await _context.CutEntries.Where(c => c.CuttingPlanId == cuttingPlan.Id &&
+                                                                                   c.IsFulfilled == false).ToListAsync();
+                List<CutEntryDTO> cutEntryDTOs = new List<CutEntryDTO>();
+                List<CutEntryDTO> notCuttedEntryDTOs = new List<CutEntryDTO>();
+
+                foreach (CutEntry cutEntry in cutEntries)
+                {
+                    OrderLine? order = await _context.OrderLines.Where(o => o.Id == cutEntry.OrderLineId).FirstOrDefaultAsync();
+                    if (order == null) continue;
+                    OrderDTO orderDTO = new OrderDTO();
+                    orderDTO.InvoiceNumber = order.InvoiceNumber;
+                    orderDTO.Line = order.Line;
+                    orderDTO.Width = order.Width;
+                    orderDTO.Height = order.Height;
+                    orderDTO.Quantity = order.Quantity;
+                    orderDTO.StockCode = order.StockCode;
+                    orderDTO.StockName = order.StockName;
+                    orderDTO.CustomerCode = order.CustomerCode;
+                    orderDTO.CustomerName = order.CustomerName;
+                    orderDTO.Description = order.Description;
+
+
+
+                    CutEntryDTO cutEntryDTO = new CutEntryDTO();
+                    cutEntryDTO.Id = cutEntry.Id;
+                    cutEntryDTO.OrderLineId = cutEntry.OrderLineId;
+                    cutEntryDTO.OrderQuantity = await _context.OrderLines.Where(ol => ol.Id == cutEntry.OrderLineId).Select(ol => ol.Quantity).FirstOrDefaultAsync();
+                    cutEntryDTO.Order = orderDTO;
+                    cutEntryDTO.QuantityFulfilled = cutEntry.QuantityFulfilled;
+                    cutEntryDTO.Positions = await _context.Positions.Where(p => p.CutEntryId == cutEntry.Id).ToListAsync();
+                    cutEntryDTO.Dimension = await _context.Dimensions.FirstOrDefaultAsync(d => d.CutEntryId == cutEntry.Id);
+                    if(cutEntryDTO.OrderQuantity == cutEntryDTO.QuantityFulfilled)
+                        cutEntryDTO.IsFulfilled = true;
+                    cutEntryDTOs.Add(cutEntryDTO);
+                }
+
+                foreach (CutEntry cutEntry in notCuttedEntries)
+                {
+                    OrderLine? order = await _context.OrderLines.Where(o => o.Id == cutEntry.OrderLineId).FirstOrDefaultAsync();
+                    if (order == null) continue;
+                    OrderDTO orderDTO = new OrderDTO();
+                    orderDTO.InvoiceNumber = order.InvoiceNumber;
+                    orderDTO.Line = order.Line;
+                    orderDTO.Width = order.Width;
+                    orderDTO.Height = order.Height;
+                    orderDTO.Quantity = order.Quantity;
+                    orderDTO.StockCode = order.StockCode;
+                    orderDTO.StockName = order.StockName;
+                    orderDTO.CustomerCode = order.CustomerCode;
+                    orderDTO.CustomerName = order.CustomerName;
+                    orderDTO.Description = order.Description;
+
+
+
+                    CutEntryDTO notcuttedEntryDTO = new CutEntryDTO();
+                    notcuttedEntryDTO.Id = cutEntry.Id;
+                    notcuttedEntryDTO.OrderLineId = cutEntry.OrderLineId;
+                    notcuttedEntryDTO.OrderQuantity = await _context.OrderLines.Where(ol => ol.Id == cutEntry.OrderLineId).Select(ol => ol.Quantity).FirstOrDefaultAsync();
+                    notcuttedEntryDTO.Order = orderDTO;
+                    notcuttedEntryDTO.QuantityFulfilled = cutEntry.QuantityFulfilled;
+                    notcuttedEntryDTO.Positions = await _context.Positions.Where(p => p.CutEntryId == cutEntry.Id).ToListAsync();
+                    notcuttedEntryDTO.Dimension = await _context.Dimensions.FirstOrDefaultAsync(d => d.CutEntryId == cutEntry.Id);
+                    if(notcuttedEntryDTO.OrderQuantity == notcuttedEntryDTO.QuantityFulfilled)
+                        notcuttedEntryDTO.IsFulfilled = true;
+                    notCuttedEntryDTOs.Add(notcuttedEntryDTO);
+
+                }
+
+                CuttingPlanDTO dTO = new CuttingPlanDTO
+                {
+                    Id = cuttingPlanId,
+                    Status = cuttingPlan.Status,
+                    Block = block,
+                    Explanation = cuttingPlan.Explanation,
+                    CutEntries = cutEntryDTOs,
+                    NotCuttedEntries = notCuttedEntryDTOs,
+                    TotalVolume = cuttingPlan.TotalVolume,
+                    ScrapVolume = cuttingPlan.ScrapVolume,
+                    PercentFulfilled = cuttingPlan.PercentFulfilled
+                };
+
+                return dTO;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message.ToString());
+                return null;
+            }
+        }
         public async Task<bool> CreateBlockAsync(Block block)
         {
             try

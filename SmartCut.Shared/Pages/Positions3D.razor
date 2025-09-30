@@ -1,5 +1,14 @@
-﻿@page "/positions3d"
+﻿@page "/positions3d/{CuttingPlanId:int}"
 @using SmartCut.Shared.Models
+@using SmartCut.Shared.Models.DTOs
+@using SmartCut.Shared.Models.ViewModels
+@using SmartCut.Shared.Services
+@using SmartCut.Shared.Resources.Localization
+@implements IDisposable
+@inject NotificationService NotificationService
+@inject BreadcrumbService BreadcrumbService
+@inject NavigationManager NavigationManager
+@inject ApiClient DataService
 @inject IJSRuntime JS
 
 <h3>3D Positions View</h3>
@@ -9,31 +18,72 @@
 <!-- tooltip injected / managed by JS, but keep a placeholder for CSS to apply -->
 <div id="three-tooltip" style="display:none;"></div>
 
-<button @onclick="Reload">Reload / Re-render</button>
-<button @onclick="DisposeJs">Destroy Viewer</button>
-
+<button @onclick="Reload">Reload</button>
+@* <button @onclick="DisposeJs">Destroy Viewer</button>
+ *@
 @code {
     // Replace this with DB loaded data in real usage
-    private List<Position> Positions = new()
+    [Parameter]
+    public int CuttingPlanId { get; set; }
+    private List<Position> Positions = new List<Position>();
+    
+    protected override async Task OnInitializedAsync()
     {
-        new Position{ Id=1, OrderLineId=10, QuantityLine=1, CutEntryId=1, X=0, Y=0, Z=0, Ex=210, Ey=10, Ez=280 },
-        new Position{ Id=2, OrderLineId=2, QuantityLine=1, CutEntryId=2, X=0, Y=10, Z=0, Ex=210, Ey=10, Ez=280 },
-        new Position{ Id=3, OrderLineId=9, QuantityLine=1, CutEntryId=3, X=0, Y=20, Z=0, Ex=210, Ey=8, Ez=280 },
-        new Position{ Id=4, OrderLineId=9, QuantityLine=2, CutEntryId=3, X=0, Y=28, Z=0, Ex=210, Ey=8, Ez=280 },
-        new Position{ Id=5, OrderLineId=1, QuantityLine=1, CutEntryId=4, X=0, Y=36, Z=0, Ex=210, Ey=8, Ez=280 },
-        new Position{ Id=6, OrderLineId=1, QuantityLine=2, CutEntryId=4, X=0, Y=44, Z=0, Ex=210, Ey=8, Ez=280 },
-        new Position{ Id=7, OrderLineId=4, QuantityLine=1, CutEntryId=5, X=0, Y=52, Z=0, Ex=120, Ey=12, Ez=160 },
-        new Position{ Id=8, OrderLineId=4, QuantityLine=2, CutEntryId=5, X=120, Y=52, Z=0, Ex=12, Ey=120, Ez=160 }
-    };
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
+        try
         {
-            // First time render
+            BreadcrumbService.SetBreadcrumbs(new List<BreadcrumbItem>
+            {
+                new() { Title = Localizer.Get("Home"), Url = "/", IsActive = false },
+                new() { Title = Localizer.Get("Plans"), Url = "/calculation", IsActive = false },
+                new() { Title = Localizer.Get("Plan List"), Url = "/list-calculations", IsActive = false },
+                new() { Title = Localizer.Get("Visualize Result"), Url = $"/positions3d/{CuttingPlanId}", IsActive = true }
+
+            });
+            CuttingPlanDTO cuttingPlan = await DataService.GetCuttingPlanByIdAsync(CuttingPlanId);
+            if (cuttingPlan == null)
+            {
+                NotificationService.ShowError(Localizer.Get("Cutting plan not found."));
+                NavigationManager.NavigateTo("/list-calculations");
+                return;
+            }
+            else if(cuttingPlan.CutEntries == null)
+            {
+                NotificationService.ShowError(Localizer.Get("No cut entries found in the cutting plan."));
+                NavigationManager.NavigateTo("/list-calculations");
+               return;
+            }
+            else if(cuttingPlan.CutEntries.Count == 0)
+            {
+                NotificationService.ShowError(Localizer.Get("No cut entries found in the cutting plan."));
+                NavigationManager.NavigateTo("/list-calculations");
+               return;
+            }
+            foreach(var item in cuttingPlan.CutEntries)
+            {
+                if(item.Positions != null)
+                {
+                    if(item.Positions.Count > 0)
+                        foreach(var pos in item.Positions)
+                            Positions.Add(pos);
+                }
+            }
             await JS.InvokeVoidAsync("renderPositions3D", Positions);
         }
+        catch (Exception ex)
+        {
+            NotificationService.ShowError(Localizer.Get("An error occurred while visualizing result."));
+            await JS.InvokeVoidAsync("destroyPositions3D");
+            NavigationManager.NavigateTo("/list-calculations");
+        }
     }
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     if (firstRender)
+    //     {
+    //         // First time render
+    //         await JS.InvokeVoidAsync("renderPositions3D", Positions);
+    //     }
+    // }
 
     private async Task Reload()
     {
@@ -44,5 +94,10 @@
     private async Task DisposeJs()
     {
         await JS.InvokeVoidAsync("destroyPositions3D");
+    }
+    public void Dispose()
+    {
+        // ✅ Automatically called when navigating away
+        _ = JS.InvokeVoidAsync("destroyPositions3D");
     }
 }

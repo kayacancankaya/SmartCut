@@ -736,7 +736,7 @@
     <value>Fire</value>
   </data>
   <data name="Fulfilled" xml:space="preserve">
-    <value>Karşılanan</value>
+    <value>Tamamlandı</value>
   </data>
   <data name="No cut entries." xml:space="preserve">
     <value>Kesim girişi bulunamadı.</value>
@@ -875,5 +875,23 @@
   </data>
   <data name="Hide Not Included" xml:space="preserve">
     <value>Eklenmeyenleri Gizle</value>
+  </data>
+  <data name="Not Fulfilled" xml:space="preserve">
+    <value>Başlanmadı</value>
+  </data>
+  <data name="Visualize Result" xml:space="preserve">
+    <value>Sonucu Görselleştir</value>
+  </data>
+  <data name="Hide Visualization" xml:space="preserve">
+    <value>Görseli Kapat</value>
+  </data>
+  <data name="An error occurred while visualizing result." xml:space="preserve">
+    <value>Sonuç görselleştirilirken hata ile karşılaşıldı.</value>
+  </data>
+  <data name="Plan Result" xml:space="preserve">
+    <value>Plan Sonu</value>
+  </data>
+  <data name="Hide Result" xml:space="preserve">
+    <value />
   </data>
 </root>

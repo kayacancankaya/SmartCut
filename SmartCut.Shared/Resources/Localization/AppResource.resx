@@ -876,4 +876,22 @@
   <data name="Hide Not Included" xml:space="preserve">
     <value>Hide Not Included</value>
   </data>
+  <data name="Not Fulfilled" xml:space="preserve">
+    <value>Not Fulfilled</value>
+  </data>
+  <data name="Visualize Result" xml:space="preserve">
+    <value>Visualize Result</value>
+  </data>
+  <data name="Hide Visualization" xml:space="preserve">
+    <value>Hide Visualization</value>
+  </data>
+  <data name="An error occurred while visualizing result." xml:space="preserve">
+    <value>An error occurred while visualizing result.</value>
+  </data>
+  <data name="Plan Result" xml:space="preserve">
+    <value>Plan Result</value>
+  </data>
+  <data name="Hide Result" xml:space="preserve">
+    <value>Hide Result</value>
+  </data>
 </root>

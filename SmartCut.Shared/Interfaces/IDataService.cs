@@ -9,6 +9,7 @@ namespace SmartCut.Shared.Interfaces
         Task<IEnumerable<Block>?> GetAllBlocksAsync(string companyId);
         Task<IEnumerable<OrderDTO>?> GetAllOrdersAsync(string companyId);
         Task<List<CuttingPlanDTO>?> GetCalculationsAsync(int pageNumber, int pageSize, int status, float percentFulfilled, string InvoiceNumber, int line, string stockCode, string stockName, string customerCode, string customerName);
+        Task<CuttingPlanDTO?> GetCuttingPlanByIdAsync(int cuttingPlanId);
         Task<bool> CreateBlockAsync(Block block);
         Task<int> CheckIfBlockExistsAsync(string blockName);
         Task<bool> CreateOrderAsync(OrderDTO orderDTO);
