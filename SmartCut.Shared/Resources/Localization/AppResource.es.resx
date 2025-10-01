@@ -894,4 +894,7 @@
   <data name="Hide Result" xml:space="preserve">
     <value>Ocultar Resulto</value>
   </data>
+  <data name="Block data not found." xml:space="preserve">
+    <value>El Bloque no encontrado en el plan.</value>
+  </data>
 </root>

@@ -136,9 +136,30 @@
     document.addEventListener('mousemove', (e) => { lastMouseX = e.clientX; lastMouseY = e.clientY; });
 
     // Build boxes from positions array
-    function buildFromPositions(positions) {
+    function buildFromPositions(block, positions) {
         clearScene();
 
+
+        const sizeX = block.width;
+        const sizeY = block.height;
+        const sizeZ = block.depth;
+
+        // --- Draw block (container) ---
+        const containerGeometry = new THREE.BoxGeometry(sizeX, sizeY, sizeZ);
+        const containerMaterial = new THREE.MeshBasicMaterial({
+            color: 0x0000ff,   // blue
+            wireframe: true,   // keep wireframe so inside orders are visible
+            opacity: 0.25,
+            transparent: true
+        });
+
+        const container = new THREE.Mesh(containerGeometry, containerMaterial);
+
+        // Just like positions, shift so 0,0,0 is at the MIN corner
+        container.position.set(sizeX / 2, sizeY / 2, sizeZ / 2);
+
+        scene.add(container);
+        objects.push(container);
         // Optionally compute bounds to center camera
         let min = { x: Infinity, y: Infinity, z: Infinity }, max = { x: -Infinity, y: -Infinity, z: -Infinity };
         positions.forEach(p => {
@@ -204,7 +225,7 @@
     }
 
     // Public function called by Blazor
-    window.renderPositions3D = function (positions) {
+    window.renderPositions3D = function (block,positions) {
         try {
             if (!ensureContainer()) return;
             if (!scene) initScene();
@@ -220,7 +241,17 @@
                 ey: Number(p.Ey ?? p.ey ?? 1),
                 ez: Number(p.Ez ?? p.ez ?? 1)
             }));
-            buildFromPositions(normalized);
+            console.log(block.Width);
+            console.log(block.Length);
+            console.log(block.Height);
+            // normalize field names: allow PascalCase or camelCase
+            const normalizedBlock = {
+                id: block?.Id ?? block?.id,
+                width: Number(block?.Width ?? block?.width ?? 330),
+                height: Number(block?.Length ?? block?.length ?? 330),
+                depth: Number(block?.Height ?? block?.depth ?? 330),
+            };
+            buildFromPositions(normalizedBlock,normalized);
             if (!animationId) animate();
         } catch (err) {
             console.error('renderPositions3D error', err);

@@ -894,4 +894,7 @@
   <data name="Hide Result" xml:space="preserve">
     <value />
   </data>
+  <data name="Block data not found." xml:space="preserve">
+    <value>Blok bilgisi bulunamadı.</value>
+  </data>
 </root>

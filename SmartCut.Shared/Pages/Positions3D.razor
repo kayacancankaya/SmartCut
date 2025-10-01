@@ -43,19 +43,16 @@
             if (cuttingPlan == null)
             {
                 NotificationService.ShowError(Localizer.Get("Cutting plan not found."));
-                NavigationManager.NavigateTo("/list-calculations");
                 return;
             }
             else if(cuttingPlan.CutEntries == null)
             {
-                NotificationService.ShowError(Localizer.Get("No cut entries found in the cutting plan."));
-                NavigationManager.NavigateTo("/list-calculations");
+                NotificationService.ShowError(Localizer.Get("Cutting plan not found."));
                return;
             }
             else if(cuttingPlan.CutEntries.Count == 0)
             {
-                NotificationService.ShowError(Localizer.Get("No cut entries found in the cutting plan."));
-                NavigationManager.NavigateTo("/list-calculations");
+                NotificationService.ShowError(Localizer.Get("Cutting plan not found."));
                return;
             }
             foreach(var item in cuttingPlan.CutEntries)
@@ -67,7 +64,13 @@
                             Positions.Add(pos);
                 }
             }
-            await JS.InvokeVoidAsync("renderPositions3D", Positions);
+            Block? block = cuttingPlan.Block;
+            if(block == null)
+            {
+                NotificationService.ShowError(Localizer.Get("Block data not found."));
+                return;
+            }
+            await JS.InvokeVoidAsync("renderPositions3D",block, Positions);
         }
         catch (Exception ex)
         {
