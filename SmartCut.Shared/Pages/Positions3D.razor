@@ -48,29 +48,34 @@
             else if(cuttingPlan.CutEntries == null)
             {
                 NotificationService.ShowError(Localizer.Get("Cutting plan not found."));
-               return;
+                return;
             }
             else if(cuttingPlan.CutEntries.Count == 0)
             {
                 NotificationService.ShowError(Localizer.Get("Cutting plan not found."));
-               return;
+                return;
             }
             foreach(var item in cuttingPlan.CutEntries)
             {
                 if(item.Positions != null)
                 {
                     if(item.Positions.Count > 0)
-                        foreach(var pos in item.Positions)
+                    {
+                        foreach (var pos in item.Positions)
                             Positions.Add(pos);
+                    }
+                       
                 }
             }
+
             Block? block = cuttingPlan.Block;
+            string orderNumber = String.Format("{0}-{1}" cuttingPlan.CutEntries.Order.InvoiceNumber, cuttingPlan.CutEntries.Order.Line);
             if(block == null)
             {
                 NotificationService.ShowError(Localizer.Get("Block data not found."));
                 return;
             }
-            await JS.InvokeVoidAsync("renderPositions3D",block, Positions);
+            await JS.InvokeVoidAsync("renderPositions3D",block, Positions, orderNumber);
         }
         catch (Exception ex)
         {

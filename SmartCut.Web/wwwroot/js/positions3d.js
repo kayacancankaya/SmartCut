@@ -136,7 +136,7 @@
     document.addEventListener('mousemove', (e) => { lastMouseX = e.clientX; lastMouseY = e.clientY; });
 
     // Build boxes from positions array
-    function buildFromPositions(block, positions) {
+    function buildFromPositions(block, positions, customerOrder) {
         clearScene();
 
 
@@ -191,7 +191,7 @@
 
             // store tooltip data
             mesh.userData = {
-                tooltip: `Id: ${p.id || p.Id}<br/>CutEntry: ${p.cutEntryId || p.CutEntryId}<br/>OrderLine: ${p.orderLineId || p.OrderLineId}`
+                tooltip: `${customerOrder} : ${p.customerOrder || p.CustomerOrder}`
             };
 
             scene.add(mesh);
@@ -225,7 +225,7 @@
     }
 
     // Public function called by Blazor
-    window.renderPositions3D = function (block,positions) {
+    window.renderPositions3D = function (block,positions,customerOrder) {
         try {
             if (!ensureContainer()) return;
             if (!scene) initScene();
@@ -249,7 +249,7 @@
                 id: block?.Id ?? block?.id,
                 width: Number(block?.Width ?? block?.width ?? 330),
                 height: Number(block?.Length ?? block?.length ?? 330),
-                depth: Number(block?.Height ?? block?.depth ?? 330),
+                depth: Number(block?.Height ?? block?.height ?? 330),
             };
             buildFromPositions(normalizedBlock,normalized);
             if (!animationId) animate();
