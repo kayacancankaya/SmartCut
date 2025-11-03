@@ -107,6 +107,7 @@
 
     private string platform => FormFactor.GetPlatform(); 
     private string factor => FormFactor.GetFormFactor();
+    private Confirmation confirmationRef;
     private List<BlockDTO> blocks = new List<BlockDTO>();
     private string buttonsDisabled = string.Empty;
     private bool showBlocks = false;

@@ -60,11 +60,14 @@
     <input class="form-control" @bind="block.Material" />
 </div>
 
-<button class="btn btn-primary" @onclick="HandleSubmitAsync">@Localizer.Get("Save")</button>
-
+<ActionButton actionType="1" disabled="@buttonDisabled" OnClicked="OpenConfirmationModal" />
+<Confirmation @ref="confirmationRef" OnApproved="HandleConfirmationApproved" OnClose="HandleConfirmationClosed" />
 @code {
     private SmartCut.Shared.Models.Block block = new SmartCut.Shared.Models.Block();
     private SmartCut.Shared.Models.ValidationErrors errors = new SmartCut.Shared.Models.ValidationErrors();
+    private string buttonDisabled = string.Empty;
+
+    private Confirmation confirmationRef;
     protected override void OnInitialized()
     {
         BreadcrumbService.SetBreadcrumbs(new List<BreadcrumbItem>
@@ -72,31 +75,48 @@
             new() { Title = "Ana Sayfa", Url = "/", IsActive = false },
             new() { Title = "Blok", Url = "/block", IsActive = false } ,
             new() { Title = "Blok Oluştur", Url = "/create-block", IsActive = true } 
- 
+
         });
+    }
+
+    private void OpenConfirmationModal()
+    {
+        errors = new ValidationErrors(); // reset
+
+        // Manual validation
+        if (string.IsNullOrWhiteSpace(block.Name))
+            errors.Name = Localizer.Get("Block Name is required");
+
+        if (block.Width <= 0)
+            errors.Width = Localizer.Get("Width is required");
+
+        if (block.Length <= 0)
+            errors.Length = Localizer.Get("Length is required");
+
+        if (block.Height <= 0)
+            errors.Height = Localizer.Get("Height is required");
+
+        if (errors.HasErrors)
+            return; // stop submit
+
+        confirmationRef.DisplayClass = "d-block";
+        confirmationRef.ModalType = 1;
+        confirmationRef.Delegate = nameof(HandleSubmitAsync);
+    }
+    private async Task HandleConfirmationApproved()
+    {
+        confirmationRef.DisplayClass = "d-none";
+        if (confirmationRef.Delegate == nameof(HandleSubmitAsync))
+        {
+            await HandleSubmitAsync();
+        }
     }
     private async Task HandleSubmitAsync()
     {
         try
         {
 
-            errors = new ValidationErrors(); // reset
-
-            // Manual validation
-            if (string.IsNullOrWhiteSpace(block.Name))
-                errors.Name = Localizer.Get("Block Name is required");
-
-            if (block.Width <= 0)
-                errors.Width = Localizer.Get("Width is required");
-
-            if (block.Length <= 0)
-                errors.Length = Localizer.Get("Length is required");
-
-            if (block.Height <= 0)
-                errors.Height = Localizer.Get("Height is required");
-
-            if (errors.HasErrors)
-                return; // stop submit
+            buttonDisabled = "disabled";
             int resultInt = await BlockService.CheckIfBlockExistsAsync(block.Name);
             if (resultInt == 0)
             {
@@ -118,11 +138,17 @@
             {
                 NotificationService.ShowError("Failed to save block");
             }
+            buttonDisabled = string.Empty;
         }
         catch (Exception)
         {
             NotificationService.ShowError("An error occured while saving block");
+            buttonDisabled = string.Empty;
         }
 
+    }
+    private void HandleConfirmationClosed()
+    {
+        confirmationRef.DisplayClass = "d-none";
     }
 }

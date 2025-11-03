@@ -897,4 +897,7 @@
   <data name="Block data not found." xml:space="preserve">
     <value>Blok bilgisi bulunamadı.</value>
   </data>
+  <data name="Plan List" xml:space="preserve">
+    <value>Plan Listesi</value>
+  </data>
 </root>

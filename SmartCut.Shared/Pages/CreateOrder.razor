@@ -109,17 +109,19 @@
                     }
                 </div>
                  <div class="full-width">
-                <ActionButton actionType="1" disabled="@buttonDisabled" OnClicked="HandleSubmitAsync"/>
+                    <ActionButton actionType="1" disabled="@buttonDisabled" OnClicked="OpenConfirmationModal" />
                 </div>
              </div>
         </div>
     </div>
 </div>
+<Confirmation @ref="confirmationRef" OnApproved="HandleConfirmationApproved" OnClose="HandleConfirmationClosed" />
 
 @code {
     private OrderDTO order = new OrderDTO();
     private SmartCut.Shared.Models.ValidationErrors errors = new SmartCut.Shared.Models.ValidationErrors();
     private string buttonDisabled = string.Empty;
+    private Confirmation confirmationRef;
     protected override void OnInitialized()
     {
         BreadcrumbService.SetBreadcrumbs(new List<BreadcrumbItem>
@@ -130,35 +132,53 @@
 
         });
     }
+    private void OpenConfirmationModal()
+    {
+        errors = new ValidationErrors(); // reset
+
+        // Manual validation
+        if (string.IsNullOrWhiteSpace(order.InvoiceNumber))
+            errors.InvoiceNumber = Localizer.Get("Invoice is required");
+
+        if (order.Width <= 0)
+            errors.Width = Localizer.Get("Width is required");
+
+        if (order.Length <= 0)
+            errors.Length = Localizer.Get("Length is required");
+
+        if (order.Height <= 0)
+            errors.Height = Localizer.Get("Height is required");
+
+        if (order.Quantity <= 0)
+            errors.Height = Localizer.Get("Quantity is required");
+
+        if (order.Line <= 0)
+            errors.Height = Localizer.Get("Order line is required");
+
+        if (errors.HasErrors)
+            return; // stop submit
+
+        confirmationRef.DisplayClass = "d-block";
+        confirmationRef.ModalType = 1;
+        confirmationRef.Delegate = nameof(HandleSubmitAsync);
+    }
+
+    private async Task HandleConfirmationApproved()
+    {
+        confirmationRef.DisplayClass = "d-none";
+        if (confirmationRef.Delegate == nameof(HandleSubmitAsync))
+        {
+            await HandleSubmitAsync();
+        }
+    }
+    private void HandleConfirmationClosed()
+    {
+        confirmationRef.DisplayClass = "d-none";
+    }
     private async Task HandleSubmitAsync()
     {
         try
         {
-
-            errors = new ValidationErrors(); // reset
-
-            // Manual validation
-            if (string.IsNullOrWhiteSpace(order.InvoiceNumber))
-                errors.InvoiceNumber = Localizer.Get("Invoice is required");
-
-            if (order.Width <= 0)
-                errors.Width = Localizer.Get("Width is required");
-
-            if (order.Length <= 0)
-                errors.Length = Localizer.Get("Length is required");
-
-            if (order.Height <= 0)
-                errors.Height = Localizer.Get("Height is required");
-
-            if (order.Quantity <= 0)
-                errors.Height = Localizer.Get("Quantity is required");
-
-            if (order.Line <= 0)
-                errors.Height = Localizer.Get("Order line is required");
-
-            if (errors.HasErrors)
-                return; // stop submit
-
             buttonDisabled = "disabled";
             bool result = await OrderService.CreateOrderAsync(order);
             if (result)

@@ -105,29 +105,35 @@
     }
 
     function animate() {
+        if (disposed) return; // ✅ stop immediately if disposed
         animationId = requestAnimationFrame(animate);
-        controls.update();
 
-        // hover check
-        raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObjects(objects, true);
-        if (intersects.length > 0) {
-            const first = intersects[0].object.userData || intersects[0].object.parent?.userData || {};
-            if (first) {
-                tooltipDiv.style.display = 'block';
-                tooltipDiv.style.left = ((((intersects[0].point.x - camera.position.x) * 0)) + (eventClientX_safe())) + 'px';
-                // Position tooltip near mouse pointer using container's rect
-                const rect = container.getBoundingClientRect();
-                tooltipDiv.style.left = (lastMouseX - rect.left) + 'px';
-                tooltipDiv.style.top = (lastMouseY - rect.top) + 'px';
-                tooltipDiv.innerHTML = first.tooltip || '';
+        if (!renderer || !scene || !camera) return; // defensive
+        controls?.update();
+
+        try {
+            // hover check
+            if (raycaster && mouse && objects.length > 0) {
+                raycaster.setFromCamera(mouse, camera);
+                const intersects = raycaster.intersectObjects(objects, true);
+                if (intersects.length > 0 && tooltipDiv && !disposed) {
+                    const first = intersects[0].object.userData || {};
+                    tooltipDiv.style.display = 'block';
+                    const rect = container.getBoundingClientRect();
+                    tooltipDiv.style.left = (lastMouseX - rect.left) + 'px';
+                    tooltipDiv.style.top = (lastMouseY - rect.top) + 'px';
+                    tooltipDiv.innerHTML = first.tooltip || '';
+                } else if (tooltipDiv) {
+                    tooltipDiv.style.display = 'none';
+                }
             }
-        } else {
-            tooltipDiv.style.display = 'none';
-        }
 
-        renderer.render(scene, camera);
+            renderer.render(scene, camera);
+        } catch (e) {
+            console.warn('animate loop skipped after dispose:', e);
+        }
     }
+
 
     // helpers to avoid 'event' not defined: we cache last mouse client coords
     let lastMouseX = 0, lastMouseY = 0;
@@ -225,11 +231,18 @@
         }
     }
 
+    function updateLastMousePosition(e) {
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
+    }
     // Public function called by Blazor
     window.renderPositions3D = function (block,positions,customerOrders) {
         try {
+            disposed = false;
             if (!ensureContainer()) return;
             if (!scene) initScene();
+
+            document.addEventListener('mousemove', updateLastMousePosition);
             // normalize field names: allow PascalCase or camelCase
             const normalized = (positions || []).map(p => ({
                 id: p.Id ?? p.id,
@@ -242,15 +255,15 @@
                 ey: Number(p.Ey ?? p.ey ?? 1),
                 ez: Number(p.Ez ?? p.ez ?? 1)
             }));
-            console.log(block.Width);
-            console.log(block.Length);
-            console.log(block.Height);
+            console.log(block.width);
+            console.log(block.length);
+            console.log(block.height);
             // normalize field names: allow PascalCase or camelCase
             const normalizedBlock = {
                 id: block?.Id ?? block?.id,
                 width: Number(block?.Width ?? block?.width ?? 330),
-                height: Number(block?.Length ?? block?.length ?? 330),
-                depth: Number(block?.Height ?? block?.height ?? 330),
+                height: Number(block?.Length ?? block?.height ?? 330),
+                depth: Number(block?.Height ?? block?.length ?? 330),
             };
             buildFromPositions(normalizedBlock, normalized, customerOrders);
             if (!animationId) animate();
@@ -259,30 +272,58 @@
         }
     };
 
+    let disposed = false;
+
     window.destroyPositions3D = function () {
+        disposed = true;
+
+        // stop animation
         if (animationId) {
             cancelAnimationFrame(animationId);
             animationId = null;
         }
-        if (controls) {
-            controls.dispose();
-            controls = null;
+
+        // dispose objects
+        if (objects && objects.length > 0) {
+            objects.forEach(obj => {
+                if (obj.geometry) obj.geometry.dispose();
+                if (obj.material) {
+                    if (Array.isArray(obj.material)) obj.material.forEach(m => m.dispose());
+                    else obj.material.dispose();
+                }
+                scene?.remove(obj);
+            });
+            objects = [];
         }
+
+        // remove renderer and DOM
         if (renderer) {
             renderer.dispose();
-            if (renderer.domElement && renderer.domElement.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement);
+            if (renderer.domElement && renderer.domElement.parentNode) {
+                renderer.domElement.parentNode.removeChild(renderer.domElement);
+            }
             renderer = null;
         }
-        if (scene) {
-            clearScene();
-            scene = null;
-        }
-        if (window.removeEventListener) {
-            window.removeEventListener('resize', onWindowResize);
-            container && container.removeEventListener('mousemove', onMouseMove);
-        }
-        const tt = document.getElementById('three-tooltip');
-        if (tt && tt.parentNode) tt.parentNode.removeChild(tt);
+
+        // remove event listeners
+        window.removeEventListener('resize', onWindowResize);
+        if (container) container.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mousemove', updateLastMousePosition);
+
+        // clear globals
+        scene = null;
+        camera = null;
+        controls = null;
+        raycaster = null;
+        container = null;
+        tooltipDiv = null;
+
+        console.log('🧹 3D viewer destroyed');
     };
+
+
+    
+
+
 
 })();

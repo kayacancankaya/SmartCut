@@ -4,7 +4,7 @@
 @using SmartCut.Shared.Models.ViewModels
 @using SmartCut.Shared.Services
 @using SmartCut.Shared.Resources.Localization
-@implements IDisposable
+@implements IAsyncDisposable
 @inject NotificationService NotificationService
 @inject BreadcrumbService BreadcrumbService
 @inject NavigationManager NavigationManager
@@ -25,8 +25,11 @@
     // Replace this with DB loaded data in real usage
     [Parameter]
     public int CuttingPlanId { get; set; }
+    private string uniqueKey = Guid.NewGuid().ToString();
     private List<Position> Positions = new List<Position>();
     private Dictionary<int, string> OrderNumbers = new Dictionary<int, string>();
+    private Block? block { get; set; } 
+
     protected override async Task OnInitializedAsync()
     {
         try
@@ -73,7 +76,7 @@
                 }
             }
 
-            Block? block = cuttingPlan.Block;
+            block = cuttingPlan.Block;
             
             if(block == null)
             {
@@ -89,28 +92,45 @@
             NavigationManager.NavigateTo("/list-calculations");
         }
     }
-    // protected override async Task OnAfterRenderAsync(bool firstRender)
-    // {
-    //     if (firstRender)
-    //     {
-    //         // First time render
-    //         await JS.InvokeVoidAsync("renderPositions3D", Positions);
-    //     }
-    // }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // First time render
+            await JS.InvokeVoidAsync("destroyPositions3D");
+        }
+    }
 
     private async Task Reload()
-    {
-        // call again after potential data change
-        await JS.InvokeVoidAsync("renderPositions3D", Positions);
+    {  
+        // Change key so Blazor re-renders entire div — like a mini hard reload
+        uniqueKey = Guid.NewGuid().ToString();
+        await InvokeAsync(StateHasChanged);
+
+        // Wait for DOM to update, then re-run JS
+        await Task.Delay(100);
+        await JS.InvokeVoidAsync("renderPositions3D", block, Positions, OrderNumbers);
     }
 
     private async Task DisposeJs()
     {
         await JS.InvokeVoidAsync("destroyPositions3D");
     }
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
-        // ✅ Automatically called when navigating away
-        _ = JS.InvokeVoidAsync("destroyPositions3D");
+        try
+        {
+            // Wait for JS cleanup to fully finish
+            await JS.InvokeAsync<bool>("destroyPositions3D");
+        }
+        catch (JSException jsex)
+        {
+            Console.Error.WriteLine($"JS cleanup failed: {jsex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"DisposeAsync exception: {ex}");
+        }
     }
+
 }
